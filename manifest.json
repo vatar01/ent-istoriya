@@ -1,0 +1,14 @@
+{
+  "name": "ЕНТ: История Казахстана",
+  "short_name": "ЕНТ История",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b3550",
+  "theme_color": "#0b3550",
+  "lang": "ru",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}
