@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ЕНТ 2027">
-<meta name="theme-color" content="#0b3550">
+<meta name="theme-color" content="#ffffff">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <title>ЕНТ 2027: подготовка</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: собранный, спокойный учебник-тренажёр
    IDEA: тетрадь-хронология с казахским орнаментом
@@ -90,11 +90,35 @@ mark{background:#f2b70555;color:inherit;border-radius:3px}
 #subj button{background:#ffffff1f;color:#fff;border:1px solid #ffffff40;border-radius:20px;padding:8px 14px;font:600 14px Inter,sans-serif;min-height:40px;cursor:pointer}
 #subj button[aria-current=true]{background:var(--gold);color:#1b1400;border-color:var(--gold)}
 math{font-size:1.12em}.opt math,.q math{font-size:1.15em}.lesson table td{vertical-align:middle}td.y math{white-space:nowrap}.sol{margin-top:10px;padding:12px 14px;border-radius:12px;background:light-dark(#fff8e1,#2a2410);border:1px solid #f2b70566;font-size:15px;line-height:1.7}.sol math{font-size:1.05em}.scroll{overflow-x:auto}.lesson table{display:block;overflow-x:auto}
+
+:root,:root[data-theme=dark],:root[data-theme=light]{color-scheme:light;--bg:#ffffff;--card:#ffffff;--ink:#111827;--mut:#6b7280;--line:#e5e7eb;--sky:#2563eb;--deep:#111827;--gold:#2563eb;--ok:#059669;--bad:#dc2626;--okbg:#ecfdf5;--badbg:#fef2f2;--soft:#f3f4f6}
+h1,h2,h3{font-family:Inter,system-ui,sans-serif;font-weight:700;letter-spacing:-0.01em}
+.top{background:#fff;color:var(--ink);border-bottom:1px solid var(--line)}
+.top .in{padding-top:18px}
+.top p{color:var(--mut)}
+.sun,.orn{display:none}
+nav{gap:2px;padding-bottom:0}
+nav button{color:var(--mut);border-radius:0;padding:10px 12px;border-bottom:2px solid transparent;font-weight:600}
+nav button[aria-current=true]{background:transparent;color:var(--sky);border-bottom-color:var(--sky)}
+#subj button{background:var(--soft);color:#374151;border:1px solid var(--line)}
+#subj button[aria-current=true]{background:var(--sky);color:#fff;border-color:var(--sky)}
+.btn{border-radius:10px}
+.btn.gold{background:var(--sky);color:#fff}
+.btn.alt{background:var(--soft);color:var(--ink)}
+.card{border-radius:14px}
+.stats .card{background:var(--soft);border-color:transparent}
+.stat,.flash .big,.res,.timer{font-family:Inter,system-ui,sans-serif;font-weight:700}
+.pill.g{background:#dbeafe;color:#1e3a8a}
+.ctx{background:#f9fafb;border:1px solid var(--line)}
+.note{border-left-color:var(--sky);background:#f9fafb}
+.opt{border-width:1.5px}
+.sol{background:#eff6ff;border-color:#bfdbfe}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #93c5fd}
+.code{background:#0f172a}
 </style>
 </head>
 <body>
 <header class="top">
-<svg class="sun" viewBox="0 0 200 200" aria-hidden="true"><g fill="#f2b705"><circle cx="100" cy="100" r="34"/></g><g fill="#f2b705" id="rays"></g></svg>
 <div class="in">
 <div id="subj" role="tablist" aria-label="Предмет"><button data-s="hist">История Казахстана</button><button data-s="inf">Информатика</button><button data-s="math">Математика</button></div>
 <h1 id="ttl">ЕНТ 2027</h1>
@@ -103,7 +127,6 @@ math{font-size:1.12em}.opt math,.q math{font-size:1.15em}.lesson table td{vertic
 <button data-v="home">Главная</button><button data-v="learn">Учить</button><button data-v="ref" id="refbtn">Справочник</button><button data-v="cards">Карточки</button><button data-v="test">Тесты</button><button data-v="mist">Ошибки</button>
 </nav>
 </div>
-<div class="orn"></div>
 </header>
 <main id="app"></main>
 <script>
@@ -1191,7 +1214,7 @@ const TEX=(()=>{
  return {tex,fmt,html}})();
 
 /* ================= Приложение: несколько предметов ================= */
-const rays=document.getElementById('rays');let rs='';for(let i=0;i<32;i++){rs+=`<path d="M100 52 l4 -22 h-8z" transform="rotate(${i*360/32} 100 100)"/>`}rays.innerHTML=rs;
+
 
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
