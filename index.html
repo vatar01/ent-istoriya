@@ -2181,7 +2181,8 @@ const TEX=(()=>{
    if(x.k==='num')return '<mn>'+E(x.v)+'</mn>';
    if(x.k==='id')return '<mi>'+E(x.v)+'</mi>';
    if(x.k==='txt')return '<mi mathvariant="normal">'+E(x.v)+'</mi>';
-   if(x.k==='op'){if(x.v==="'")return '<mo>′</mo>';if(x.v==='-'||x.v==='+'){const pr=t[p-2];const un=!pr||(pr.k==='op'&&'([;,=<>|'.includes(pr.v))||pr.k==='{'||(pr.k==='cmd'&&(OPS[pr.v]||pr.v==='left'));const ch=x.v==='-'?'−':'+';return un?'<mo lspace="0" rspace="0">'+ch+'</mo>':'<mo>'+ch+'</mo>'}if('()[]|'.includes(x.v))return '<mo stretchy="false" lspace="0" rspace="0">'+E(x.v)+'</mo>';if(x.v===';'||x.v===',')return '<mo lspace="0" rspace="0.25em">'+x.v+'</mo>';return '<mo>'+E(x.v)+'</mo>'}
+   if(x.k==='op'){if(x.v==="'")return '<mo>′</mo>';if(x.v==='-'||x.v==='+'){const pr=t[p-2];const un=!pr||(pr.k==='op'&&'([;,=<>|'.includes(pr.v))||pr.k==='{'||(pr.k==='cmd'&&(OPS[pr.v]||pr.v==='left'));const ch=x.v==='-'?'−':'+';return un?'<mo lspace="0" rspace="0">'+ch+'</mo>':'<mo>'+ch+'</mo>'}if(x.v==='('){let d=0,j=p;for(;j<t.length;j++){const y=t[j];if(y.k==='op'&&y.v==='(')d++;else if(y.k==='op'&&y.v===')'){if(d===0)break;d--}}if(j<t.length&&t[j+1]&&(t[j+1].k==='^'||t[j+1].k==='_')){let inner='';while(p<j)inner+=item();p=j+1;return '<mrow><mo stretchy="false" lspace="0" rspace="0">(</mo>'+inner+'<mo stretchy="false" lspace="0" rspace="0">)</mo></mrow>'}}
+   if('()[]|'.includes(x.v))return '<mo stretchy="false" lspace="0" rspace="0">'+E(x.v)+'</mo>';if(x.v===';'||x.v===',')return '<mo lspace="0" rspace="0.25em">'+x.v+'</mo>';return '<mo>'+E(x.v)+'</mo>'}
    if(x.k==='{'){p--;return group()}
    if(x.k==='cmd'){const v=x.v;
     if(v==='frac'||v==='dfrac'){const a=group(),b=group();return '<mfrac>'+a+b+'</mfrac>'}
@@ -2191,6 +2192,8 @@ const TEX=(()=>{
     if(v==='overline'){return '<mover>'+group()+'<mo stretchy="true">‾</mo></mover>'}
     if(v==='int')return '<mo largeop="true">∫</mo>';
     if(v==='sum')return '<mo largeop="true">∑</mo>';
+    if(v==='left'){const y=t[p++];if(!y)return '';const dch=z=>z.k==='cmd'?(z.v==='{'?'{':z.v==='}'?'}':z.v==='|'?'|':''):z.v;const lc=dch(y);let d=0,j=p;for(;j<t.length;j++){const z=t[j];if(z.k==='cmd'&&z.v==='left')d++;else if(z.k==='cmd'&&z.v==='right'){if(d===0)break;d--}}
+     let inner='';while(p<j&&p<t.length)inner+=item();p=j+1;const rz=t[p++];const rc=rz?dch(rz):'';const MO=c=>c&&c!=='.'?'<mo stretchy="true" lspace="0" rspace="0">'+E(c)+'</mo>':'';return '<mrow>'+MO(lc)+inner+MO(rc)+'</mrow>'}
     if(v==='left'||v==='right'){const y=t[p++];if(!y)return '';const ch=y.k==='cmd'?(y.v==='{'?'{':y.v==='}'?'}':y.v==='|'?'|':''):y.v;return ch&&ch!=='.'?'<mo stretchy="true" lspace="0" rspace="0">'+E(ch)+'</mo>':''}
     if(v===','||v===';'||v===' ')return '<mspace width="0.2em"></mspace>';
     if(v==='quad')return '<mspace width="1em"></mspace>';
