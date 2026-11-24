@@ -73,7 +73,7 @@ td.n{color:var(--mut);width:1%;text-align:right;font-variant-numeric:tabular-num
 input[type=search],select{font:16px Inter,sans-serif;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:44px;width:100%}
 .timer{font:700 20px Unbounded,sans-serif}
 .wbox{display:block;width:100%;min-height:260px;margin:12px 0 6px;padding:12px;font:16px/1.55 Inter,sans-serif;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);resize:vertical;box-sizing:border-box}
-input[type=text]{font:16px Inter,sans-serif;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:44px;box-sizing:border-box}
+input[type=text],input[type=password]{font:16px Inter,sans-serif;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:44px;box-sizing:border-box}
 .proc{display:flex;flex-direction:column;align-items:stretch;gap:2px;max-width:420px}.pstep{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--soft)}.parr{text-align:center;color:var(--mut)}
 [hidden]{display:none!important}
 .how{margin-top:12px;padding:14px;border-radius:14px;background:#f8fafc;border:1px solid #e5e7eb;font-size:15px;line-height:1.65}
@@ -87,6 +87,7 @@ input[type=text]{font:16px Inter,sans-serif;padding:10px 12px;border-radius:12px
 .ans{margin-top:10px;padding-top:8px;border-top:1px dashed #d1d5db}
 #fref{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:40;padding:10px 16px;border-radius:999px;border:0;background:#2563eb;color:#fff;font:700 15px Inter,sans-serif;box-shadow:0 6px 18px rgba(37,99,235,.35);cursor:pointer;min-height:44px}
 #fref[hidden]{display:none!important}
+#fref{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}#fref.drag{opacity:.75;transform:scale(1.08);cursor:grabbing}
 #app{padding-bottom:70px}
 #fai{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:40;padding:10px 16px;border-radius:999px;border:0;background:#111827;color:#fff;font:700 15px Inter,sans-serif;box-shadow:0 6px 18px rgba(17,24,39,.3);cursor:pointer;min-height:44px}
 #fai[hidden]{display:none!important}
@@ -101,12 +102,13 @@ input[type=text]{font:16px Inter,sans-serif;padding:10px 12px;border-radius:12px
 .aimsg.assistant{align-self:flex-start;background:#f3f4f6;color:#111827}
 .aimsg math{font-size:1.05em}
 .aiin{display:flex;gap:8px;align-items:flex-end}.aiin textarea{flex:1;font:16px/1.4 Inter,sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:12px;resize:none;max-height:140px}
+.aisetup{background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:12px;font-size:15px}.aisetup ol{padding-left:20px}.aisetup code{background:#eef2ff;padding:1px 4px;border-radius:4px}
 .aitag{display:inline-flex;gap:8px;align-items:center;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:4px 10px}
-#modal{position:fixed;inset:0;background:rgba(17,24,39,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+#modal{position:fixed;z-index:50;left:8px;top:40%;width:560px;height:45vh;filter:drop-shadow(0 10px 28px rgba(17,24,39,.35))}#modal.min{height:auto!important}#modal.min .mbody,#modal.min .mrz{display:none}
 #modal[hidden]{display:none!important}
-.mbox{background:#fff;width:100%;max-width:760px;max-height:88vh;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
-.mbody{overflow-y:auto;-webkit-overflow-scrolling:touch}
-@media(min-width:700px){#modal{align-items:center}.mbox{border-radius:18px}}
+.mbox{background:#fff;width:100%;height:100%;border-radius:16px;border:1px solid #d1d5db;padding:0 12px 12px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}#modal.min .mbox{padding-bottom:0}.mhead{display:flex;align-items:center;gap:8px;padding:8px 0;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;border-bottom:1px solid #eef0f3;flex:none}#modal.drag .mhead{cursor:grabbing}#modal.drag{opacity:.92}.mgrip{color:#9ca3af;font-size:18px;line-height:1}.mtit{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mrz{position:absolute;right:0;bottom:0;width:28px;height:28px;cursor:nwse-resize;touch-action:none;background:linear-gradient(135deg,transparent 55%,#9ca3af 55%,#9ca3af 62%,transparent 62%,transparent 72%,#9ca3af 72%,#9ca3af 79%,transparent 79%)}
+.mbody{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+
 #subj button.entb{border-color:var(--sky);color:var(--sky);font-weight:700}
 #subj button.entb[aria-current=true]{background:var(--sky);color:#fff}
 .etabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:10px 0}
@@ -2288,9 +2290,21 @@ function HINTS(it,Fx){const out=[];const rules=(typeof MR!=='undefined'?(it.r||[
  else{steps.slice(0,2).forEach((s,k)=>out.push(`<b>Подсказка ${k+1} — ${k?'следующий':'первый'} шаг:</b> ${Fx(s)}`))}
  return out}
 function MODAL(title,html){let m=document.getElementById('modal');if(!m){m=document.createElement('div');m.id='modal';document.body.appendChild(m)}
- m.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="row" style="justify-content:space-between;align-items:center;flex-wrap:nowrap"><b>${esc(title)}</b><button class="btn alt sm" id="mcl">✕ Закрыть</button></div><div class="mbody lesson">${html}</div></div>`;
- m.hidden=false;document.body.style.overflow='hidden';
- const close=()=>{m.hidden=true;document.body.style.overflow=''};document.getElementById('mcl').onclick=close;m.onclick=ev=>{if(ev.target===m)close()}}
+ m.innerHTML=`<div class="mbox" role="dialog" aria-label="${esc(title)}"><div class="mhead" id="mhd" title="Зажми и тяни, чтобы передвинуть окно"><span class="mgrip" aria-hidden="true">⠿</span><b class="mtit">${esc(title)}</b><button class="btn alt sm" id="mmin" aria-label="Свернуть или развернуть">▁</button><button class="btn alt sm" id="mcl" aria-label="Закрыть">✕</button></div><div class="mbody lesson">${html}</div><div class="mrz" id="mrz" aria-hidden="true"></div></div>`;
+ m.hidden=false;m.classList.remove('min');
+ const cl=(v,a2,z)=>Math.max(a2,Math.min(z,v));let g={};try{g=JSON.parse(localStorage.getItem('ent-mwin'))||{}}catch(_){}
+ const W=innerWidth,H=innerHeight;let w=cl(g.w||Math.min(W-16,560),220,W-8),h=cl(g.h||Math.round(H*.45),160,H-8);
+ const place=(x,y)=>{x=cl(x,4-(m.offsetWidth-80),W2()-80);y=cl(y,4,innerHeight-44);m.style.left=x+'px';m.style.top=y+'px';return[x,y]},W2=()=>innerWidth;
+ m.style.width=w+'px';m.style.height=h+'px';place(g.x!=null?g.x*innerWidth:(W-w)/2,g.y!=null?g.y*innerHeight:H-h-12);
+ const save=()=>{const r=m.getBoundingClientRect();try{localStorage.setItem('ent-mwin',JSON.stringify({x:r.left/innerWidth,y:r.top/innerHeight,w:m.classList.contains('min')?(g.w||w):r.width,h:m.classList.contains('min')?(g.h||h):r.height}))}catch(_){}g=JSON.parse(localStorage.getItem('ent-mwin')||'{}')};
+ const drag=(el,fn)=>{let st=null;el.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const r=m.getBoundingClientRect();st={px:e.clientX,py:e.clientY,x:r.left,y:r.top,w:r.width,h:r.height};m.classList.add('drag');try{el.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault()});
+  el.addEventListener('pointermove',e=>{if(!st)return;e.preventDefault();fn(st,e.clientX-st.px,e.clientY-st.py)});
+  const end=()=>{if(!st)return;st=null;m.classList.remove('drag');save()};el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end)};
+ drag(document.getElementById('mhd'),(st,dx,dy)=>place(st.x+dx,st.y+dy));
+ drag(document.getElementById('mrz'),(st,dx,dy)=>{m.style.width=cl(st.w+dx,220,innerWidth-st.x-4)+'px';m.style.height=cl(st.h+dy,160,innerHeight-st.y-4)+'px'});
+ document.getElementById('mmin').onclick=()=>{m.classList.toggle('min');const r=m.getBoundingClientRect();if(r.top>innerHeight-50)place(r.left,innerHeight-60)};
+ const close=()=>{m.hidden=true};document.getElementById('mcl').onclick=close;
+ document.onkeydown=ev=>{if(ev.key==='Escape'&&!m.hidden)close()}}
 document.addEventListener('click',ev=>{const t=ev.target.closest('[data-mt],[data-mf]');if(!t)return;ev.preventDefault();ev.stopPropagation();
  const [sid,tid]=(t.dataset.mt||t.dataset.mf).split(':');const S2=SUBJ[sid],tp=S2.T.find(x=>x.id===tid);const Fx=s=>sid==='math'?TEX.fmt(s):esc(s);
  if(t.dataset.mt)MODAL(tp.name,sid==='math'?TEX.html(tp.html):tp.html);
@@ -2330,8 +2344,20 @@ function openRef(tid){const R=cur.ref;if(!R)return;const Fx=s=>cur.id==='math'?T
  const body=t=>`<table><tbody>${R.rows.filter(r=>!t||r.topic===t).map(r=>`<tr><td class="y">${Fx(r.a)}</td><td>${Fx(r.b)}</td></tr>`).join('')}</tbody></table>`;
  MODAL(R.title,`${hasT?`<select id="mrf" aria-label="Тема" style="width:100%;margin-bottom:10px"><option value="">Все темы</option>${cur.T.map(t=>`<option value="${t.id}" ${t.id===tid?'selected':''}>${esc(t.name)}</option>`).join('')}</select>`:''}<div id="mrb">${body(hasT?tid:'')}</div>`);
  const sel=document.getElementById('mrf');if(sel)sel.onchange=()=>{document.getElementById('mrb').innerHTML=body(sel.value)}}
-(()=>{const b=document.createElement('button');b.id='fref';b.type='button';b.setAttribute('aria-label','Открыть справочник');b.onclick=()=>openRef(window.CURTOPIC||'');document.body.appendChild(b);
- const upd=()=>{b.hidden=!!window.ENTMODE||!cur.ref;b.textContent='📋 '+(cur.ref?cur.ref.label:'')};setInterval(upd,500);upd()})();
+(()=>{const b=document.createElement('button');b.id='fref';b.type='button';b.setAttribute('aria-label','Открыть справочник. Кнопку можно перетащить');b.title='Нажми — формулы. Зажми и тяни — передвинуть';document.body.appendChild(b);
+ const cl=(v,a,z)=>Math.max(a,Math.min(z,v));
+ const place=(x,y)=>{const w=b.offsetWidth||120,h=b.offsetHeight||44;x=cl(x,4,innerWidth-w-4);y=cl(y,4,innerHeight-h-4);b.style.left=x+'px';b.style.top=y+'px';b.style.right='auto';b.style.bottom='auto';return[x,y]};
+ let pos=null;try{pos=JSON.parse(localStorage.getItem('ent-fref-pos'))}catch(e){}
+ const restore=()=>{if(pos&&!b.hidden)place(pos[0]*innerWidth,pos[1]*innerHeight)};
+ let st=null,moved=false;
+ b.addEventListener('pointerdown',e=>{const r=b.getBoundingClientRect();st={px:e.clientX,py:e.clientY,x:r.left,y:r.top};moved=false;try{b.setPointerCapture(e.pointerId)}catch(_){}});
+ b.addEventListener('pointermove',e=>{if(!st)return;const dx=e.clientX-st.px,dy=e.clientY-st.py;if(!moved&&Math.hypot(dx,dy)<8)return;moved=true;b.classList.add('drag');e.preventDefault();place(st.x+dx,st.y+dy)});
+ let lastP=0;
+ const end=(e,cancel)=>{if(!st)return;st=null;b.classList.remove('drag');lastP=Date.now();if(moved){const r=b.getBoundingClientRect();pos=[r.left/innerWidth,r.top/innerHeight];try{localStorage.setItem('ent-fref-pos',JSON.stringify(pos))}catch(_){}}else if(!cancel)openRef(window.CURTOPIC||'')};
+ b.addEventListener('pointerup',e=>end(e,false));b.addEventListener('pointercancel',e=>end(e,true));
+ b.addEventListener('click',e=>{e.preventDefault();if(Date.now()-lastP<800)return;openRef(window.CURTOPIC||'')});
+ addEventListener('resize',restore);
+ let wasH=true;const upd=()=>{b.hidden=!!window.ENTMODE||!cur.ref;b.textContent='📋 '+(cur.ref?cur.ref.label:'');if(wasH&&!b.hidden)restore();wasH=b.hidden};setInterval(upd,500);upd()})();
 document.getElementById('subj').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!QLEAVE())return;if(b.dataset.s==='ent'){eMode();return}cur=SUBJ[b.dataset.s];try{localStorage.setItem('ent-subj',cur.id)}catch(e){}S=loadS();setHeader();go('home')});
 
 function makeExam(){const E=cur.exam,it=cur.items;
@@ -2482,7 +2508,7 @@ function startQuiz(qs,title,exam){window.QACTIVE=true;window.QEXAM=!!exam;const 
   <div class="card"><div class="small mut">${c?'<span class="pill g">Контекст</span> ':''}${it.t==='m'?'<span class="pill g">2 балла · несколько ответов</span> ':''}${it.t==='x'?'<span class="pill g">2 балла · соответствие</span> ':''}${esc(tn(it.topic))}</div><div class="q">${F(it.q)}</div>
   ${it.code?`<pre class="code">${esc(it.code)}</pre>`:''}${body()}
   ${(()=>{if(done||exam||!(cur.id==='math'))return'';const H=HINTS(it,F),n=HL[i]||0;if(!H.length)return'';return`<div class="hints">${H.slice(0,n).map(h=>`<div class="hint">💡 ${h}</div>`).join('')}${n<H.length?`<button class="btn alt sm" id="hint" style="margin-top:8px">💡 ${n?'Ещё подсказка':'Подсказка'} (${n+1} из ${H.length})</button>`:'<div class="small mut" style="margin-top:6px">Подсказок больше нет — попробуй ответить.</div>'}</div>`})()}
-  ${!exam?'<div><button class="btn alt sm" data-ai="1" style="margin-top:8px">🤖 Спросить ИИ про задание</button></div>':''}
+
   ${needCheck?`<button class="btn" id="chk" style="margin-top:8px" ${answered(p,a)?'':'disabled'}>Проверить</button>`:''}
   ${done?`<div class="expl small">${(()=>{const g=grade(p,a),mx=pts(it);return g===mx?'<b style="color:var(--ok)">Верно.</b> ':(g>0?`<b style="color:var(--gold)">Частично: ${g} из ${mx}.</b> `:'<b style="color:var(--bad)">Неверно.</b> ')})()}${it.t==='s'&&p.opts[a]!==it.opts[0]?'Правильно: <b>'+F(it.opts[0])+'</b>. ':''}${it.t!=='s'?'Правильно: <b>'+F(corrText(it))+'</b>. ':''}${cur.id==='math'?'':(grade(p,a)<pts(it)&&it.sol?'':F(it.expl))}</div>${cur.id==='math'?HOWH(it,F,'math'):(grade(p,a)<pts(it)?SOLH(it):'')}`:''}</div>
   <div class="row" style="margin-top:14px;justify-content:space-between"><button class="btn alt" id="qq">Завершить</button>
@@ -2769,84 +2795,6 @@ function eFinish(R){clearInterval(timerId);
  document.getElementById('again').onclick=()=>eStart(R.kind);document.getElementById('hm').onclick=()=>eHome();
  window.scrollTo({top:0});
 }
-
-/* ---------- ИИ-помощник (Claude) ---------- */
-let AIS=null,AIS_TRIED=false,AIABORT=null;
-async function aiGet(){if(AIS_TRIED)return AIS;AIS_TRIED=true;try{if(window.claude&&typeof claude.use==='function')AIS=await claude.use('sample')}catch(e){AIS=null}return AIS}
-const AIH=(()=>{try{return JSON.parse(localStorage.getItem('ent-ai-chat'))||[]}catch(e){return[]}})();
-function aiSave(){try{localStorage.setItem('ent-ai-chat',JSON.stringify(AIH.slice(-30)))}catch(e){}}
-const AISYS=`Ты — ИИ-репетитор в приложении для подготовки к ЕНТ 2027 (Казахстан) и к IELTS. Предметы: история Казахстана, математика, информатика, математическая грамотность, грамотность чтения, история России, английский язык и IELTS.
-Правила ответа:
-- Отвечай по-русски (по IELTS можно давать английские примеры с переводом).
-- Объясняй максимально понятно, как для новичка: по шагам, у каждого действия — причина, называй правило или формулу, которое используешь. Простые вычисления тоже поясняй (например, «потому что 2·2·2=8»).
-- Математику записывай в LaTeX ТОЛЬКО внутри одинарных долларов: $\\frac{1}{2}$, $x^2$, $\\sqrt{3}$. Не используй $$ и \\[ \\].
-- Форматирование: **жирный** для главного, списки с «- » или «1. ». Без таблиц.
-- Точность важнее всего: пересчитывай вычисления; исторические даты и факты давай только достоверные. Если не уверен — прямо скажи об этом и посоветуй проверить по учебнику или на сайте НЦТ (testcenter.kz). Ничего не выдумывай.
-- Если ученик ещё не ответил на задание — не называй ответ, а дай наводящую подсказку, пока он сам не попросит ответ.
-- Отвечай по существу, без лишней воды. Если вопрос не про учёбу — ответь коротко и вежливо верни к учёбе.`;
-function MDX(s){
- s=String(s).replace(/\$\$([\s\S]+?)\$\$/g,(m,a)=>'$'+a.replace(/\n/g,' ')+'$').replace(/\\\(([\s\S]+?)\\\)/g,(m,a)=>'$'+a+'$').replace(/\\\[([\s\S]+?)\\\]/g,(m,a)=>'$'+a.replace(/\n/g,' ')+'$');
- let html='',list=null;
- for(const ln of s.split('\n')){const li=ln.match(/^\s*([-*•]|\d+[.)])\s+(.*)/),h=ln.match(/^\s*#{1,4}\s+(.*)/);
-  const body=li?li[2]:h?h[1]:ln;let x;try{x=TEX.fmt(body)}catch(e){x=esc(body)}x=x.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
-  const lt=li?(/\d/.test(li[1])?'ol':'ul'):null;
-  if(lt){if(list!==lt){if(list)html+='</'+list+'>';html+='<'+lt+'>';list=lt}html+='<li>'+x+'</li>';continue}
-  if(list){html+='</'+list+'>';list=null}
-  if(ln.trim())html+=h?'<p><b>'+x+'</b></p>':'<p>'+x+'</p>'}
- if(list)html+='</'+list+'>';return html}
-function aiCtxText(){const c=window.AICTX;if(!c||!c.it)return'';const it=c.it;let t=`Предмет: ${c.subj}.\nЗадание: ${it.q}`;
- if(it.code)t+='\nКод:\n'+it.code;
- if(c.ctx)t+='\nТекст / контекст задания: '+String(c.ctx.text).slice(0,3000);
- if(it.t==='s')t+='\nВарианты ответа: '+(c.opts||it.opts).join(' | ');
- else if(it.t==='m')t+='\nВарианты (несколько верных): '+it.opts.join(' | ');
- else t+='\nЛевая колонка: '+it.left.join(' | ')+'\nПравая колонка: '+it.right.join(' | ');
- if(c.done){t+='\nПравильный ответ: '+(it.t==='s'?it.opts[0]:it.t==='m'?it.ans.join('; '):it.left.map((l,i)=>l+' → '+it.ans[i]).join('; '));if(c.yours)t+='\nОтвет ученика: '+c.yours;if(it.sol)t+='\nРешение из приложения: '+it.sol;else if(it.expl)t+='\nПояснение из приложения: '+it.expl}
- else t+='\nУченик ещё НЕ ответил на это задание — не называй ответ, помоги наводящими вопросами и подсказками.';
- return t}
-function aiPanel(){let p=document.getElementById('aipanel');if(p)return p;p=document.createElement('div');p.id='aipanel';p.hidden=true;
- p.innerHTML=`<div class="aibox" role="dialog" aria-label="ИИ-помощник"><div class="row" style="justify-content:space-between;align-items:center;flex-wrap:nowrap"><b>🤖 ИИ-помощник</b><span class="row" style="flex-wrap:nowrap"><button class="btn alt sm" id="aiclr">Очистить</button><button class="btn alt sm" id="aicl">✕</button></span></div>
- <div id="ailog" class="ailog"></div><div id="aictx" class="small"></div>
- <div class="aiin"><textarea id="aitx" rows="2" placeholder="Задай вопрос по учёбе…"></textarea><button class="btn" id="aisend" aria-label="Отправить">➤</button></div>
- <div class="small mut" id="ainote">ИИ может ошибаться — важное сверяй с учебником.</div></div>`;
- document.body.appendChild(p);
- p.onclick=e=>{if(e.target===p)aiClose()};
- document.getElementById('aicl').onclick=aiClose;
- document.getElementById('aiclr').onclick=()=>{AIH.length=0;aiSave();aiRender()};
- document.getElementById('aisend').onclick=aiSend;
- document.getElementById('aitx').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();aiSend()}});
- return p}
-function aiRender(live){const log=document.getElementById('ailog');if(!log)return;
- log.innerHTML=(AIH.length?'':`<div class="small mut" style="padding:8px">Спроси что угодно по предметам: «Объясни теорему косинусов», «Чем Ахмет Байтурсынов известен?», «Проверь моё эссе». Из задания можно нажать «🤖 Спросить ИИ» — помощник увидит само задание.</div>`)
-  +AIH.map(m=>`<div class="aimsg ${m.role}">${m.role==='user'?esc(m.show||m.content).replace(/\n/g,'<br>'):MDX(m.content)}</div>`).join('')
-  +(live!==undefined?`<div class="aimsg assistant" id="ailive">${live?MDX(live):'<span class="mut">Думаю…</span>'}</div>`:'');
- log.scrollTop=log.scrollHeight}
-function aiOpen(withCtx,prefill){const p=aiPanel();p.hidden=false;document.body.style.overflow='hidden';
- const cx=document.getElementById('aictx');p.dataset.ctx=withCtx&&window.AICTX?'1':'';
- cx.innerHTML=p.dataset.ctx?`<div class="aitag">📎 Задание прикреплено <button class="btn alt sm" id="aiunctx" style="min-height:28px;padding:2px 8px">убрать</button></div>`:'';
- const u=document.getElementById('aiunctx');if(u)u.onclick=()=>{p.dataset.ctx='';cx.innerHTML=''};
- const tx=document.getElementById('aitx');if(prefill!==undefined)tx.value=prefill;aiRender();setTimeout(()=>tx.focus(),50)}
-function aiClose(){const p=document.getElementById('aipanel');if(p)p.hidden=true;document.body.style.overflow='';try{AIABORT&&AIABORT.abort()}catch(e){}}
-async function aiSend(){const tx=document.getElementById('aitx'),q=tx.value.trim();if(!q)return;const p=aiPanel();
- const ctxT=p.dataset.ctx?aiCtxText():'';const content=ctxT?`${q}\n\n[Задание из приложения]\n${ctxT}`:q;
- tx.value='';p.dataset.ctx='';document.getElementById('aictx').innerHTML='';
- AIH.push({role:'user',content,show:q+(ctxT?'\n📎 (задание прикреплено)':'')});aiSave();
- const S2=await aiGet();
- if(!S2){const full=AISYS+'\n\n'+content;
-  try{await navigator.clipboard.writeText(content)}catch(e){}
-  AIH.push({role:'assistant',content:'В этой версии приложения (на iPhone с GitHub) встроенный ИИ недоступен — он работает только в версии, открытой через claude.ai.\n\n**Твой вопрос скопирован.** Сейчас откроется Claude — просто вставь вопрос (если поле пустое) и отправь.'});aiSave();aiRender();
-  const url='https://claude.ai/new?q='+encodeURIComponent(content.slice(0,1800));try{window.open(url,'_blank')}catch(e){location.href=url}return}
- const msgs=AIH.slice(-12).map((m,i,a)=>({role:m.role,content:m.content}));
- while(msgs.length&&msgs[0].role!=='user')msgs.shift();
- msgs[0]={role:'user',content:AISYS+'\n\n---\n\n'+msgs[0].content};
- aiRender('');const btn=document.getElementById('aisend');btn.disabled=true;AIABORT=new AbortController();
- try{const r=await S2(msgs,{modelTier:'complex',cache:false,signal:AIABORT.signal,onText:({text})=>{const el=document.getElementById('ailive');if(el){el.innerHTML=MDX(text);const log=document.getElementById('ailog');log.scrollTop=log.scrollHeight}}});
-  AIH.push({role:'assistant',content:r.text||'(пустой ответ)'})}
- catch(e){const code=e&&e.code;AIH.push({role:'assistant',content:code==='not_granted'?'Доступ к ИИ не разрешён. Открой приложение через claude.ai и разреши использование Claude, когда появится запрос.':code==='rate_limited'?'Слишком много запросов подряд. Подожди немного и попробуй снова.':(e&&e.text?e.text+'\n\n*(ответ прерван)*':'Не получилось получить ответ. Попробуй ещё раз.')})}
- finally{btn.disabled=false;AIABORT=null;aiSave();aiRender()}}
-document.addEventListener('click',ev=>{const t=ev.target.closest('[data-ai]');if(!t)return;ev.preventDefault();ev.stopPropagation();
- aiOpen(true,window.AICTX&&window.AICTX.done?'Объясни это задание ещё подробнее, простыми словами.':'Не понимаю, как решать это задание. Дай подсказку, но не говори ответ.')},true);
-(()=>{const b=document.createElement('button');b.id='fai';b.type='button';b.textContent='🤖 ИИ';b.setAttribute('aria-label','ИИ-помощник');b.onclick=()=>aiOpen(false);document.body.appendChild(b);
- setInterval(()=>{b.hidden=!!window.ENTMODE||!!(window.QACTIVE&&window.QEXAM)},500)})();
 
 setHeader();
 const start=(location.hash||'#home').slice(1);
