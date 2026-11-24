@@ -3417,6 +3417,7 @@ try{if(localStorage.getItem('ent-subj')==='ent')eMode()}catch(e){}
 
 }
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 34 от 24.11 18:40</p>
+<script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
