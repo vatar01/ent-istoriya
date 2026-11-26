@@ -502,6 +502,16 @@ select.fshid{position:absolute!important;opacity:0!important;pointer-events:none
 
 .rqf{display:inline-flex;background:#F1F4FA;border-radius:12px;padding:3px;gap:2px}.rqf button{border:0;background:none;border-radius:9px;padding:7px 12px;font:600 13px 'Golos Text',sans-serif;color:var(--mut);cursor:pointer}.rqf button b{display:inline-block;min-width:18px;margin-left:4px;padding:1px 6px;border-radius:999px;background:#fff;color:var(--ink);font-size:11px}.rqf button.on{background:#fff;color:var(--pen);box-shadow:0 2px 6px rgba(16,26,51,.08)}.rqf button.on b{background:var(--pen);color:#fff}
 .rqdel{border:0;background:none;color:var(--mut);cursor:pointer;padding:5px;border-radius:8px;display:inline-grid;place-items:center}.rqdel:hover{background:#FDE8EA;color:var(--bad)}
+
+.pgsum{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:12px}.pgsum div{background:#F5F7FB;border-radius:12px;padding:10px;text-align:center}.pgsum b{display:block;font:800 20px Unbounded,sans-serif;color:var(--ink)}.pgsum span{font-size:12px;color:var(--mut)}.pgsum .g b{color:#1B8A46}.pgsum .r b{color:#C9343C}
+.pglist{display:flex;flex-direction:column;gap:8px}.pgs{border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff}
+.pgh{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:0;cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
+.pgn{flex:1;min-width:0}.pgn b{display:block;font-size:14.5px}.pgn small{color:var(--mut);font-size:12px}
+.pgnum{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:700;white-space:nowrap}.pgnum b{font-size:15px;color:var(--pen)}
+.g{color:#1B8A46}.r{color:#C9343C}.pgar{flex:none;color:var(--mut);transition:transform .2s}.pgh[aria-expanded=true] .pgar{transform:rotate(180deg)}
+.pgb{display:flex;height:7px;border-radius:5px;background:#E8EEF8;overflow:hidden;margin-top:8px}.pgb i{display:block;height:100%}.pgb i.ok{background:#22A355}.pgb i.bad{background:#F07178}
+.pgt{margin-top:10px;border-top:1px dashed var(--line);padding-top:6px;animation:pgin .25s}.pgtr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:7px 0;border-bottom:1px solid #F0F3F9;font-size:13.5px}.pgtr .pgb{grid-column:1/-1;margin-top:3px;height:5px}.pgtr.zero{opacity:.55}
+.pgent{margin-top:12px;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px}.pger{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:6px 0;font-size:13.5px}.pger .pgb{grid-column:1/-1;height:5px;margin-top:2px}
 </style>
 </head>
 <body>
@@ -3473,9 +3483,22 @@ async function admUser(uid){const u=ADM.users.find(x=>x.id===uid);if(!u)return;c
  document.getElementById('au_save').onclick=()=>upd({name:document.getElementById('au_n').value.trim().slice(0,30),pair:document.getElementById('au_p').value||'none',note:document.getElementById('au_note').value.slice(0,1000)},'Сохранено');
  document.getElementById('au_blk').onclick=()=>{if(confirm(u.blocked?'Разблокировать пользователя?':'Заблокировать? Он не сможет пользоваться приложением.'))upd({blocked:!u.blocked},u.blocked?'Разблокирован':'Заблокирован')};
  document.getElementById('au_rst').onclick=async()=>{if(!confirm('Сбросить весь прогресс этого пользователя?'))return;const m={},t=Date.now();SYNCKEYS().forEach(k=>m[k]={v:'',t});try{await FB.putProg(uid,m);await FB.setUser(uid,{stats:{n:0,ok:0,acc:0,ent:0,best:null}});say2('au_m','✓ Прогресс сброшен',1)}catch(e){say2('au_m',fbErr(e))}};
- try{const P=await FB.getProg(uid);const rows=Object.values(SUBJ).map(s=>{const r=P[s.key];let st=null;try{st=r&&r.v?JSON.parse(r.v):null}catch(e){}let n=0,ok=0;if(st&&st.q)Object.values(st.q).forEach(x=>{n+=x.n||0;ok+=x.ok||0});return n?`<tr><td>${esc(s.name)}</td><td>${n}</td><td>${Math.round(ok/n*100)}%</td></tr>`:''}).join('');
-  let H=[];try{H=P['ent-mock-v1']&&P['ent-mock-v1'].v?JSON.parse(P['ent-mock-v1'].v):[]}catch(e){}
-  document.getElementById('au_prog').innerHTML=(rows?`<table><thead><tr><th>Предмет</th><th>Ответов</th><th>Верно</th></tr></thead><tbody>${rows}</tbody></table>`:'Ещё ничего не решал.')+(H.length?`<p>Пробные ЕНТ: ${H.slice(-5).reverse().map(h=>`<b>${h.score}/${h.max}</b>`).join(', ')}</p>`:'')}catch(e){document.getElementById('au_prog').textContent=fbErr(e)}}
+ try{const P=await FB.getProg(uid);document.getElementById('au_prog').innerHTML=progHTML(P);progBind()}catch(e){document.getElementById('au_prog').textContent=fbErr(e)}}
+function progData(P){return Object.keys(SUBJ).map(sid=>{const s=SUBJ[sid],A=SUBJ_ALL[sid]||s,r=P[s.key];let st=null;try{st=r&&r.v?JSON.parse(r.v):null}catch(e){}if(!st||!st.q)return null;
+  const items=[...(A.items||[]),...(A.ctx||[]).flatMap(ctxItems)],tk={};items.forEach(it=>{tk[k(it)]=it.topic});
+  const tot={};items.forEach(it=>{tot[it.topic]=(tot[it.topic]||0)+1});
+  let seen=0,ok=0,att=0;const T={};Object.entries(st.q).forEach(([key,x])=>{if(!(x.n>0))return;seen++;att+=x.n||0;if(x.last)ok++;const t=tk[key]||'?';T[t]=T[t]||{seen:0,ok:0};T[t].seen++;if(x.last)T[t].ok++});
+  if(!seen)return null;return{sid,name:s.name,seen,ok,bad:seen-ok,att,all:items.length,read:Object.keys(st.read||{}).length,topics:(A.T||[]).map(t=>({name:t.name,n:tot[t.id]||0,...(T[t.id]||{seen:0,ok:0})})),wrong:(st.wrong||[]).length}}).filter(Boolean)}
+function progHTML(P){const D=progData(P);let H=[];try{H=P['ent-mock-v1']&&P['ent-mock-v1'].v?JSON.parse(P['ent-mock-v1'].v):[]}catch(e){}
+ if(!D.length&&!H.length)return'<p class="mut" style="margin:0">Ещё ничего не решал.</p>';
+ const S=D.reduce((a,d)=>({seen:a.seen+d.seen,ok:a.ok+d.ok,att:a.att+d.att}),{seen:0,ok:0,att:0}),bad=S.seen-S.ok,acc=S.seen?Math.round(S.ok/S.seen*100):0;
+ const pc=(a,b)=>b?Math.round(a/b*100):0,bar=(ok,bad,all)=>`<div class="pgb" title="верно ${ok}, неверно ${bad}, не решено ${all-ok-bad}"><i class="ok" style="width:${pc(ok,all)}%"></i><i class="bad" style="width:${pc(bad,all)}%"></i></div>`;
+ return`<div class="pgsum"><div><b>${S.seen}</b><span>заданий решено</span></div><div class="g"><b>${S.ok}</b><span>верно</span></div><div class="r"><b>${bad}</b><span>неверно</span></div><div><b>${acc}%</b><span>точность</span></div><div><b>${S.att}</b><span>всего ответов</span></div><div><b>${H.length}</b><span>пробных ЕНТ</span></div></div>
+ ${D.length?`<div class="pglist">${D.map((d,i)=>`<div class="pgs"><button class="pgh" data-pg="${i}" aria-expanded="false"><span class="pgn"><b>${esc(d.name)}</b><small>решено ${d.seen} из ${d.all} · тем прочитано ${d.read}${d.wrong?` · в «Ошибках» ${d.wrong}`:''}</small></span><span class="pgnum"><span class="g">✓ ${d.ok}</span><span class="r">✗ ${d.bad}</span><b>${pc(d.ok,d.seen)}%</b></span><svg class="pgar" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button>${bar(d.ok,d.bad,d.all)}
+  <div class="pgt" hidden>${d.topics.filter(t=>t.n).map(t=>`<div class="pgtr ${t.seen?'':'zero'}"><span>${esc(t.name)}</span><span class="small">${t.seen?`${t.seen}/${t.n} · <span class="g">✓${t.ok}</span> <span class="r">✗${t.seen-t.ok}</span>`:'не решал'}</span>${bar(t.ok,t.seen-t.ok,t.n)}</div>`).join('')}</div></div>`).join('')}</div>`:''}
+ ${H.length?`<div class="pgent"><b>Пробные ЕНТ</b>${H.slice(-8).reverse().map(h=>`<div class="pger"><span>${h.t?new Date(h.t).toLocaleDateString('ru-RU',{day:'numeric',month:'short'}):''} · ${h.kind==='full'?'полное':'по предмету'}</span><b>${h.score}/${h.max}</b>${bar(h.score,0,h.max)}</div>`).join('')}</div>`:''}
+ <p class="small mut" style="margin:8px 0 0">Решено — разные задания (повторы не считаются). Верно/неверно — по последней попытке. Нажми на предмет, чтобы увидеть темы.</p>`}
+function progBind(){document.querySelectorAll('#au_prog .pgh').forEach(b=>b.onclick=()=>{const t=b.parentElement.querySelector('.pgt'),o=t.hidden;t.hidden=!o;b.setAttribute('aria-expanded',o)})}
 let REQF='pending';
 function admReqs(box){const now=Date.now();const ALL=ADM.reqs.slice().sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||b.t-a.t);const np=ALL.filter(r=>r.status==='pending').length,nd=ALL.length-np;
  const R=ALL.filter(r=>REQF==='all'||(REQF==='pending'?r.status==='pending':r.status!=='pending'));const cd=can('approve');
@@ -3889,7 +3912,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 74 от 26.11 23:53</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 75 от 27.11 00:00</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,pend=false;const busy=()=>!!(window.QACTIVE||window.ENTMODE);function updBar(){let u=document.getElementById("updbar");const t=busy()?"Вышло обновление сайта. Применится после теста — ответы не пропадут.":"Вышло обновление сайта";if(!u){u=document.createElement("div");u.id="updbar";u.innerHTML='<span class="ut"></span><button type="button">Обновить</button><button type="button" class="ux" aria-label="Позже">✕</button>';document.body.appendChild(u);u.querySelector("button").onclick=()=>{if(busy()&&!confirm("Тест ещё идёт. Обновить сейчас? Ответы текущего теста пропадут."))return;location.reload()};u.querySelector(".ux").onclick=()=>u.remove();requestAnimationFrame(()=>u.classList.add("on"))}u.querySelector(".ut").textContent=t}navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had){had=true;return}pend=true;if(!busy()&&document.visibilityState==="hidden"){location.reload();return}updBar()});document.addEventListener("visibilitychange",()=>{if(pend&&document.visibilityState==="hidden"&&!busy())location.reload()});setInterval(()=>{if(pend&&document.getElementById("updbar"))updBar()},4000);navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
