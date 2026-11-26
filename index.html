@@ -409,6 +409,7 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 .note.c1{background:#FFF8D6}.note.c2{background:#E6F6FF}.note.c3{background:#EAF8EE}.note.c4{background:#FDECEF}.note.c5{background:#F1ECFF}
 .ned textarea{width:100%;min-height:260px;resize:vertical;font:15px/1.5 'Golos Text',sans-serif;padding:12px;border:1.5px solid var(--line);border-radius:12px}
 .ncol{display:flex;gap:8px;align-items:center}.ncol button{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}.ncol button.on{border-color:var(--pen);box-shadow:0 0 0 2px #fff inset}
+.nickw{position:relative;display:block}.nickw>span.at{position:absolute;left:13px;top:50%;transform:translateY(-50%);margin-top:2px;color:var(--mut);font-weight:700}.nickw input{padding-left:30px!important}.nickst{font-size:12px;margin-top:4px;min-height:16px}.pnick{font-size:14px;color:rgba(255,255,255,.85);margin-top:2px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -1420,6 +1421,10 @@ const D={
 '. Изменить можно в профиле (👤 вверху).':'. Профильде өзгертуге болады (👤 жоғарыда).','баллов (национальные вузы —':'ұпай (ұлттық ЖОО —',
 '(профильный предмет).':'(бейіндік пән).','максимум 10 баллов':'ең көбі 10 ұпай','порог — 5 баллов':'шегі — 5 ұпай','порог — 3 балла':'шегі — 3 ұпай',
 'Защищено reCAPTCHA ·':'reCAPTCHA қорғайды ·','Конфиденциальность':'Құпиялылық','Условия':'Шарттар',
+'Логин (ник)':'Логин (лақап ат)','например, aruzhan_07':'мысалы, aruzhan_07','Придумай логин.':'Логин ойлап тап.','Проверяем…':'Тексеріп жатырмыз…','✓ Логин свободен':'✓ Логин бос','✗ Этот логин уже занят':'✗ Бұл логин бос емес',
+'Этот логин уже занят — придумай другой.':'Бұл логин бос емес — басқасын ойлап тап.','Этот логин занят.':'Бұл логин бос емес.','+ придумать логин':'+ логин ойлап табу',
+'Логин: 3–20 символов — латинские буквы, цифры, _ и точка.':'Логин: 3–20 таңба — латын әріптері, сандар, _ және нүкте.','Логин не может начинаться или заканчиваться на точку или _.':'Логин нүктемен немесе _ белгісімен басталмауы және аяқталмауы керек.',
+'Логин (ник): 3–20 символов — латинские буквы, цифры, _ и точка':'Логин (лақап ат): 3–20 таңба — латын әріптері, сандар, _ және нүкте',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -3123,6 +3128,10 @@ const FBERR={'auth/email-already-in-use':'Эта почта уже зареги�
 const fbErr=e=>FBERR[e&&e.code]||('Ошибка: '+((e&&(e.code||e.message))||e));
 const pairOpts=sel=>`<option value="" disabled ${sel?'':'selected'}>— выбери пару предметов —</option>${PAIRS.map(p=>`<option value="${p}" ${sel===p?'selected':''}>${pairName(p)}${p.split('-').some(s=>!PHAVE[s])?' *':''}</option>`).join('')}<option value="none" ${sel==='none'?'selected':''}>Ещё не выбрал / творческий экзамен</option>`;
 const PNOTE='<p class="small mut" style="margin:.4em 0 0">* Этих предметов пока нет в приложении — они появятся позже. Сейчас есть математика, информатика и физика, а обязательные предметы доступны всем.</p>';
+const NICKRE=/^[a-z0-9_.]{3,20}$/;
+const normNick=v=>(v||'').trim().replace(/^@/,'').toLowerCase();
+const nickErr=n=>!n?'Придумай логин.':!NICKRE.test(n)?'Логин: 3–20 символов — латинские буквы, цифры, _ и точка.':/^[._]|[._]$|\.\./.test(n)?'Логин не может начинаться или заканчиваться на точку или _.':['admin','owner','support','manager','ent2027','moderator'].includes(n)?'Этот логин занят.':'';
+async function nickFreeCheck(n){try{const d=await FB.nickGet(n);return !d||(ACC&&d.uid===ACC.uid)}catch(e){return true}}
 const PHDOM='@phone.ent2027.app';
 const isPhoneMail=m=>(m||'').endsWith(PHDOM);
 const showId=m=>isPhoneMail(m)?'+'+m.replace(PHDOM,'').replace(/^(\d)(\d{3})(\d{3})(\d{2})(\d{2})$/,'$1 $2 $3 $4 $5'):(m||'');
@@ -3136,7 +3145,7 @@ function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=docum
  w.innerHTML=`<div class="authbox">${LANGSW()}<div class="authlogo authlogo9">${LOGO9}</div><h2 style="margin:.2em 0">${up?'Регистрация':mode==='reset'?'Новый пароль':'Вход'}</h2><p class="small mut" style="margin:0 0 14px">${up?'Аккаунт нужен, чтобы сохранять результаты и следить за прогрессом.':mode==='reset'?'Пришлём на почту ссылку для нового пароля.':'С возвращением! Войди, чтобы продолжить.'}</p>
  ${mode!=='reset'?`<div class="authtabs"><button data-by="mail" class="${!ph?'on':''}">По e-mail</button><button data-by="phone" class="${ph?'on':''}">По телефону</button></div>`:''}
  <form id="authf" novalidate>
- ${up?`<label>Имя<input id="a_name" autocomplete="nickname" maxlength="30" placeholder="Как к тебе обращаться"></label>`:''}
+ ${up?`<label>Имя<input id="a_name" autocomplete="given-name" maxlength="30" placeholder="Как к тебе обращаться"></label><label>Логин (ник)<span class="nickw"><span class="at">@</span><input id="a_nick" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="20" placeholder="например, aruzhan_07"></span></label><div class="nickst" id="a_nst"></div>`:''}
  ${ph?`<label>Номер телефона<input id="a_phone" type="tel" inputmode="tel" autocomplete="tel" value="+7" placeholder="+7 7xx xxx xx xx"></label>`:`<label>E-mail<input id="a_mail" type="email" autocomplete="email" inputmode="email" placeholder="name@mail.com"></label>`}
  ${mode!=='reset'?`<label>Пароль<span class="pwrap"><input id="a_pass" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="${up?'Минимум 8 символов':''}">${eye('a_pass')}</span></label>`:''}
  ${up?`<label>Повтори пароль<span class="pwrap"><input id="a_pass2" type="password" autocomplete="new-password">${eye('a_pass2')}</span></label><label>Профильные предметы<select id="a_pair">${pairOpts('')}</select></label>${PNOTE}
@@ -3152,6 +3161,7 @@ function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=docum
  w.querySelectorAll('[data-by]').forEach(b=>b.onclick=e=>{e.preventDefault();AUTHBY=b.dataset.by;localStorage.setItem('ent-authby',AUTHBY);authShow(mode)});
  w.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=document.getElementById(b.dataset.eye);i.type=i.type==='password'?'text':'password'});
  const pe=document.getElementById('a_phone');if(pe){pe.oninput=()=>{pe.value=fmtPh(pe.value)};pe.onfocus=()=>{if(!pe.value)pe.value='+7'}}
+ const ni=document.getElementById('a_nick');if(ni){let nt;ni.oninput=()=>{const v=ni.value.replace(/[^A-Za-z0-9_.]/g,'').toLowerCase();if(v!==ni.value)ni.value=v;const ns=document.getElementById('a_nst'),er=nickErr(v);clearTimeout(nt);if(!v){ns.textContent='';return}if(er){ns.textContent=er;ns.style.color='var(--mut)';return}ns.textContent='Проверяем…';ns.style.color='var(--mut)';nt=setTimeout(async()=>{if(!FB)return;const ok=await nickFreeCheck(v);if(ni.value!==v)return;ns.textContent=ok?'✓ Логин свободен':'✗ Этот логин уже занят';ns.style.color=ok?'var(--ok)':'var(--bad)'},450)}}
  const g=document.getElementById('a_guest');if(g)g.onclick=()=>authHide();
  const msgEl=document.getElementById('a_msg'),say=(t,ok)=>{msgEl.textContent=t;msgEl.style.color=ok?'var(--ok)':'var(--bad)'};
  const gb=document.getElementById('a_google');if(gb)gb.onclick=async()=>{if(!FB)return;try{if(up){window.PENDINGPROF={name:'',pair:'',avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)],google:1}}say('Открываем Google…',true);await FB.google()}catch(e){window.PENDINGPROF=null;say(e&&e.code==='auth/operation-not-allowed'?'Вход через Google ещё не включён владельцем.':e&&e.code==='auth/popup-closed-by-user'?'Окно Google закрыто.':fbErr(e))}};
@@ -3161,8 +3171,8 @@ function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=docum
   try{btn.disabled=true;
    if(mode==='reset'){await FB.reset(mail);say('Готово! Проверь почту (и папку «Спам») и перейди по ссылке.',true);btn.disabled=false;return}
    if(up){const name=document.getElementById('a_name').value.trim(),pair=document.getElementById('a_pair').value;const fail=t=>{btn.disabled=false;say(t)};
-    if(!name)return fail('Напиши имя.');if(pass.length<8)return fail('Пароль — минимум 8 символов.');if(pass!==document.getElementById('a_pass2').value)return fail('Пароли не совпадают.');if(!pair)return fail('Выбери профильные предметы.');if(!document.getElementById('a_ok').checked)return fail('Нужно согласиться с политикой конфиденциальности.');
-    say('Создаём аккаунт…',true);window.PENDINGPROF={name,pair,phone:ph?'+'+phDigits(document.getElementById('a_phone').value):'',avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)]};await FB.signUp(mail,pass)}
+    if(!name)return fail('Напиши имя.');const nick=normNick(document.getElementById('a_nick').value),ne=nickErr(nick);if(ne)return fail(ne);if(!(await nickFreeCheck(nick)))return fail('Этот логин уже занят — придумай другой.');if(pass.length<8)return fail('Пароль — минимум 8 символов.');if(pass!==document.getElementById('a_pass2').value)return fail('Пароли не совпадают.');if(!pair)return fail('Выбери профильные предметы.');if(!document.getElementById('a_ok').checked)return fail('Нужно согласиться с политикой конфиденциальности.');
+    say('Создаём аккаунт…',true);window.PENDINGPROF={name,nick,pair,phone:ph?'+'+phDigits(document.getElementById('a_phone').value):'',avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)]};await FB.signUp(mail,pass)}
    else{if(!pass){btn.disabled=false;return say('Введи пароль.')}say('Входим…',true);await FB.signIn(mail,pass)}
   }catch(err){btn.disabled=false;window.PENDINGPROF=null;say(err&&err.code==='auth/email-already-in-use'?(ph?'Этот номер уже зарегистрирован. Нажми «Войти».':'Эта почта уже зарегистрирована. Нажми «Войти».'):err&&(err.code==='auth/invalid-credential'||err.code==='auth/wrong-password')?(ph?'Неверный номер или пароль.':'Неверная почта или пароль.'):fbErr(err))}};
  if(mode==='reset'&&AUTHBY==='phone')say('Восстановить пароль по номеру телефона можно через поддержку: напиши владельцу. По e-mail — введи почту.',false);
@@ -3184,7 +3194,7 @@ const say2=(id,t,ok)=>{const m=document.getElementById(id);if(m){m.textContent=t
 function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  const badge=isStaff()?'<span class="pbadge own">'+ICO(ROLEI[myRole()],15)+' '+ROLEN[myRole()]+'</span>'+(t?` <span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)}</span>`:''):t?`<span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)} · до ${ACC.paidUntil>=FOREVER?'∞':fmtD(ACC.paidUntil)}</span>`:'<span class="pbadge">Бесплатный доступ</span>';
  page('profile',`<div class="phero"><div class="pava" id="pf_av">${AVH(ACC.avatar,96,ACC.name)}<span class="pedit">${ICO('pencil',14)}</span></div>
- <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pmail">${esc(showId(ACC.email))}</div>${badge}</div>
+ <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pnick" id="pf_nick">${ACC.nick?'@'+esc(ACC.nick):'+ придумать логин'}</div><div class="pmail">${esc(showId(ACC.email))}</div>${badge}</div>
  <div class="pstats"><div><b>${st.n}</b><span>решено заданий</span></div><div><b>${st.acc}%</b><span>точность</span></div><div><b>${st.ent}</b><span>пробных ЕНТ</span></div><div><b>${st.best!=null?st.best:'—'}</b><span>лучший ЕНТ${st.bestMax?' из '+st.bestMax:''}</span></div></div>
  <div class="card"><h3 style="margin-top:0">Профильные предметы</h3><select id="pf_pair">${pairOpts(ACC.pair)}</select>${profSubs().some(s=>!PHAVE[s])?PNOTE:''}<button class="btn sm" id="pf_psave" style="margin-top:10px">Сохранить</button> <span class="small" id="pf_pmsg"></span></div>
  <div class="pgrid"><button class="card ptile" id="pf_tar"><span class="dbi">${ICO('gem',24)}</span><b>Тарифы</b><small>${t?'Подписка активна':'Открой все разделы'}</small></button>
@@ -3197,6 +3207,7 @@ function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  <div style="text-align:center;margin-top:10px">${matchMedia('(display-mode: standalone)').matches||navigator.standalone?'':'<button class="linkb" id="pf_inst">Установить приложение</button>'}<button class="linkb" id="pf_priv">Политика конфиденциальности</button><button class="linkb" id="pf_del" style="color:var(--bad)">Удалить аккаунт</button></div>`);
  remBind();refBind();{const ib=document.getElementById('pf_inst');if(ib)ib.onclick=()=>window.showInstall()}if(REFS===null)loadRefs().then(()=>{if(window.PAGEMODE==='profile')showProfile()});document.getElementById('pf_priv').onclick=showPrivacy;document.getElementById('pf_del').onclick=deleteAccount;
  document.getElementById('pf_av').onclick=avatarPicker;
+ document.getElementById('pf_nick').onclick=()=>nickEdit();
  document.getElementById('pf_name').onclick=async()=>{const n=prompt('Как тебя зовут?',ACC.name||'');if(n==null)return;const v=n.trim().slice(0,30);if(!v)return;ACC.name=v;LSS(ACK,ACC);headerAcct();try{await FB.setUser(ACC.uid,{name:v})}catch(e){}showProfile()};
  document.getElementById('pf_psave').onclick=async()=>{const pair=document.getElementById('pf_pair').value||'none';ACC.pair=pair;LSS(ACK,ACC);applyAccess();try{if(FB)await FB.setUser(ACC.uid,{pair});say2('pf_pmsg','✓ Сохранено',1)}catch(e){say2('pf_pmsg',fbErr(e))}};
  document.getElementById('pf_tar').onclick=()=>showTariffs();
@@ -3261,13 +3272,13 @@ function admDash(box){const U=ADM.users,now=Date.now(),wk=now-7*864e5;const pro=
  <div class="card"><h3 style="margin-top:0">Самые активные</h3>${U.slice().sort((a,b)=>((b.stats||{}).n||0)-((a.stats||{}).n||0)).slice(0,10).map((u,i)=>`<div class="arow" data-u="${u.id}">${i+1}. ${AVH(u.avatar,28,u.name)} <b>${esc(u.name||'—')}</b><span class="mut small">${(u.stats||{}).n||0} заданий · ${(u.stats||{}).acc||0}%</span></div>`).join('')}</div>`;
  box.querySelectorAll('[data-u]').forEach(r=>r.onclick=()=>admUser(r.dataset.u))}
 function admUsers(box){const draw=q=>{q=(q||'').toLowerCase();const now=Date.now();const fo=(document.getElementById('aufo')||{}).checked;const L=ADM.users.filter(u=>(!q||(u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q))&&(!fo||onl(u))).sort((a,b)=>(onl(b)-onl(a))||((b.seen||0)-(a.seen||0)));
-  document.getElementById('aul').innerHTML=L.map(u=>`<div class="arow" data-u="${u.id}"><span class="avw">${AVH(u.avatar,34,u.name)}${onl(u)?'<i class="odot"></i>':''}</span><div style="flex:1;min-width:0"><b>${esc(u.name||'—')}</b>${roleOf(u)?' <span class="tag own" title="'+ROLEN[roleOf(u)]+'">'+ICO(ROLEI[roleOf(u)],12)+'</span>':''}${u.blocked?' <span class="tag bad">заблокирован</span>':''}<div class="small mut ell">${esc(showId(u.email))} · ${esc(pairName(u.pair))}</div></div><div class="small" style="text-align:right">${u.plan&&(u.paidUntil||0)>now?`<span class="tag pro">${ICO('gem',12)} до ${u.paidUntil>=FOREVER?'∞':new Date(u.paidUntil).toLocaleDateString('ru-RU')}</span>`:'<span class="mut">бесплатно</span>'}<div class="mut">${(u.stats||{}).n||0} зад.</div><div class="${onl(u)?'oon':'mut'}">${ago(u.seen)}</div></div></div>`).join('')||'<p class="mut">Никого не найдено</p>';
+  document.getElementById('aul').innerHTML=L.map(u=>`<div class="arow" data-u="${u.id}"><span class="avw">${AVH(u.avatar,34,u.name)}${onl(u)?'<i class="odot"></i>':''}</span><div style="flex:1;min-width:0"><b>${esc(u.name||'—')}</b>${roleOf(u)?' <span class="tag own" title="'+ROLEN[roleOf(u)]+'">'+ICO(ROLEI[roleOf(u)],12)+'</span>':''}${u.blocked?' <span class="tag bad">заблокирован</span>':''}<div class="small mut ell">${u.nick?'@'+esc(u.nick)+' · ':''}${esc(showId(u.email))} · ${esc(pairName(u.pair))}</div></div><div class="small" style="text-align:right">${u.plan&&(u.paidUntil||0)>now?`<span class="tag pro">${ICO('gem',12)} до ${u.paidUntil>=FOREVER?'∞':new Date(u.paidUntil).toLocaleDateString('ru-RU')}</span>`:'<span class="mut">бесплатно</span>'}<div class="mut">${(u.stats||{}).n||0} зад.</div><div class="${onl(u)?'oon':'mut'}">${ago(u.seen)}</div></div></div>`).join('')||'<p class="mut">Никого не найдено</p>';
   document.querySelectorAll('#aul [data-u]').forEach(r=>r.onclick=()=>admUser(r.dataset.u))};
  box.innerHTML=`<div class="row"><input id="aus" placeholder="Поиск по имени или почте" style="flex:1"><button class="btn alt sm" id="aur">${ICO('repeat',15)} Обновить</button></div><div class="row" style="justify-content:space-between;margin:8px 0"><span class="small mut">Всего: ${ADM.users.length} · <b class="oon">в сети: ${ADM.users.filter(onl).length}</b></span><label class="chk small"><input type="checkbox" id="aufo"> Только кто в сети</label></div><div id="aul"></div>`;
  document.getElementById('aufo').onchange=()=>draw(document.getElementById('aus').value);clearInterval(window.AUTIMER);window.AUTIMER=setInterval(async()=>{if(!document.getElementById('aul')){clearInterval(window.AUTIMER);return}try{await admLoad(true);draw(document.getElementById('aus').value)}catch(e){}},60000);
  document.getElementById('aus').oninput=e=>draw(e.target.value);document.getElementById('aur').onclick=async()=>{await admLoad(true);admUsers(box)};draw('')}
 async function admUser(uid){const u=ADM.users.find(x=>x.id===uid);if(!u)return;const now=Date.now(),on=u.plan&&(u.paidUntil||0)>now;
- page('admin',`<h2 style="margin:.6em 0 .3em">${AVH(u.avatar,44,u.name)} ${esc(u.name||'—')}</h2><p><button class="btn alt sm" id="au_chat">${ICO('chat',15)} Написать в чат</button> ${roleOf(u)?`<span class="pbadge own sm">${ICO(ROLEI[roleOf(u)],13)} ${ROLEN[roleOf(u)]}</span>`:''}</p><p class="small mut">${esc(showId(u.email))} · UID: <code>${u.id}</code><br>Зарегистрирован: ${u.created?fmtD(u.created):'—'} · ${onl(u)?'<b class="oon">● в сети</b>':'Был в сети: '+ago(u.seen)}</p>
+ page('admin',`<h2 style="margin:.6em 0 .3em">${AVH(u.avatar,44,u.name)} ${esc(u.name||'—')}</h2><p><button class="btn alt sm" id="au_chat">${ICO('chat',15)} Написать в чат</button> ${roleOf(u)?`<span class="pbadge own sm">${ICO(ROLEI[roleOf(u)],13)} ${ROLEN[roleOf(u)]}</span>`:''}</p><p class="small mut">${u.nick?'@'+esc(u.nick)+' · ':''}${esc(showId(u.email))} · UID: <code>${u.id}</code><br>Зарегистрирован: ${u.created?fmtD(u.created):'—'} · ${onl(u)?'<b class="oon">● в сети</b>':'Был в сети: '+ago(u.seen)}</p>
  <div class="card"><h3 style="margin-top:0">${ICO('gem',18)} Подписка</h3><p>${on?`Активна: <b>${esc((CFG.tariffs.find(t=>t.id===u.plan)||{}).name||u.plan)}</b> до <b>${u.paidUntil>=FOREVER?'бессрочно':fmtD(u.paidUntil)}</b>`:'Нет активной подписки'}</p>
  <div class="row"><select id="au_t">${CFG.tariffs.map(t=>`<option value="${t.id}" ${u.plan===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select><select id="au_d"><option value="7">7 дней</option><option value="30" selected>30 дней</option><option value="90">90 дней</option><option value="180">180 дней</option><option value="365">1 год</option><option value="0">Навсегда</option></select></div>
  <div class="row" style="margin-top:8px"><button class="btn" id="au_give">${on?'Продлить':'Выдать'}</button>${on?'<button class="btn alt" id="au_take" style="color:var(--bad)">Забрать подписку</button>':''}</div></div>
@@ -3487,6 +3498,11 @@ function helpBadge(){if(!FB||!ACC)return;if(CHMETA){CHMETA();CHMETA=null}
  if(isStaff()){FB.chatsListen((L,err)=>{const b=document.getElementById('acctbtn');if(b&&L)b.classList.toggle('dot',L.some(c=>c.unreadStaff))})}}
 
 
+async function nickEdit(){const v0=prompt('Логин (ник): 3–20 символов — латинские буквы, цифры, _ и точка',ACC.nick||'');if(v0==null)return;const n=normNick(v0);if(n===ACC.nick)return;const er=nickErr(n);if(er)return alert(er);
+ if(!(await nickFreeCheck(n)))return alert('Этот логин уже занят — придумай другой.');
+ try{await FB.nickClaim(n,ACC.uid)}catch(e){return alert('Этот логин уже занят — придумай другой.')}
+ const old=ACC.nick;try{await FB.setUser(ACC.uid,{nick:n})}catch(e){FB.nickFree(n).catch(()=>{});return alert(fbErr(e))}
+ if(old)FB.nickFree(old).catch(()=>{});ACC.nick=n;LSS(ACK,ACC);showProfile()}
 /* ---- рефералы: пригласи друга ---- */
 let REFS=null;
 function refDiscount(){if(!ACC)return 0;const per=+(CFG.refPct??10),mx=+(CFG.refMax??30);const n=Math.max(0,(REFS?REFS.length:0)-(ACC.refUsed||0));let d=Math.min(mx,n*per);if(ACC.refBy&&!ACC.refFriendUsed&&!planOn())d=Math.max(d,+(CFG.refFriend??10));return CFG.refOn===false?0:d}
@@ -3522,9 +3538,9 @@ async function onUser(u){
  if(!u){if(NEEDAUTH){if(ACC){localStorage.removeItem(ACK);ACC=null;applyAccess()}authShow('in')}return}
  try{const [p0,cfg]=await Promise.all([FB.getUser(u.uid),FB.getCfg().catch(()=>null)]);let p=p0;const pend=window.PENDINGPROF;window.PENDINGPROF=null;
   if(cfg){CFG=Object.assign({},DEFCFG,cfg);LSS(CFK,CFG)}
-  if(!p&&pend){p={...pend,name:pend.name||u.displayName||'',email:u.email,created:Date.now()};delete p.google;if(window.REFCODE&&window.REFCODE!==u.uid){p.refBy=window.REFCODE}await FB.setUser(u.uid,p);if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
+  if(!p&&pend){p={...pend,name:pend.name||u.displayName||'',email:u.email,created:Date.now()};delete p.google;if(p.nick){try{await FB.nickClaim(p.nick,u.uid)}catch(e){p.nick=''}}else delete p.nick;if(window.REFCODE&&window.REFCODE!==u.uid){p.refBy=window.REFCODE}await FB.setUser(u.uid,p);if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
   if(!p){p={name:u.displayName||(isPhoneMail(u.email)?'':(u.email||'').split('@')[0]),email:u.email,pair:'',created:Date.now(),avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)]};if(window.REFCODE&&window.REFCODE!==u.uid)p.refBy=window.REFCODE;await FB.setUser(u.uid,p).catch(()=>{});if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
-  const first=!ACC||ACC.uid!==u.uid;if(p.remind&&!LSG(RMK))LSS(RMK,Object.assign(remGet(),p.remind));ACC={uid:u.uid,email:u.email,name:p.name,pair:p.pair,avatar:p.avatar||'',plan:p.plan||null,paidUntil:p.paidUntil||0,blocked:!!p.blocked,role:p.role||'',refBy:p.refBy||'',refUsed:p.refUsed||0,phone:p.phone||''};LSS(ACK,ACC);
+  const first=!ACC||ACC.uid!==u.uid;if(p.remind&&!LSG(RMK))LSS(RMK,Object.assign(remGet(),p.remind));ACC={uid:u.uid,email:u.email,name:p.name,pair:p.pair,avatar:p.avatar||'',plan:p.plan||null,paidUntil:p.paidUntil||0,blocked:!!p.blocked,role:p.role||'',nick:p.nick||'',refBy:p.refBy||'',refUsed:p.refUsed||0,phone:p.phone||''};LSS(ACK,ACC);
   authHide();if(ACC.blocked&&!isOwner()){blockedScreen();return}lsnPrefill();applyAccess();
   if(!SYNC.uid&&SYNCKEYS().some(k=>localStorage.getItem(k)!=null)){const keep=await askMigrate(!!pend);if(!keep){SYNCKEYS().forEach(k=>localStorage.removeItem(k));localStorage.removeItem('ent-mock-run')}SYNC={uid:u.uid,h:{},t:{}};saveSync();S=loadS()}
   const changed=await pullProg();if(changed&&!window.PAGEMODE){S=loadS();if(window.ENTMODE)eMode();else go(location.hash.slice(1)||'home')}
@@ -3599,6 +3615,9 @@ const auth=U.getAuth(app);auth.languageCode=window.LANG==='kk'?'kk':'ru';const d
 window.FBAPI={onAuth:cb=>U.onAuthStateChanged(auth,cb),signUp:(e,p)=>U.createUserWithEmailAndPassword(auth,e,p),signIn:(e,p)=>U.signInWithEmailAndPassword(auth,e,p),reset:e=>U.sendPasswordResetEmail(auth,e),out:()=>U.signOut(auth),
 google:()=>{const pr=new U.GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;return sa?U.signInWithRedirect(auth,pr):U.signInWithPopup(auth,pr).catch(e=>{if(e&&(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'))return U.signInWithRedirect(auth,pr);throw e})},
 redirectResult:()=>U.getRedirectResult(auth),
+nickGet:n=>D.getDoc(D.doc(db,'usernames',n)).then(d=>d.exists()?d.data():null),
+nickClaim:(n,uid)=>D.setDoc(D.doc(db,'usernames',n),{uid,t:Date.now()}),
+nickFree:n=>D.deleteDoc(D.doc(db,'usernames',n)),
 notesList:uid=>D.getDocs(D.collection(db,'notes',uid,'items')).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o}),
 noteSave:(uid,id,d)=>id?D.setDoc(D.doc(db,'notes',uid,'items',id),d,{merge:true}).then(()=>id):D.addDoc(D.collection(db,'notes',uid,'items'),d).then(r=>r.id),
 noteDel:(uid,id)=>D.deleteDoc(D.doc(db,'notes',uid,'items',id)),
@@ -3623,7 +3642,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 57 от 26.11 22:48</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 58 от 26.11 22:50</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
