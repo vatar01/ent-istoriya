@@ -421,6 +421,7 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 .vagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
 .vab{text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;box-shadow:0 2px 0 var(--line);font:inherit;color:var(--ink)}
 .vab b{font-size:14px}.vab span{font-size:12px;color:var(--mut)}.vab.on{border-color:var(--pen);background:#EEF2FF;box-shadow:0 2px 0 var(--pen)}
+.vamod{position:fixed;inset:0;z-index:960;background:rgba(16,26,51,.45);display:flex;align-items:center;justify-content:center;padding:16px;animation:pgin .2s}.vamodbox{background:#fff;border-radius:18px;padding:18px;max-width:640px;width:100%;max-height:85vh;overflow:auto;box-shadow:0 20px 50px rgba(16,26,51,.3)}
 </style>
 </head>
 <body>
@@ -3547,14 +3548,17 @@ async function nickEdit(){const v0=prompt('Логин (ник): 3–20 симв�
 const VAOPTS=()=>[{k:'free',n:'Ученик без тарифа',d:'2 теста в день, без «Учить»',v:{role:'',plan:''}},...(CFG.tariffs||[]).map(t=>({k:t.id,n:'Ученик · '+t.name,d:(+t.price||0).toLocaleString('ru-RU')+' ₸',v:{role:'',plan:t.id}})),{k:'manager',n:'Менеджер',d:'чаты, ученики, заявки',v:{role:'manager',plan:''}},{k:'admin',n:'Администратор',d:'всё, кроме ролей',v:{role:'admin',plan:''}}];
 function setViewAs(v){try{if(v)sessionStorage.setItem('ent-viewas',JSON.stringify(v));else sessionStorage.removeItem('ent-viewas')}catch(e){}location.reload()}
 function vaName(){const v=viewAs();if(!v)return'';const o=VAOPTS().find(x=>x.v.role===(v.role||'')&&x.v.plan===(v.plan||''));return o?o.n:'другая роль'}
-function vaCard(){if(!realOwner())return'';const v=viewAs();
+function vaCard(){if(!realOwner()||viewAs())return'';const v=null;
  return`<div class="card"><h3 style="margin-top:0">${ICO('search',18)} Посмотреть сайт как…</h3><p class="small mut" style="margin-top:0">Увидишь сайт глазами ученика с нужным тарифом, менеджера или админа. Твой аккаунт и данные не меняются. Выйти — кнопкой в жёлтой полосе вверху.</p>
  <div class="vagrid">${VAOPTS().map(o=>`<button class="vab ${v&&o.v.role===(v.role||'')&&o.v.plan===(v.plan||'')?'on':''}" data-va='${JSON.stringify(o.v)}'><b>${esc(o.n)}</b><span>${esc(o.d)}</span></button>`).join('')}</div>${v?`<button class="btn alt" id="va_off" style="margin-top:10px">${ICO('crown',16)} Вернуться к виду владельца</button>`:''}</div>`}
 function vaBind(){document.querySelectorAll('[data-va]').forEach(b=>b.onclick=()=>setViewAs(JSON.parse(b.dataset.va)));const o=document.getElementById('va_off');if(o)o.onclick=()=>setViewAs(null)}
 function vaBar(){let b=document.getElementById('vabar');if(!viewAs()){if(b)b.remove();document.body.classList.remove('vamode');return}
  if(!b){b=document.createElement('div');b.id='vabar';document.body.prepend(b)}document.body.classList.add('vamode');
  b.innerHTML=`<span>${ICO('search',15)} Ты смотришь как: <b>${esc(vaName())}</b></span><span class="row" style="gap:6px"><button id="vab_ch">Сменить</button><button id="vab_x">${ICO('crown',14)} Выйти</button></span>`;
- document.getElementById('vab_x').onclick=()=>setViewAs(null);document.getElementById('vab_ch').onclick=()=>{showProfile();setTimeout(()=>{const c=document.querySelector('.vagrid');if(c)c.scrollIntoView({behavior:'smooth',block:'center'})},300)}}
+ document.getElementById('vab_x').onclick=()=>setViewAs(null);document.getElementById('vab_ch').onclick=vaPick}
+function vaPick(){const v=viewAs();let m=document.getElementById('vamod');if(m)m.remove();m=document.createElement('div');m.id='vamod';m.className='vamod';
+ m.innerHTML=`<div class="vamodbox"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h3 style="margin:0">${ICO('search',18)} Смотреть как…</h3><button class="instx" id="vam_x" aria-label="Закрыть">✕</button></div><div class="vagrid">${VAOPTS().map(o=>`<button class="vab ${v&&o.v.role===(v.role||'')&&o.v.plan===(v.plan||'')?'on':''}" data-va='${JSON.stringify(o.v)}'><b>${esc(o.n)}</b><span>${esc(o.d)}</span></button>`).join('')}</div><button class="btn alt" id="va_off" style="margin-top:12px;width:100%">${ICO('crown',16)} Вернуться к виду владельца</button></div>`;
+ document.body.appendChild(m);m.onclick=e=>{if(e.target===m)m.remove()};document.getElementById('vam_x').onclick=()=>m.remove();vaBind()}
 
 /* ---- рефералы: пригласи друга ---- */
 let REFS=null;
@@ -3695,7 +3699,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 60 от 26.11 22:54</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 61 от 26.11 22:57</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
