@@ -518,6 +518,10 @@ select.fshid{position:absolute!important;opacity:0!important;pointer-events:none
 .say .sayi{flex:none}
 .tlim{background:#FFFBEA!important;border-color:#F0D66B!important;margin-top:14px}.tlh{display:flex;gap:12px;align-items:flex-start}.tlh>svg{flex:none;color:#B98900;margin-top:2px}
 .lkb{display:inline-flex;align-items:center;gap:4px;vertical-align:middle;font:700 11px 'Golos Text',sans-serif;background:var(--hl);color:var(--ink);border-radius:999px;padding:3px 8px;margin-left:6px}.lockc{background:#F7F8FB!important}.lockc .btn{background:#C9D2E3!important;border-color:#B5C0D6!important;box-shadow:0 2px 0 #B5C0D6!important;color:#fff!important}.lockg .topic{opacity:.6}
+
+.fscard{border-color:#BFD0F5!important;background:linear-gradient(135deg,#F2F6FF,#fff)!important;margin-bottom:14px}.fsh2{display:flex;gap:12px;align-items:flex-start}.fsh2 .dbi{margin:0;flex:none}
+.fsprog{display:flex;align-items:center;gap:10px;margin:12px 0 10px}.fsprog .bar{flex:1}
+.nocount{display:flex;gap:10px;align-items:flex-start;background:#FFF6E0!important;border:1.5px solid #F0D66B!important;border-radius:12px;padding:10px 12px;font-size:14px;color:#6B4E00}.nocount svg{flex:none;margin-top:1px}
 </style>
 </head>
 <body>
@@ -1544,6 +1548,7 @@ const D={
 'Вышло обновление сайта. Применится после теста — ответы не пропадут.':'Сайт жаңарды. Тесттен кейін қолданылады — жауаптар жоғалмайды.','Вышло обновление сайта':'Сайт жаңарды','Обновить':'Жаңарту',
 'Ответы сохранены. Завтра лимит обновится, или оформи тариф — тогда без ограничений.':'Жауаптар сақталды. Ертең лимит жаңарады немесе тариф рәсімде — сонда шектеусіз.','Завершить тест':'Тестті аяқтау','Лимит заданий на сегодня закончился':'Бүгінгі тапсырма лимиті бітті','Сегодня без тарифа осталось:':'Бүгін тарифсіз қалды:','Заданий в день':'Күніне тапсырма',
 'с тарифом':'тарифпен','Тесты по темам':'Тақырыптар бойынша тесттер','«Все задания», «Новые» и контекстные':'«Барлық тапсырма», «Жаңалары» және контекстік','«Все задания», «Новые» и контекстные задания доступны с тарифом. Без тарифа — пробное ЕНТ и тесты по темам.':'«Барлық тапсырма», «Жаңалары» және контекстік тапсырмалар тарифпен қолжетімді. Тарифсіз — сынақ ҰБТ және тақырыптық тесттер.',
+'Решать тесты':'Тест шешу','Пройти ещё раз':'Тағы өту','Продолжить':'Жалғастыру',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Установить приложение':'Қосымшаны орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -1575,6 +1580,8 @@ const P=[
  [/^На сегодня всё — (\d+) \S+ без тарифа$/,m=>`Бүгінге болды — тарифсіз ${m[1]} тапсырма`],
  [/^Без тарифа на сегодня осталось (\d+) \S+$/,m=>`Тарифсіз бүгінге ${m[1]} тапсырма қалды`],
  [/^заданий$/,m=>'тапсырма'],
+ [/^(\d+) заданий — бесплатно, не тратят дневной лимит\. Новая подборка каждые (\d+) ч — следующая через (.+)\.$/,m=>`${m[1]} тапсырма — тегін, күндік лимитті жұмсамайды. Жаңа іріктеме әр ${m[2]} сағ сайын — келесісі ${m[3].replace('ч','сағ')} кейін.`],
+ [/^(\d+) заданий\. Новая подборка каждые (\d+) ч — следующая через (.+)\.$/,m=>`${m[1]} тапсырма. Жаңа іріктеме әр ${m[2]} сағ сайын — келесісі ${m[3].replace('ч','сағ')} кейін.`],
  [/^(\d+) минут$/,m=>`${m[1]} минут`],
  [/^Начать ЕНТ · (\d+) минут$/,m=>`ҰБТ бастау · ${m[1]} минут`],
  [/^(\d+) предметов · (\d+) заданий · (\d+) мин$/,m=>`${m[1]} пән · ${m[2]} тапсырма · ${m[3]} мин`],
@@ -1978,6 +1985,7 @@ function home(){
   <div class="card"><div class="mut small">Верно из решённых</div><div class="stat">${seen?Math.round(ok/seen*100):0}%</div><div class="bar"><i style="width:${seen?ok/seen*100:0}%"></i></div></div>
  </div>
  <div class="row" style="margin:18px 0"><button class="btn gold" id="ex">${EXN()} · ${examCount()} заданий</button><button class="btn" id="cont">Продолжить учить</button>${S.wrong.length?`<button class="btn alt" id="mw">Ошибки (${S.wrong.length})</button>`:''}</div>
+ ${window.FSCARD?FSCARD():''}
  <div class="grid">
  <div class="card"><h3>${cur.formatTitle||'Формат ЕНТ: '+esc(cur.name)}</h3><ul class="small">${cur.format}</ul></div>
  <div class="card"><h3>Как заниматься</h3><ol class="small"><li>Тема в «Учить» → тест по теме.</li><li>«${esc(cur.ref.label)}» — каждый день в «Карточках».</li><li>Контекстные задания — по 1–2 в день.</li><li>Раз в неделю — пробное ЕНТ на время.</li><li>Разбирай «Ошибки», пока список не опустеет.</li></ol></div>
@@ -1985,7 +1993,7 @@ function home(){
  </div>
  <div class="card" style="margin-top:14px"><div class="row" style="justify-content:space-between"><span class="small mut">Начать «${esc(cur.name)}» заново</span><button class="btn alt" id="rs">Сбросить прогресс</button></div><div id="rsc"></div></div>
  <details class="card" style="margin-top:14px"><summary><b>Откуда информация</b></summary><div class="small" style="margin-top:8px"><p>Сверено с официальными материалами Национального центра тестирования (testcenter.kz, раздел «Тестілеуге дайындық»):</p>${cur.sources}</div></details></div>`;
- document.getElementById('ex').onclick=()=>startQuiz(makeExam(),EXN(),true);
+ if(window.FSBIND)FSBIND();document.getElementById('ex').onclick=()=>startQuiz(makeExam(),EXN(),true);
  document.getElementById('cont').onclick=()=>{const t=cur.T.find(t=>!S.read[t.id])||cur.T[0];go('learn',t.id)};
  const mw=document.getElementById('mw');if(mw)mw.onclick=()=>go('mist');
  document.getElementById('rs').onclick=()=>{const b=document.getElementById('rsc');b.innerHTML=`<div class="note" style="margin-top:12px"><p style="margin:0 0 10px">Удалить статистику, ошибки, прочитанные темы и результаты пробных по предмету «${esc(cur.name)}»? Отменить будет нельзя.</p><div class="row"><button class="btn alt" id="rsn">Отмена</button><button class="btn" id="rsy">Да, сбросить</button></div></div>`;document.getElementById('rsn').onclick=()=>b.innerHTML='';document.getElementById('rsy').onclick=()=>{S={read:{},q:{},wrong:[],exams:[]};save();home()}};
@@ -2052,6 +2060,7 @@ function cards(){const R=cur.ref;
 /* ---------- Тесты ---------- */
 function test(){const LX=window.PERKOK&&!PERKOK('extra'),LK=`<span class="lkb">${ICO('lock',13)} с тарифом</span>`;const it=cur.items,ns=it.filter(x=>x.t==='s').length,nm=it.filter(x=>x.t==='m').length,nx=it.filter(x=>x.t==='x').length;
  app.innerHTML=`<div class="fade"><h2>Тесты</h2>
+ ${window.FSCARD?FSCARD():''}
  <div class="grid">
  <div class="card"><h3>${EXN()}</h3><p class="small mut">${cur.examName?'Смешанный тест':'Как на ЕНТ'}: ${examCount()} заданий, максимум ${examMax()} баллов, ${cur.exam.minutes} минут. Ответы — в конце.</p><button class="btn gold" id="ex">Начать</button></div>
  <div class="card ${LX?'lockc':''}"><h3>Все задания ${LX?LK:''}</h3><p class="small mut">${it.length} заданий в случайном порядке, пояснение после каждого.</p><button class="btn" id="all">Начать</button></div>
@@ -2064,7 +2073,7 @@ function test(){const LX=window.PERKOK&&!PERKOK('extra'),LK=`<span class="lkb">$
  ${cur.ctx.length?`<h3 style="margin-top:24px">Контекстные задания (${cur.ctx.length}) ${LX?LK:''}</h3>`:''}
  <div class="grid ${LX?'lockg':''}" id="ct">${cur.ctx.map(c=>{const ok=ctxItems(c).filter(q=>S.q[k(q)]&&S.q[k(q)].last).length;return`<button class="card topic" data-c="${c.id}"><div class="per">${esc(c.kind)}</div><b>${esc(c.title)}</b><div class="small mut" style="margin-top:6px">${ok}/5 верно</div></button>`}).join('')}</div>
 </div>`;
- document.getElementById('ex').onclick=()=>startQuiz(makeExam(),EXN(),true);
+ if(window.FSBIND)FSBIND();document.getElementById('ex').onclick=()=>startQuiz(makeExam(),EXN(),true);
  document.getElementById('all').onclick=()=>(window.PERKGATE&&!PERKGATE('extra'))||startQuiz(shuf(it),'Все задания');
  document.getElementById('nw').onclick=()=>{if(window.PERKGATE&&!PERKGATE('extra'))return;const n=all().filter(q=>!S.q[k(q)]);if(n.length)startQuiz(shuf(n),'Новые задания')};
  const mm=document.getElementById('mm');if(mm)mm.onclick=()=>startQuiz(shuf(it.filter(x=>x.t==='m')),'Несколько ответов');
@@ -2117,7 +2126,7 @@ function SIMILAR(it,seen,later){const r0=new Set(it.r||[]);const S1=new Set(seen
  const L=new Set(later||[]);
  const sc=x=>{let s=Math.random();if(x.t===it.t)s+=2;(x.r||[]).forEach(id=>{if(r0.has(id))s+=3});const st=S.q&&S.q[k(x)];if(!st||!st.last)s+=1;if(x.lvl&&x.lvl===it.lvl)s+=0.5;if(L.has(x))s+=0.3;return s};
  return pool.map(x=>[sc(x),x]).sort((a,b)=>b[0]-a[0])[0][1]}
-function startQuiz(qs,title,exam){if(window.QUIZGATE&&!QUIZGATE(exam,qs.length))return;const TOPIC=!!window.QTOPIC&&!exam;window.QTOPIC=0;window.QACTIVE=true;window.QEXAM=!!exam;const HL=[];
+function startQuiz(qs,title,exam,opt){const FREE=!!(opt&&opt.free);if(!FREE&&window.QUIZGATE&&!QUIZGATE(exam,qs.length))return;window.FREESET=FREE;const TOPIC=!!window.QTOPIC&&!exam;window.QTOPIC=0;window.QACTIVE=true;window.QEXAM=!!exam;const HL=[];
  let i=0,score=0,maxSoFar=0;const P=qs.map(prep);const ans=[],checked=[];let left=(exam?cur.exam.minutes:0)*60;
  const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
  if(exam){timerId=setInterval(()=>{left--;const el=document.getElementById('tm');if(el)el.textContent=fmt(left);if(left<=0){clearInterval(timerId);finish()}},1000)}
@@ -2143,11 +2152,11 @@ function startQuiz(qs,title,exam){if(window.QUIZGATE&&!QUIZGATE(exam,qs.length))
   ${exam?`<div class="navq">${P.map((pp,j)=>`<button data-g="${j}" class="${answered(pp,ans[j])?'a':''} ${j===i?'c':''}" aria-label="Задание ${j+1}">${j+1}</button>`).join('')}</div>`:''}</div>`;
   const opts=document.getElementById('opts');
   opts.onclick=e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;
-   if(it.t==='s'){if(!exam&&window.TASKSTEP&&!TASKSTEP())return;ans[i]=+b.dataset.j;if(!exam){checked[i]=1;const g=grade(p,ans[i]);score+=g;maxSoFar+=1;record(it,g===1);save()}draw();return}
+   if(it.t==='s'){if(!exam&&window.TASKSTEP&&!TASKSTEP(it))return;ans[i]=+b.dataset.j;if(!exam){checked[i]=1;const g=grade(p,ans[i]);score+=g;maxSoFar+=1;record(it,g===1);save()}draw();return}
    if(it.t==='m'){const s=new Set(ans[i]||[]);const j=+b.dataset.j;s.has(j)?s.delete(j):s.add(j);ans[i]=[...s];draw();return}
    const arr=(ans[i]||it.left.map(()=>null)).slice();const li=+b.dataset.l,ri=+b.dataset.r;arr[li]=arr[li]===ri?null:ri;ans[i]=arr;draw()};
   const hb=document.getElementById('hint');if(hb)hb.onclick=()=>{if(window.PERKGATE&&!PERKGATE('hints'))return;HL[i]=(HL[i]||0)+1;draw()};
-  const chk=document.getElementById('chk');if(chk)chk.onclick=()=>{if(window.TASKSTEP&&!TASKSTEP())return;checked[i]=1;const g=grade(p,ans[i]);score+=g;maxSoFar+=pts(it);record(it,g===pts(it));save();draw()};
+  const chk=document.getElementById('chk');if(chk)chk.onclick=()=>{if(window.TASKSTEP&&!TASKSTEP(it))return;checked[i]=1;const g=grade(p,ans[i]);score+=g;maxSoFar+=pts(it);record(it,g===pts(it));save();draw()};
   const nx=document.getElementById('nx');if(nx)nx.onclick=()=>{if(i<P.length-1){i++;draw()}else finish()};
   const pv=document.getElementById('pv');if(pv)pv.onclick=()=>{i--;draw()};
   const sm=document.getElementById('sim');if(sm)sm.onclick=()=>{if(window.PERKGATE&&!PERKGATE('similar'))return;const seen=P.slice(0,i+1).map(x=>x.it).filter((x,j)=>true),later=P.slice(i+1).filter((x,j)=>!checked[i+1+j]).map(x=>x.it);const gm=it.g&&typeof GENMAKE==='function'?GENMAKE(it):null;if(gm){const np=prep(gm);np.sim=1;P.splice(i+1,0,np);ans.splice(i+1,0,undefined);checked.splice(i+1,0,undefined);HL.splice(i+1,0,0);i++;draw();window.scrollTo({top:0,behavior:'smooth'});return}const c=SIMILAR(it,seen,later);if(!c){document.getElementById('simmsg').textContent='Похожих заданий в этой теме нет — открой урок по теме.';return}
@@ -2157,10 +2166,10 @@ function startQuiz(qs,title,exam){if(window.QUIZGATE&&!QUIZGATE(exam,qs.length))
   document.getElementById('qq').onclick=()=>{const left=P.filter((pp,j)=>!answered(pp,ans[j])).length;if(!exam||left===0)return finish();const box=document.getElementById('cf');box.innerHTML=`<div class="note" style="margin-top:14px"><p style="margin:0 0 10px">Без ответа: <b>${left}</b> из ${P.length}. Они дадут 0 баллов. Завершить?</p><div class="row"><button class="btn alt" id="cfn">Продолжить тест</button><button class="btn" id="cfy">Завершить</button></div></div>`;document.getElementById('cfn').onclick=()=>box.innerHTML='';document.getElementById('cfy').onclick=finish};}
  function finish(){if(window.SYNCNOW)SYNCNOW();window.QACTIVE=false;clearInterval(timerId);let total=score,max=maxSoFar;
   if(exam){total=0;max=0;P.forEach((p,j)=>{max+=pts(p.it);if(!answered(p,ans[j]))return;const g=grade(p,ans[j]);total+=g;record(p.it,g===pts(p.it))});
-   if(P.some((p,j)=>answered(p,ans[j]))){S.exams.push({d:new Date().toLocaleDateString('ru-RU'),s:total,m:max});S.exams=S.exams.slice(-30)}save()}
+   var nA=P.filter((p,j)=>answered(p,ans[j])).length,cntd=nA*2>=P.length;if(cntd){S.exams.push({d:new Date().toLocaleDateString('ru-RU'),s:total,m:max});S.exams=S.exams.slice(-30);if(window.MOCKUSE)MOCKUSE(nA)}save()}
   const wrongs=P.map((p,j)=>({p,j})).filter(({p,j})=>(exam||checked[j])&&grade(p,ans[j])<pts(p.it)&&(exam||answered(p,ans[j])));
   app.innerHTML=`<div class="fade"><div class="card" style="text-align:center"><div class="mut">${esc(title)}</div><div class="res" data-cel="${max?total/max:0}">${total}/${max}</div><div class="small mut">баллов</div>
-  ${exam&&cur.id==='hist'?`<p>${total>=5?'Порог в 5 баллов пройден.':'Ниже порога в 5 баллов — повтори темы с ошибками.'}</p>`:''}
+  ${exam&&!cntd?`<div class="nocount" style="text-align:left;margin-top:10px">${ICO('alert',18)}<span>Попытка <b>не засчитана</b>: отвечено ${nA} из ${P.length}. Пробник засчитывается, если ответить хотя бы на половину — тогда он попадает в «Последние пробные» и в дневной лимит.</span></div>`:''}${exam&&cur.id==='hist'?`<p>${total>=5?'Порог в 5 баллов пройден.':'Ниже порога в 5 баллов — повтори темы с ошибками.'}</p>`:''}
   <div class="row" style="justify-content:center;margin-top:10px"><button class="btn" id="again">Ещё раз</button><button class="btn alt" id="hm">На главную</button></div></div>
   ${(()=>{const L=P.map((p,j)=>({p,j})).filter(({p,j})=>exam||checked[j]).map(({p,j})=>({it:p.it,p,a:ans[j],answered:answered(p,ans[j]),g:answered(p,ans[j])?grade(p,ans[j]):0,max:pts(p.it),num:j+1}));return L.length?`<h3 style="margin-top:20px">Разбор: твои ответы и правильные</h3>${RVW(L,F,cur.id,{topicLink:tn})}`:''})()}</div>`;
   document.getElementById('again').onclick=()=>{window.QTOPIC=TOPIC?1:0;return startQuiz(exam?makeExam():qs.some(q=>q.ctx)?qs:shuf(qs),title,exam)};
@@ -3103,10 +3112,11 @@ function eFinish(R){clearInterval(timerId);
   try{localStorage.setItem(S2.key,JSON.stringify(st))}catch(e){}});
  S=loadS();
  const score=parts.reduce((s,p)=>s+p.sc,0),max=parts.reduce((s,p)=>s+p.mx,0),min=Math.round((Math.min(Date.now(),R.end)-R.started)/60000);
- const H=LSG(ENTK)||[];H.push({t:Date.now(),kind:R.kind,score,max,min,parts:parts.map(p=>p.sc)});LSS(ENTK,H);localStorage.removeItem(ENTRUN);if(window.SYNCNOW)SYNCNOW();
+ let nAns=0,nAll=0;R.blocks.forEach((B,b)=>B.items.forEach((P,i)=>{nAll++;if(answered(P,R.ans[key(b,i)]))nAns++}));const counted=nAns*2>=nAll;
+ const H=LSG(ENTK)||[];if(counted){H.push({t:Date.now(),kind:R.kind,score,max,min,parts:parts.map(p=>p.sc)});LSS(ENTK,H);if(window.ENTUSE)ENTUSE()}localStorage.removeItem(ENTRUN);if(window.SYNCNOW)SYNCNOW();
  const passSub=parts.every(p=>p.sc>=ESUB.find(s=>s.id===p.sid).min);
  const full=R.kind==='full';
- app.innerHTML=`<div class="fade"><h2 data-cel="${max?score/max:0}">Результат: <span class="cnum">${score}</span> из ${max}</h2><p class="mut small">Время: ${min} мин.</p>
+ app.innerHTML=`<div class="fade"><h2 data-cel="${max?score/max:0}">Результат: <span class="cnum">${score}</span> из ${max}</h2><p class="mut small">Время: ${min} мин.</p>${counted?'':`<div class="card nocount">${ICO('alert',18)}<span>Попытка <b>не засчитана</b>: ты ответил на ${nAns} из ${nAll}. Пробное засчитывается, когда отвечено хотя бы на половину заданий — тогда оно попадает в историю и в дневной лимит.</span></div>`}
  <div class="card scroll" style="padding:6px"><table><thead><tr><th>Предмет</th><th>Баллы</th><th>Порог</th></tr></thead><tbody>${parts.map(p=>{const s=ESUB.find(z=>z.id===p.sid);const ok=p.sc>=s.min;return`<tr><td>${s.name}</td><td><b>${p.sc}</b> / ${p.mx}</td><td style="color:${ok?'var(--ok)':'var(--bad)'}">${ok?'✓':'✗'} ${s.min}</td></tr>`}).join('')}</tbody></table></div>
  ${full?`<div class="card" style="margin-top:12px"><b>Куда хватает баллов</b><ul class="small">${[[50,'порог для поступления в вузы'],[65,'национальные вузы'],[70,'здравоохранение'],[75,'педагогика и право']].map(([v,t])=>`<li style="color:${score>=v&&passSub?'var(--ok)':'inherit'}">${score>=v&&passSub?'✓':'✗'} ${v}+ — ${t}</li>`).join('')}</ul>${passSub?'':'<p class="small" style="color:var(--bad)">Не пройден порог хотя бы по одному предмету — на настоящем ЕНТ это значит, что поступить нельзя, даже если общий балл высокий.</p>'}<p class="small mut">Для гранта нужно больше: проходной балл на грант зависит от специальности и конкурса.</p></div>`:''}
  <div class="row" style="margin-top:12px"><button class="btn gold" id="again">Ещё попытка</button><button class="btn alt" id="hm">К пробному ЕНТ</button></div>
@@ -3244,11 +3254,13 @@ window.QUIZGATE=(exam,cnt)=>{const L=perk('tests'),LT=perk('tasks'),u=useGet();
  if(LT>=0){const rest=LT-(u.tasks||0);if(rest<=0){showTariffs(`Без тарифа можно решать ${LT} ${GW(LT,'задание','задания','заданий')} в день — на сегодня всё. Приходи завтра или оформи тариф.`);return false}
   if(exam&&cnt>rest){showTariffs(`В пробнике ${cnt} ${GW(cnt,'задание','задания','заданий')}, а без тарифа на сегодня осталось ${rest}. Реши тесты по темам или оформи тариф.`);return false}}
  if(L>=0){if((u.tests||0)>=L){showTariffs(`Без тарифа можно решать ${L} ${GW(L,'тест','теста','тестов')} в день — лимит на сегодня закончился. Приходи завтра или оформи тариф.`);return false}useAdd('tests')}
- if(LT>=0&&exam&&cnt)useAdd('tasks',cnt);return true};
-window.TASKSTEP=()=>{const LT=perk('tasks');if(LT<0)return true;const u=useGet();if((u.tasks||0)>=LT){const box=document.getElementById('cf');if(box)box.innerHTML=`<div class="card tlim"><div class="tlh">${ICO('lock',22)}<div><b>На сегодня всё — ${LT} ${GW(LT,'задание','задания','заданий')} без тарифа</b><p class="small mut" style="margin:2px 0 0">Ответы сохранены. Завтра лимит обновится, или оформи тариф — тогда без ограничений.</p></div></div><div class="row" style="margin-top:10px;gap:8px"><button class="btn" id="tl_tar">${ICO('gem',16)} Тарифы</button><button class="btn alt" id="tl_end">Завершить тест</button></div></div>`;
+ return true};
+window.MOCKUSE=n=>{if(perk('tasks')>=0&&n)useAdd('tasks',n)};
+window.TASKSTEP=it=>{if(window.FREESET&&window.QACTIVE){if(it&&window.FSMARK)FSMARK(it);return true}const LT=perk('tasks');if(LT<0)return true;const u=useGet();if((u.tasks||0)>=LT){const box=document.getElementById('cf');if(box)box.innerHTML=`<div class="card tlim"><div class="tlh">${ICO('lock',22)}<div><b>На сегодня всё — ${LT} ${GW(LT,'задание','задания','заданий')} без тарифа</b><p class="small mut" style="margin:2px 0 0">Ответы сохранены. Завтра лимит обновится, или оформи тариф — тогда без ограничений.</p></div></div><div class="row" style="margin-top:10px;gap:8px"><button class="btn" id="tl_tar">${ICO('gem',16)} Тарифы</button><button class="btn alt" id="tl_end">Завершить тест</button></div></div>`;
   const tt=document.getElementById('tl_tar');if(tt)tt.onclick=()=>{window.QACTIVE=false;showTariffs()};const te=document.getElementById('tl_end');if(te)te.onclick=()=>{const q=document.getElementById('qq');q&&q.click()};box&&box.scrollIntoView({behavior:'smooth',block:'center'});TOAST('Лимит заданий на сегодня закончился','info',4000);return false}
  useAdd('tasks');const left=LT-(u.tasks||0)-1;if(left===5||left===1)TOAST(`Без тарифа на сегодня осталось ${left} ${GW(left,'задание','задания','заданий')}`,'info',3500);return true};
-window.ENTGATE=()=>{const L=perk('ent');if(L<0)return true;const u=useGet();if(u.ent>=L){showTariffs(`Пробное ЕНТ без ограничений — с тарифом Standart Plus. Сейчас доступно ${L} в день, на сегодня попытки закончились.`);return false}useAdd('ent');return true};
+window.ENTGATE=()=>{const L=perk('ent');if(L<0)return true;const u=useGet();if((u.ent||0)>=L){showTariffs(`Пробное ЕНТ без ограничений — с тарифом Standart Plus. Сейчас доступно ${L} в день, на сегодня попытки закончились.`);return false}return true};
+window.ENTUSE=()=>{if(perk('ent')>=0)useAdd('ent')};
 const secMode=s=>(CFG.access||{})[s]||'free';
 function canSec(s){if(isAdminR()||!NEEDAUTH&&!ACC)return true;const m=secMode(s);return m==='free'||(m==='paid'&&hasFeat(s))}
 function topicSec(tid){for(const k in SUBJ_ALL)if((SUBJ_ALL[k].T||[]).some(t=>t.id===tid))return k;return cur.id}
@@ -3554,6 +3566,7 @@ function admTar(box){const T=JSON.parse(JSON.stringify(CFG.tariffs)),FR=Object.a
  <p class="small" style="margin:8px 0 2px"><b>Возможности</b></p>${pk(t.perks,'p',i)}
  <p class="small" style="margin:8px 0 2px"><b>Разделы</b></p><label class="chk"><input type="checkbox" data-all="${i}" ${t.features.includes('all')?'checked':''}> Все разделы (включая доп.)</label>
  <div class="fchk">${SECS.map(([k,n])=>`<label class="chk"><input type="checkbox" data-ft="${i}" value="${k}" ${t.features.includes(k)?'checked':''} ${t.features.includes('all')?'disabled':''}> ${n}</label>`).join('')}</div></div>`}).join('')}
+ <div class="card"><h3 style="margin-top:0">${ICO('target',18)} Бесплатная подборка «Решать тесты»</h3><p class="small mut" style="margin-top:0">Доступна всем, не тратит дневной лимит. Задания подбираются случайно для каждого ученика и меняются по расписанию.</p><div class="row" style="gap:12px"><label class="small">Заданий в подборке<input id="fs_n" type="number" min="5" max="60" value="${CFG.freeSetN||25}" style="width:90px"></label><label class="small">Менять каждые, часов<input id="fs_h" type="number" min="1" max="48" value="${CFG.freeSetH||5}" style="width:90px"></label></div></div>
  <div class="row"><button class="btn alt" id="at_add">+ Добавить тариф</button><button class="btn" id="at_save">Сохранить тарифы</button></div><p class="small" id="at_m"></p><p class="small mut">Срок 36500 дней = навсегда. Какие разделы и темы платные — во вкладке «Доступ».</p>`;
   box.querySelectorAll('[data-f]').forEach(el=>el.oninput=()=>{const t=T[+el.dataset.i],f=el.dataset.f;t[f]=f==='price'||f==='days'?+el.value:el.value});
   box.querySelectorAll('[data-fb]').forEach(el=>el.onchange=()=>{FR[el.dataset.fb]=el.checked});
@@ -3565,7 +3578,7 @@ function admTar(box){const T=JSON.parse(JSON.stringify(CFG.tariffs)),FR=Object.a
   box.querySelectorAll('[data-del]').forEach(el=>el.onclick=()=>{if(confirm('Удалить тариф?')){T.splice(+el.dataset.del,1);draw()}});
   box.querySelectorAll('[data-up]').forEach(el=>el.onclick=()=>{const i=+el.dataset.up;if(i>0){[T[i-1],T[i]]=[T[i],T[i-1]];draw()}});
   document.getElementById('at_add').onclick=()=>{T.push({id:'t'+Date.now().toString(36),name:'Новый тариф',price:1990,days:30,desc:'',features:BASESEC.slice(),perks:{learn:true,ref:true,mist:true,hints:true,similar:true,tasks:-1,tests:-1,ent:-1}});draw()};
-  document.getElementById('at_save').onclick=()=>saveCfg({tariffs:T,free:FR},'at_m')};draw()}
+  document.getElementById('at_save').onclick=()=>saveCfg({tariffs:T,free:FR,freeSetN:Math.max(5,Math.min(60,+(document.getElementById('fs_n')||{}).value||25)),freeSetH:Math.max(1,Math.min(48,+(document.getElementById('fs_h')||{}).value||5))},'at_m')};draw()}
 function admAcc(box){const A=Object.assign({},CFG.access),TP=Object.assign({},CFG.topics);const M=[['free','Бесплатно'],['paid','По подписке'],['hidden','Скрыто']];
  const sel=(v,attr,inh)=>`<select ${attr}>${inh?'<option value="">Как у предмета</option>':''}${M.map(([k,n])=>`<option value="${k}" ${v===k?'selected':''}>${n}</option>`).join('')}</select>`;
  box.innerHTML=`<p class="small mut">«По подписке» — открыто тем, у кого тариф включает этот раздел. «Скрыто» — не видно никому, кроме тебя.</p>${SECS.map(([k,n])=>`<details class="card"><summary class="row" style="justify-content:space-between"><b>${n}</b>${sel(A[k]||'free',`data-s="${k}"`)}</summary>
@@ -3802,6 +3815,18 @@ function vaPick(){const v=viewAs();let m=document.getElementById('vamod');if(m)m
  m.innerHTML=`<div class="vamodbox"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h3 style="margin:0">${ICO('search',18)} Смотреть как…</h3><button class="instx" id="vam_x" aria-label="Закрыть">✕</button></div><div class="vagrid">${VAOPTS().map(o=>`<button class="vab ${v&&o.v.role===(v.role||'')&&o.v.plan===(v.plan||'')?'on':''}" data-va='${JSON.stringify(o.v)}'><b>${esc(o.n)}</b><span>${esc(o.d)}</span></button>`).join('')}</div><button class="btn alt" id="va_off" style="margin-top:12px;width:100%">${ICO('crown',16)} Вернуться к виду владельца</button></div>`;
  document.body.appendChild(m);m.onclick=e=>{if(e.target===m)m.remove()};document.getElementById('vam_x').onclick=()=>m.remove();vaBind()}
 
+/* ---- бесплатная подборка: N заданий, меняется каждые H часов ---- */
+const FSH=()=>+(CFG.freeSetH||5),FSN=()=>+(CFG.freeSetN||25);
+const fsPeriod=()=>Math.floor(Date.now()/(FSH()*36e5));
+function fsSeed(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return()=>{h+=0x6D2B79F5;let t=h;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function fsItems(){const pool=cur.items.slice(),rnd=fsSeed((ACC?ACC.uid:'guest')+'|'+cur.id+'|'+fsPeriod());for(let i=pool.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}return pool.slice(0,Math.min(FSN(),pool.length))}
+function fsState(){const s=LSG('ent-fset:'+(ACC?ACC.uid:'g')+':'+cur.id);return s&&s.p===fsPeriod()?s:{p:fsPeriod(),done:[]}}
+window.FSMARK=it=>{const s=fsState(),kk=k(it);if(!s.done.includes(kk)){s.done.push(kk);LSS('ent-fset:'+(ACC?ACC.uid:'g')+':'+cur.id,s)}};
+function fsLeft(){const ms=(fsPeriod()+1)*FSH()*36e5-Date.now(),h=Math.floor(ms/36e5),m=Math.ceil(ms%36e5/6e4);return h?`${h} ч ${m} мин`:`${m} мин`}
+window.FSCARD=()=>{if(!cur.items||!cur.items.length)return'';const n=Math.min(FSN(),cur.items.length),d=fsState().done.length,lim=perk('tasks')>=0;
+ return`<div class="card fscard"><div class="fsh2"><span class="dbi">${ICO('target',22)}</span><div><h3 style="margin:0">Решать тесты</h3><p class="small mut" style="margin:2px 0 0">${n} заданий${lim?' — <b>бесплатно</b>, не тратят дневной лимит':''}. Новая подборка каждые ${FSH()} ч — следующая через ${fsLeft()}.</p></div></div>
+ <div class="fsprog"><div class="bar"><i style="width:${d/n*100}%"></i></div><span class="small"><b>${Math.min(d,n)}</b> из ${n}</span></div><button class="btn" id="fs_go">${d>=n?'Пройти ещё раз':d?'Продолжить':'Начать'}</button></div>`};
+window.FSBIND=()=>{const b=document.getElementById('fs_go');if(b)b.onclick=()=>{const items=fsItems(),s=fsState(),rest=items.filter(it=>!s.done.includes(k(it)));startQuiz(rest.length?rest:items,'Решать тесты',false,{free:true})}};
 /* ---- рефералы: пригласи друга ---- */
 let REFS=null;
 function refDiscount(){if(!ACC)return 0;const per=+(CFG.refPct??10),mx=+(CFG.refMax??30);const n=Math.max(0,(REFS?REFS.length:0)-(ACC.refUsed||0));let d=Math.min(mx,n*per);if(ACC.refBy&&!ACC.refFriendUsed&&!planOn())d=Math.max(d,+(CFG.refFriend??10));return CFG.refOn===false?0:d}
@@ -3945,7 +3970,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 77 от 27.11 00:10</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 78 от 27.11 00:16</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,pend=false;const busy=()=>!!(window.QACTIVE||window.ENTMODE);function updBar(){let u=document.getElementById("updbar");const t=busy()?"Вышло обновление сайта. Применится после теста — ответы не пропадут.":"Вышло обновление сайта";if(!u){u=document.createElement("div");u.id="updbar";u.innerHTML='<span class="ut"></span><button type="button">Обновить</button><button type="button" class="ux" aria-label="Позже">✕</button>';document.body.appendChild(u);u.querySelector("button").onclick=()=>{if(busy()&&!confirm("Тест ещё идёт. Обновить сейчас? Ответы текущего теста пропадут."))return;location.reload()};u.querySelector(".ux").onclick=()=>u.remove();requestAnimationFrame(()=>u.classList.add("on"))}u.querySelector(".ut").textContent=t}navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had){had=true;return}pend=true;if(!busy()&&document.visibilityState==="hidden"){location.reload();return}updBar()});document.addEventListener("visibilitychange",()=>{if(pend&&document.visibilityState==="hidden"&&!busy())location.reload()});setInterval(()=>{if(pend&&document.getElementById("updbar"))updBar()},4000);navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
