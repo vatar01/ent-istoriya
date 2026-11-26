@@ -3552,7 +3552,7 @@ try{const [A,U,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'fireb
 const app=A.initializeApp({apiKey:"AIzaSyA5X-VTE9Ekb_Oa2BrFEGBAPuEFHpF40ns",authDomain:"ent-2027.firebaseapp.com",projectId:"ent-2027",storageBucket:"ent-2027.firebasestorage.app",messagingSenderId:"919819745087",appId:"1:919819745087:web:182ab25143c0c023db058a"});
 /* reCAPTCHA v3 через Firebase App Check: вставь сюда ключ сайта (site key) — пусто = выключено */
 const RECAPTCHA_SITE_KEY='6Le_9TMuAAAAAJXLHHFnFisBBdlBohvNM2GmSrvy';
-if(RECAPTCHA_SITE_KEY){try{const AC=await import(V+'firebase-app-check.js');AC.initializeAppCheck(app,{provider:new AC.ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),isTokenAutoRefreshEnabled:true});window.APPCHECK=true}catch(e){console.warn('AppCheck',e)}}
+if(RECAPTCHA_SITE_KEY){try{const AC=await import(V+'firebase-app-check.js');AC.initializeAppCheck(app,{provider:new AC.ReCaptchaEnterpriseProvider(RECAPTCHA_SITE_KEY),isTokenAutoRefreshEnabled:true});window.APPCHECK=true}catch(e){console.warn('AppCheck',e)}}
 const auth=U.getAuth(app);auth.languageCode=window.LANG==='kk'?'kk':'ru';const db=D.getFirestore(app);
 window.FBAPI={onAuth:cb=>U.onAuthStateChanged(auth,cb),signUp:(e,p)=>U.createUserWithEmailAndPassword(auth,e,p),signIn:(e,p)=>U.signInWithEmailAndPassword(auth,e,p),reset:e=>U.sendPasswordResetEmail(auth,e),out:()=>U.signOut(auth),
 google:()=>{const pr=new U.GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;return sa?U.signInWithRedirect(auth,pr):U.signInWithPopup(auth,pr).catch(e=>{if(e&&(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'))return U.signInWithRedirect(auth,pr);throw e})},
@@ -3578,7 +3578,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 55 от 26.11 22:30</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 56 от 26.11 22:44</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
