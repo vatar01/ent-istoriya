@@ -3051,6 +3051,7 @@ const ROLEN={owner:'Владелец',admin:'Администратор',manager
 const ROLEI={owner:'crown',admin:'shield',manager:'headset'};
 const roleOf=u=>OWNERS.includes(u.id||u.uid)?'owner':(u.role||'');
 const planOn=()=>viewAs()?!!viewAs().plan:!!ACC&&!!ACC.plan&&(ACC.paidUntil||0)>Date.now();
+const myUntil=()=>viewAs()?Date.now()+30*864e5:(ACC&&ACC.paidUntil)||0;
 const myTariff=()=>planOn()?CFG.tariffs.find(t=>t.id===(viewAs()?viewAs().plan:ACC.plan)):null;
 function hasFeat(sec){if(isAdminR())return true;const t=myTariff();return!!t&&(t.features.includes('all')||t.features.includes(sec))}
 function perk(p){if(isAdminR()||!NEEDAUTH&&!ACC)return p==='tests'||p==='ent'?-1:true;const t=myTariff();const src=t&&t.perks?t.perks:(CFG.free||DEFCFG.free);const v=src[p];return v==null?(p==='tests'||p==='ent'?-1:true):v}
@@ -3209,7 +3210,7 @@ function page(title,html,noback){document.body.classList.add('pgmode');clearInte
 const say2=(id,t,ok)=>{const m=document.getElementById(id);if(m){m.textContent=t;m.style.color=ok?'var(--ok)':'var(--bad)'}};
 
 function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
- const badge=isStaff()?'<span class="pbadge own">'+ICO(ROLEI[myRole()],15)+' '+ROLEN[myRole()]+'</span>'+(t?` <span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)}</span>`:''):t?`<span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)} · до ${ACC.paidUntil>=FOREVER?'∞':fmtD(ACC.paidUntil)}</span>`:'<span class="pbadge">Бесплатный доступ</span>';
+ const badge=isStaff()?'<span class="pbadge own">'+ICO(ROLEI[myRole()],15)+' '+ROLEN[myRole()]+'</span>'+(t?` <span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)}</span>`:''):t?`<span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)} · до ${myUntil()>=FOREVER?'∞':fmtD(myUntil())}</span>`:'<span class="pbadge">Бесплатный доступ</span>';
  page('profile',`<div class="phero"><div class="pava" id="pf_av">${AVH(ACC.avatar,96,ACC.name)}<span class="pedit">${ICO('pencil',14)}</span></div>
  <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pnick" id="pf_nick">${ACC.nick?'@'+esc(ACC.nick):'+ придумать логин'}</div><div class="pmail">${esc(showId(ACC.email))}</div>${badge}</div>
  <div class="pstats"><div><b>${st.n}</b><span>решено заданий</span></div><div><b>${st.acc}%</b><span>точность</span></div><div><b>${st.ent}</b><span>пробных ЕНТ</span></div><div><b>${st.best!=null?st.best:'—'}</b><span>лучший ЕНТ${st.bestMax?' из '+st.bestMax:''}</span></div></div>
@@ -3249,7 +3250,7 @@ function avatarPicker(){let sel=ACC.avatar&&ACC.avatar.startsWith('e|')?ACC.avat
 async function showTariffs(why){if(!ACC){if(NEEDAUTH)authShow('in');return}if(REFS===null){await loadRefs()}const t=myTariff();let mine=[];
  page('tariffs',`<h2 style="margin:.6em 0 .2em">Тарифы</h2>${why?`<div class="card why">${ICO('lock',18)} ${esc(why)}</div>`:''}
  ${isOwner()?'<p class="small mut">Ты владелец — тебе доступно всё. Тарифы настраиваются в админ-панели.</p>':''}
- ${t?`<div class="card" style="border-color:var(--ok)">${ICO('check',18)} Твой тариф: <b>${esc(t.name)}</b>, действует до <b>${ACC.paidUntil>=FOREVER?'бессрочно':fmtD(ACC.paidUntil)}</b>.</div>`:''}
+ ${t?`<div class="card" style="border-color:var(--ok)">${ICO('check',18)} Твой тариф: <b>${esc(t.name)}</b>, действует до <b>${myUntil()>=FOREVER?'бессрочно':fmtD(myUntil())}</b>.</div>`:''}
  <div class="tgrid">${CFG.tariffs.map((x,i)=>`<div class="card tcard ${i===1?'hot':''}">${i===1?'<span class="thot">Популярный</span>':''}<div class="tname">${esc(x.name)}</div>${refDiscount()?`<div class="small" style="color:var(--ok);font-weight:700">${ICO('spark',13)} −${refDiscount()}% по приглашению</div><div class="tprice"><s class="small mut" style="-webkit-text-fill-color:var(--mut)">${(+x.price||0).toLocaleString('ru-RU')}</s> ${Math.round((+x.price||0)*(100-refDiscount())/100).toLocaleString('ru-RU')} ₸<small>`:`<div class="tprice">${(+x.price||0).toLocaleString('ru-RU')} ₸<small>`} / ${x.days>=36500?'навсегда':x.days+' дн.'}</small></div><p class="small">${esc(x.desc||'')}</p>
  <button class="btn" data-buy="${x.id}" style="width:100%">${t&&t.id===x.id?'Продлить':'Оформить'}</button></div>`).join('')||'<p class="mut">Тарифы пока не настроены.</p>'}</div>
  <div class="card scroll" style="padding:6px"><table class="tcmp"><thead><tr><th></th><th>Без тарифа</th>${CFG.tariffs.map(x=>`<th>${esc(x.name)}</th>`).join('')}</tr></thead><tbody>
@@ -3699,7 +3700,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 61 от 26.11 22:57</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 62 от 26.11 22:58</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
