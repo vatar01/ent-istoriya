@@ -10,6 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="ЕНТ 2027">
 <meta name="theme-color" content="#ffffff">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.json">
 <title>ЕНТ 2027: подготовка</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -391,7 +392,12 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 .langnote{position:fixed;z-index:850;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:flex-start;background:var(--hl);color:var(--ink);border:1.5px solid #E8C93A;border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.4;box-shadow:0 3px 0 #E8C93A;animation:pgin .35s}
 .langnote button{border:0;background:none;font-size:16px;cursor:pointer;color:var(--ink);padding:0 2px}
 @media(min-width:760px){.langnote{left:auto;right:24px;bottom:24px;max-width:420px}}
-.brand b{white-space:nowrap}@media(max-width:430px){.topbar .brand b{display:none}}
+.brand b{white-space:nowrap}@media(max-width:430px){.topbar .brand b,.topbar .brand b.wm{display:none}}
+
+.bmark9{display:inline-flex;width:38px;height:38px;flex:none;filter:drop-shadow(0 3px 4px rgba(20,39,102,.25));transition:transform .35s cubic-bezier(.3,1.6,.5,1)}.bmark9 svg{width:100%;height:100%}.brand:hover .bmark9{transform:rotate(-8deg) translateY(-2px)}
+.brand b.wm{display:inline-flex;align-items:center;gap:6px;font:800 19px/1 Unbounded,sans-serif;color:var(--pen2)!important;-webkit-text-fill-color:var(--pen2);letter-spacing:-.01em}
+.brand b.wm i{font-style:normal;font-size:12px;background:var(--hl);color:var(--pen2);-webkit-text-fill-color:var(--pen2);padding:4px 6px;border-radius:6px;transform:rotate(-4deg);box-shadow:0 2px 0 #E8C93A}
+.authlogo9{width:64px;height:64px;filter:drop-shadow(0 6px 10px rgba(20,39,102,.3))}.authlogo9 svg{width:100%;height:100%}
 </style>
 </head>
 <body>
@@ -2968,6 +2974,7 @@ function eFinish(R){clearInterval(timerId);
  window.scrollTo({top:0});
 }
 
+const LOGO9='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="logo9" aria-hidden="true"><defs><linearGradient id="lt9" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0" stop-color="#18C3DE"/><stop offset="1" stop-color="#0A7FB0"/></linearGradient><linearGradient id="lg9" x1="0" y1="0" x2="0.6" y2="1"><stop offset="0" stop-color="#3D63E0"/><stop offset="1" stop-color="#142766"/></linearGradient><filter id="ls9" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#07143D" flood-opacity=".35"/></filter></defs><rect width="512" height="512" rx="112" fill="url(#lg9)"/><rect x="90" y="110" width="18" height="10" rx="3" fill="#FFD23F" transform="rotate(30 90 110)"/><rect x="150" y="70" width="18" height="10" rx="3" fill="#18C3DE" transform="rotate(-20 150 70)"/><rect x="380" y="420" width="18" height="10" rx="3" fill="#FFD23F" transform="rotate(50 380 420)"/><rect x="430" y="360" width="18" height="10" rx="3" fill="#E5484D" transform="rotate(-30 430 360)"/><rect x="70" y="380" width="18" height="10" rx="3" fill="#18C3DE" transform="rotate(15 70 380)"/><rect x="110" y="450" width="18" height="10" rx="3" fill="#FFD23F" transform="rotate(-40 110 450)"/><rect x="440" y="120" width="18" height="10" rx="3" fill="#E5484D" transform="rotate(25 440 120)"/><path d="M120 400 Q150 330 190 300 M90 350 Q120 300 160 280" stroke="#fff" stroke-opacity=".35" stroke-width="10" fill="none" stroke-linecap="round"/><g filter="url(#ls9)" transform="rotate(-16 256 256)"><g transform="translate(18 -6) translate(256 256) scale(0.9) translate(-256 -256)"> <path d="M150 252 V338 Q256 398 362 338 V252 L256 300 Z" fill="#E3EAFF"/> <path d="M256 118 L456 210 L256 302 L56 210 Z" fill="#fff" stroke="#fff" stroke-width="14" stroke-linejoin="round"/> <path d="M256 210 L404 236 V318" fill="none" stroke="#FFD23F" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/> <circle cx="256" cy="210" r="15" fill="#FFD23F"/> <path d="M390 314 h28 l8 52 q-22 12 -44 0 z" fill="#FFD23F"/></g></g></svg>';
 /* ---------- Аккаунт: вход, профиль, тарифы, доступ, админ-панель, синхронизация (Firebase) ---------- */
 const OWNERS=['gDKh7wPgxvZPounAJivTCUQKT4u2','3XxHDqXXWSQyocAY0o4U0OXEL1H3'];const OWNER=OWNERS[0];
 const PSUBJ={math:'Математика',phys:'Физика',inf:'Информатика',geo:'География',bio:'Биология',chem:'Химия',lang:'Иностранный язык',whist:'Всемирная история',law:'Основы права',kazl:'Казахский язык',kazlit:'Казахская литература',rusl:'Русский язык',ruslit:'Русская литература'};
@@ -3114,7 +3121,7 @@ const GICON='<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
 const eye=id=>`<button type="button" class="pweye" data-eye="${id}" aria-label="Показать пароль"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>`;
 function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=document.createElement('div');w.id='auth';document.body.appendChild(w)}
  document.documentElement.style.overflow='hidden';mode=mode||'in';const ready=!!FB,up=mode==='up',ph=AUTHBY==='phone'&&mode!=='reset';
- w.innerHTML=`<div class="authbox">${LANGSW()}<div class="authlogo">${ICO('cap',40)}</div><h2 style="margin:.2em 0">${up?'Регистрация':mode==='reset'?'Новый пароль':'Вход'}</h2><p class="small mut" style="margin:0 0 14px">${up?'Аккаунт нужен, чтобы сохранять результаты и следить за прогрессом.':mode==='reset'?'Пришлём на почту ссылку для нового пароля.':'С возвращением! Войди, чтобы продолжить.'}</p>
+ w.innerHTML=`<div class="authbox">${LANGSW()}<div class="authlogo authlogo9">${LOGO9}</div><h2 style="margin:.2em 0">${up?'Регистрация':mode==='reset'?'Новый пароль':'Вход'}</h2><p class="small mut" style="margin:0 0 14px">${up?'Аккаунт нужен, чтобы сохранять результаты и следить за прогрессом.':mode==='reset'?'Пришлём на почту ссылку для нового пароля.':'С возвращением! Войди, чтобы продолжить.'}</p>
  ${mode!=='reset'?`<div class="authtabs"><button data-by="mail" class="${!ph?'on':''}">По e-mail</button><button data-by="phone" class="${ph?'on':''}">По телефону</button></div>`:''}
  <form id="authf" novalidate>
  ${up?`<label>Имя<input id="a_name" autocomplete="nickname" maxlength="30" placeholder="Как к тебе обращаться"></label>`:''}
@@ -3482,7 +3489,7 @@ async function onUser(u){
  catch(e){console.warn(e);if(!ACC)authShow('in',fbErr(e))}}
 function fbBoot(api){FB=api;if(FB.redirectResult)FB.redirectResult().catch(e=>{if(document.getElementById('auth'))authShow('in',fbErr(e))});FB.onAuth(onUser);const w=document.getElementById('auth');if(w&&!ACC)authShow(document.querySelector('.authtabs .on')?.dataset.m||'in')}
 if(window.FBAPI)fbBoot(window.FBAPI);else addEventListener('fbready',()=>fbBoot(window.FBAPI));
-(function(){const h=document.querySelector('.top .in');if(h&&!document.getElementById('acctbtn')){const tb=document.createElement('div');tb.className='topbar';tb.innerHTML='<button id="homebtn" class="brand"><span class="bmark">'+ICO('cap',20)+'</span><b>ЕНТ 2027</b></button>';const b=document.createElement('button');b.id='acctbtn';b.className='acctb';b.hidden=true;b.onclick=showProfile;const hb=document.createElement('button');hb.id='helpbtn';hb.className='helpb';hb.hidden=true;hb.innerHTML=ICO('chat',18)+'<span>Помощь</span>';hb.onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showHelp()};const rt=document.createElement('div');rt.className='tbr';const ls=document.createElement('div');ls.innerHTML=LANGSW();rt.append(ls.firstChild,hb,b);tb.appendChild(rt);h.prepend(tb);document.getElementById('homebtn').onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showDash()}}
+(function(){const h=document.querySelector('.top .in');if(h&&!document.getElementById('acctbtn')){const tb=document.createElement('div');tb.className='topbar';tb.innerHTML='<button id="homebtn" class="brand" aria-label="ЕНТ 2027 — на главную"><span class="bmark9">'+LOGO9+'</span><b class="wm">ЕНТ<i>2027</i></b></button>';const b=document.createElement('button');b.id='acctbtn';b.className='acctb';b.hidden=true;b.onclick=showProfile;const hb=document.createElement('button');hb.id='helpbtn';hb.className='helpb';hb.hidden=true;hb.innerHTML=ICO('chat',18)+'<span>Помощь</span>';hb.onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showHelp()};const rt=document.createElement('div');rt.className='tbr';const ls=document.createElement('div');ls.innerHTML=LANGSW();rt.append(ls.firstChild,hb,b);tb.appendChild(rt);h.prepend(tb);document.getElementById('homebtn').onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showDash()}}
  lsnPrefill();applyAccess();
  const sj=document.getElementById('subj');if(sj){sj.addEventListener('wheel',e=>{if(sj.scrollWidth>sj.clientWidth&&Math.abs(e.deltaY)>Math.abs(e.deltaX)){sj.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});const ae=()=>sj.classList.toggle('atend',sj.scrollLeft+sj.clientWidth>=sj.scrollWidth-4);sj.addEventListener('scroll',ae);addEventListener('resize',ae);setTimeout(ae,300);sj.addEventListener('click',e=>{const b=e.target.closest('button');if(b)b.scrollIntoView({inline:'nearest',block:'nearest',behavior:'smooth'})})}
  if(NEEDAUTH&&!ACC){authShow('in');setTimeout(()=>{if(!FB&&document.getElementById('auth'))authShow('in','Не удалось подключиться к серверу. Проверь интернет и обнови страницу.')},12000)}
@@ -3568,7 +3575,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 53 от 26.11 22:24</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 54 от 26.11 22:28</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
