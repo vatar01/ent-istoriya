@@ -415,6 +415,12 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 .atabs{scrollbar-width:none;padding:2px 2px 6px!important}.atabs::-webkit-scrollbar{display:none}
 @media(min-width:760px){.atabs{flex-wrap:wrap;overflow:visible}}
 @media(max-width:759px){.atabs{margin-left:-16px;margin-right:-16px;padding-left:16px!important;padding-right:16px!important;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}}
+
+#vabar{position:sticky;top:0;z-index:950;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--hl);color:var(--ink);border-bottom:2px solid #E8C93A;padding:8px 16px;font-size:14px}
+#vabar span{display:inline-flex;align-items:center;gap:6px}#vabar button{border:1.5px solid var(--ink);background:#fff;border-radius:999px;padding:5px 12px;font:700 13px 'Golos Text',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;color:var(--ink)}#vabar #vab_x{background:var(--ink);color:#fff}
+.vagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.vab{text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;box-shadow:0 2px 0 var(--line);font:inherit;color:var(--ink)}
+.vab b{font-size:14px}.vab span{font-size:12px;color:var(--mut)}.vab.on{border-color:var(--pen);background:#EEF2FF;box-shadow:0 2px 0 var(--pen)}
 </style>
 </head>
 <body>
@@ -1430,6 +1436,7 @@ const D={
 'Этот логин уже занят — придумай другой.':'Бұл логин бос емес — басқасын ойлап тап.','Этот логин занят.':'Бұл логин бос емес.','+ придумать логин':'+ логин ойлап табу',
 'Логин: 3–20 символов — латинские буквы, цифры, _ и точка.':'Логин: 3–20 таңба — латын әріптері, сандар, _ және нүкте.','Логин не может начинаться или заканчиваться на точку или _.':'Логин нүктемен немесе _ белгісімен басталмауы және аяқталмауы керек.',
 'Логин (ник): 3–20 символов — латинские буквы, цифры, _ и точка':'Логин (лақап ат): 3–20 таңба — латын әріптері, сандар, _ және нүкте',
+'Посмотреть сайт как…':'Сайтты басқа рөлмен көру…','Ты смотришь как:':'Сен былай көріп тұрсың:','Сменить':'Ауыстыру','Ученик без тарифа':'Тарифсіз оқушы','Вернуться к виду владельца':'Иесінің көрінісіне қайту',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -3031,15 +3038,19 @@ const fmtD=t=>new Date(t).toLocaleDateString('ru-RU',{day:'numeric',month:'long'
 const FOREVER=4102444800000;
 
 /* ---- доступ ---- */
-const isOwner=()=>!!ACC&&OWNERS.includes(ACC.uid);
-const myRole=()=>!ACC?'':OWNERS.includes(ACC.uid)?'owner':(ACC.role||'');
+const realOwner=()=>!!ACC&&OWNERS.includes(ACC.uid);
+/* «Смотреть как…»: владелец временно видит сайт глазами другой роли/тарифа (только на этом устройстве, до выхода) */
+let VIEWAS=null;try{VIEWAS=JSON.parse(sessionStorage.getItem('ent-viewas')||'null')}catch(e){}
+const viewAs=()=>realOwner()&&VIEWAS?VIEWAS:null;
+const isOwner=()=>realOwner()&&!viewAs();
+const myRole=()=>!ACC?'':viewAs()?(viewAs().role||''):OWNERS.includes(ACC.uid)?'owner':(ACC.role||'');
 const isAdminR=()=>['owner','admin'].includes(myRole());
 const isStaff=()=>['owner','admin','manager'].includes(myRole());
 const ROLEN={owner:'Владелец',admin:'Администратор',manager:'Менеджер'};
 const ROLEI={owner:'crown',admin:'shield',manager:'headset'};
 const roleOf=u=>OWNERS.includes(u.id||u.uid)?'owner':(u.role||'');
-const planOn=()=>!!ACC&&!!ACC.plan&&(ACC.paidUntil||0)>Date.now();
-const myTariff=()=>planOn()?CFG.tariffs.find(t=>t.id===ACC.plan):null;
+const planOn=()=>viewAs()?!!viewAs().plan:!!ACC&&!!ACC.plan&&(ACC.paidUntil||0)>Date.now();
+const myTariff=()=>planOn()?CFG.tariffs.find(t=>t.id===(viewAs()?viewAs().plan:ACC.plan)):null;
 function hasFeat(sec){if(isAdminR())return true;const t=myTariff();return!!t&&(t.features.includes('all')||t.features.includes(sec))}
 function perk(p){if(isAdminR()||!NEEDAUTH&&!ACC)return p==='tests'||p==='ent'?-1:true;const t=myTariff();const src=t&&t.perks?t.perks:(CFG.free||DEFCFG.free);const v=src[p];return v==null?(p==='tests'||p==='ent'?-1:true):v}
 const today=()=>new Date().toISOString().slice(0,10);
@@ -3123,7 +3134,7 @@ function AVH(a,sz,name){sz=sz||40;a=a||'';const st=`width:${sz}px;height:${sz}px
 function photoToAvatar(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(im.width,im.height),c=document.createElement('canvas');c.width=c.height=192;const x=c.getContext('2d');x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,192,192);res(c.toDataURL('image/jpeg',.82))};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
 
 /* ---- шапка и объявление ---- */
-function headerAcct(){const b=document.getElementById('acctbtn');if(!b)return;b.hidden=!ACC;const hb=document.getElementById('helpbtn');if(hb)hb.hidden=!ACC||!NEEDAUTH&&!FB;if(!ACC)return;
+function headerAcct(){vaBar();const b=document.getElementById('acctbtn');if(!b)return;b.hidden=!ACC;const hb=document.getElementById('helpbtn');if(hb)hb.hidden=!ACC||!NEEDAUTH&&!FB;if(!ACC)return;
  b.innerHTML=`${AVH(ACC.avatar,26,ACC.name)}<span>${esc(ACC.name||'Профиль')}</span>${isStaff()?'<span class="tag own">'+ICO(ROLEI[myRole()],13)+'</span>':planOn()?'<span class="tag pro">'+ICO('gem',13)+'</span>':''}`}
 function annBar(){let a=document.getElementById('annbar');const t=(CFG.announce||'').trim();if(!t||!ACC){if(a)a.remove();return}
  if(!a){a=document.createElement('div');a.id='annbar';const h=document.querySelector('.top .in');h&&h.appendChild(a)}a.innerHTML=ICO('mega',16)+' '+esc(t)}
@@ -3205,12 +3216,13 @@ function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  <div class="pgrid"><button class="card ptile" id="pf_tar"><span class="dbi">${ICO('gem',24)}</span><b>Тарифы</b><small>${t?'Подписка активна':'Открой все разделы'}</small></button>
  ${isStaff()?'<button class="card ptile" id="pf_adm"><span class="dbi">'+ICO('wrench',24)+'</span><b>Админ-панель</b><small>'+(myRole()==='manager'?'Чаты поддержки и ученики':'Ученики, доступ, заявки, чаты')+'</small></button>':''}
  <button class="card ptile" id="pf_lead" disabled><span class="dbi">${ICO('trophy',24)}</span><b>Таблица лидеров</b><small>Скоро</small></button></div>
+ ${vaCard()}
  ${refCard()}
  ${remCard()}
  <p class="small mut" style="text-align:center">${syncState==='err'?'Не удалось сохранить прогресс — повторим, когда будет интернет.':'Прогресс сохраняется в аккаунте автоматически.'}</p>
  <div class="row" style="justify-content:center;gap:10px"><button class="btn alt" id="pf_out">Выйти</button><button class="btn alt" id="pf_reset" style="color:var(--bad)">Сбросить прогресс</button></div>
  <div style="text-align:center;margin-top:10px">${matchMedia('(display-mode: standalone)').matches||navigator.standalone?'':'<button class="linkb" id="pf_inst">Установить приложение</button>'}<button class="linkb" id="pf_priv">Политика конфиденциальности</button><button class="linkb" id="pf_del" style="color:var(--bad)">Удалить аккаунт</button></div>`);
- remBind();refBind();{const ib=document.getElementById('pf_inst');if(ib)ib.onclick=()=>window.showInstall()}if(REFS===null)loadRefs().then(()=>{if(window.PAGEMODE==='profile')showProfile()});document.getElementById('pf_priv').onclick=showPrivacy;document.getElementById('pf_del').onclick=deleteAccount;
+ remBind();refBind();vaBind();{const ib=document.getElementById('pf_inst');if(ib)ib.onclick=()=>window.showInstall()}if(REFS===null)loadRefs().then(()=>{if(window.PAGEMODE==='profile')showProfile()});document.getElementById('pf_priv').onclick=showPrivacy;document.getElementById('pf_del').onclick=deleteAccount;
  document.getElementById('pf_av').onclick=avatarPicker;
  document.getElementById('pf_nick').onclick=()=>nickEdit();
  document.getElementById('pf_name').onclick=async()=>{const n=prompt('Как тебя зовут?',ACC.name||'');if(n==null)return;const v=n.trim().slice(0,30);if(!v)return;ACC.name=v;LSS(ACK,ACC);headerAcct();try{await FB.setUser(ACC.uid,{name:v})}catch(e){}showProfile()};
@@ -3246,11 +3258,11 @@ async function showTariffs(why){if(!ACC){if(NEEDAUTH)authShow('in');return}if(RE
  app.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buyTariff(b.dataset.buy));
  try{if(FB){mine=await FB.myReqs(ACC.uid);const pend=mine.filter(r=>r.status==='pending');const box=document.getElementById('reqs');
   if(box&&mine.length)box.innerHTML=`<h3>Мои заявки</h3>${mine.sort((a,b)=>b.t-a.t).slice(0,5).map(r=>`<div class="card small">${esc(r.tname||r.tariff)} · ${fmtD(r.t)} · <b style="color:${r.status==='ok'?'var(--ok)':r.status==='no'?'var(--bad)':'inherit'}">${r.status==='ok'?'одобрена':r.status==='no'?'отклонена':'ждёт проверки'}</b>${r.reply?`<div class="mut">Ответ: ${esc(r.reply)}</div>`:''}</div>`).join('')}`}}catch(e){}}
-function buyTariff(id){const x0=CFG.tariffs.find(t=>t.id===id);if(!x0)return;const dsc=refDiscount(),x={...x0,price:Math.round((+x0.price||0)*(100-dsc)/100)};
+function buyTariff(id){if(viewAs()){alert('Это режим просмотра: так ученик увидит окно оплаты. Заявку отсюда отправить нельзя.')}const x0=CFG.tariffs.find(t=>t.id===id);if(!x0)return;const dsc=refDiscount(),x={...x0,price:Math.round((+x0.price||0)*(100-dsc)/100)};
  MODAL('Оформить «'+x.name+'»',`<p><b>${(+x.price||0).toLocaleString('ru-RU')} ₸</b> — ${x.days>=36500?'навсегда':x.days+' дней'}${dsc?` <span class="small" style="color:var(--ok)">(скидка ${dsc}%)</span>`:''}</p><div class="card small" style="white-space:pre-wrap">${esc(CFG.payInfo||'')}</div>
  <label class="small"><b>Комментарий</b> (например, имя отправителя перевода)<textarea id="rq_c" rows="3" style="width:100%;margin-top:4px"></textarea></label>
  <button class="btn" id="rq_go" style="margin-top:10px;width:100%">Я оплатил — отправить заявку</button><p class="small" id="rq_m"></p>`);
- document.getElementById('rq_go').onclick=async()=>{const b=document.getElementById('rq_go');b.disabled=true;
+ document.getElementById('rq_go').onclick=async()=>{if(viewAs())return alert('В режиме просмотра заявка не отправляется.');const b=document.getElementById('rq_go');b.disabled=true;
   try{await FB.addReq({uid:ACC.uid,name:ACC.name||'',email:ACC.email||'',tariff:x.id,tname:x.name,price:+x.price||0,disc:dsc,refN:REFS?REFS.length:0,days:+x.days||30,comment:document.getElementById('rq_c').value.slice(0,500),status:'pending',t:Date.now()});
    say2('rq_m','✓ Заявка отправлена. Владелец проверит оплату и откроет доступ.',1)}catch(e){b.disabled=false;say2('rq_m',fbErr(e))}}}
 
@@ -3259,13 +3271,14 @@ let ADM={users:null,reqs:null};
 async function admLoad(force){if(force||!ADM.users){const [u,r]=await Promise.all([FB.listUsers(),FB.allReqs()]);ADM.users=u;ADM.reqs=r}}
 async function showAdmin(tab){if(!isStaff()||!FB)return;const R0=myRole();tab=tab||(R0==='manager'?'chats':'dash');
  let tabs=[['chats','chat','Чаты'],['dash','chart','Обзор'],['users','users','Ученики'],['reqs','receipt','Заявки'],['tar','gem','Тарифы'],['acc','lock','Доступ'],['cont','cloud','Уроки'],['cal','cal','Календарь'],['set','sliders','Настройки']];
- if(R0==='owner')tabs.push(['notes','pencil','Заметки']);
+ if(R0==='owner')tabs.splice(tabs.length-1,0,['team','crown','Команда']),tabs.push(['notes','pencil','Заметки']);
  if(R0==='manager')tabs=tabs.filter(t=>['chats','users','reqs'].includes(t[0]));if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
  page('admin',`<h2 style="margin:.6em 0 .3em">Админ-панель <span class="pbadge own sm">${ICO(ROLEI[R0],13)} ${ROLEN[R0]}</span></h2><div class="atabs">${tabs.map(([k,ic,n])=>`<button data-t="${k}" class="${k===tab?'on':''}">${ICO(ic,16)}<span>${n}</span></button>`).join('')}</div><div id="adm"><p class="mut">Загрузка…</p></div>`);
  app.querySelectorAll('.atabs [data-t]').forEach(b=>b.onclick=()=>showAdmin(b.dataset.t));
  const box=document.getElementById('adm');
  if(tab==='chats'){admChats(box);return}
  if(tab==='notes'){admNotes(box);return}
+ if(tab==='team'){admTeam(box);return}
  try{await admLoad(tab==='dash')}catch(e){box.innerHTML=`<p style="color:var(--bad)">${esc(fbErr(e))}</p><p class="small">Проверь, что в правилах Firestore указан твой UID как владелец.</p>`;return}
  ({dash:admDash,users:admUsers,reqs:admReqs,tar:admTar,acc:admAcc,cont:admCont,cal:admCal,set:admSet})[tab](box)}
 function admDash(box){const U=ADM.users,now=Date.now(),wk=now-7*864e5;const pro=U.filter(u=>u.plan&&(u.paidUntil||0)>now);
@@ -3361,6 +3374,27 @@ function admSet(box){box.innerHTML=`<div class="card"><h3 style="margin-top:0">$
 
 
 
+
+
+/* ---- команда: назначение ролей (только владелец) ---- */
+async function admTeam(box,msg){if(!isOwner())return;try{await admLoad(true)}catch(e){box.innerHTML=`<p>${esc(fbErr(e))}</p>`;return}
+ const U=ADM.users||[],staff=U.filter(u=>OWNERS.includes(u.id)||u.role==='admin'||u.role==='manager').sort((a,b)=>(OWNERS.includes(b.id)?2:b.role==='admin'?1:0)-(OWNERS.includes(a.id)?2:a.role==='admin'?1:0));
+ const roleOf=u=>OWNERS.includes(u.id)?'owner':u.role;
+ box.innerHTML=`<div class="card"><h3 style="margin-top:0">${ICO('users',18)} Назначить роль</h3>
+ <p class="small mut" style="margin-top:0">Найди человека по логину, почте, телефону или имени — он должен быть уже зарегистрирован.</p>
+ <input id="tm_q" placeholder="@логин, почта, +7… или имя" autocomplete="off" style="width:100%"><div id="tm_res" style="margin-top:8px"></div>
+ <div class="small mut" style="margin-top:10px;line-height:1.5"><b>Менеджер</b> — отвечает в чатах «Помощь», видит учеников и заявки, но не одобряет оплату.<br><b>Администратор</b> — всё, кроме ролей: выдаёт тарифы, одобряет заявки, меняет доступ, календарь и настройки.</div></div>
+ ${msg?`<div class="card" style="color:var(--ok)">${esc(msg)}</div>`:''}
+ <div class="card"><h3 style="margin-top:0">${ICO('crown',18)} Сейчас в команде (${staff.length})</h3>${staff.map(u=>`<div class="row" style="justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);gap:8px;flex-wrap:wrap"><div style="min-width:0"><b>${esc(u.name||'Без имени')}</b> <span class="pbadge sm ${roleOf(u)==='owner'?'own':''}">${ICO(ROLEI[roleOf(u)],12)} ${ROLEN[roleOf(u)]}</span><div class="small mut ell">${u.nick?'@'+esc(u.nick)+' · ':''}${esc(showId(u.email))}</div></div>${roleOf(u)==='owner'?'':`<div class="row" style="gap:6px"><select data-tr="${u.id}" style="min-width:170px"><option value="manager" ${u.role==='manager'?'selected':''}>Менеджер</option><option value="admin" ${u.role==='admin'?'selected':''}>Администратор</option></select><button class="btn alt sm" data-trm="${u.id}" style="color:var(--bad)">Снять</button></div>`}</div>`).join('')}</div>`;
+ const setRole=async(id,r)=>{const u=U.find(x=>x.id===id);try{await FB.setUser(id,{role:r});u.role=r;admTeam(box,(u.name||'Пользователь')+': '+(r?ROLEN[r]:'роль снята, теперь ученик'))}catch(e){alert(fbErr(e))}};
+ box.querySelectorAll('[data-tr]').forEach(s=>s.onchange=()=>setRole(s.dataset.tr,s.value));
+ box.querySelectorAll('[data-trm]').forEach(b=>b.onclick=()=>{if(confirm('Снять роль? Человек станет обычным учеником.'))setRole(b.dataset.trm,'')});
+ const q=document.getElementById('tm_q'),res=document.getElementById('tm_res');
+ q.oninput=()=>{const v=q.value.trim().toLowerCase().replace(/^@/,''),dg=v.replace(/\D/g,'');if(v.length<2){res.innerHTML='';return}
+  const f=U.filter(u=>!OWNERS.includes(u.id)&&((u.nick||'').includes(v)||(u.email||'').toLowerCase().includes(v)||(u.name||'').toLowerCase().includes(v)||(dg.length>=4&&(u.email||'').replace(/\D/g,'').includes(dg)))).slice(0,8);
+  res.innerHTML=f.length?f.map(u=>`<div class="row" style="justify-content:space-between;padding:8px 10px;border:1.5px solid var(--line);border-radius:12px;margin-top:6px;gap:8px;flex-wrap:wrap"><div style="min-width:0"><b>${esc(u.name||'Без имени')}</b>${u.role?` <span class="pbadge sm">${ROLEN[u.role]}</span>`:''}<div class="small mut ell">${u.nick?'@'+esc(u.nick)+' · ':''}${esc(showId(u.email))}</div></div><div class="row" style="gap:6px"><button class="btn sm" data-ta="${u.id}" data-r="manager">Менеджер</button><button class="btn sm alt" data-ta="${u.id}" data-r="admin">Админ</button></div></div>`).join(''):'<p class="small mut">Никого не нашли. Человек должен сначала зарегистрироваться на сайте.</p>';
+  res.querySelectorAll('[data-ta]').forEach(b=>b.onclick=()=>{const u=U.find(x=>x.id===b.dataset.ta);if(confirm(`Назначить «${u.name||u.email}» — ${ROLEN[b.dataset.r]}?`))setRole(u.id,b.dataset.r)})};
+ }
 
 /* ---- личные заметки владельца (видны только ему) ---- */
 let NOTES=null,NQ='';
@@ -3508,6 +3542,20 @@ async function nickEdit(){const v0=prompt('Логин (ник): 3–20 симв�
  try{await FB.nickClaim(n,ACC.uid)}catch(e){return alert('Этот логин уже занят — придумай другой.')}
  const old=ACC.nick;try{await FB.setUser(ACC.uid,{nick:n})}catch(e){FB.nickFree(n).catch(()=>{});return alert(fbErr(e))}
  if(old)FB.nickFree(old).catch(()=>{});ACC.nick=n;LSS(ACK,ACC);showProfile()}
+
+/* ---- режим «Смотреть как…» ---- */
+const VAOPTS=()=>[{k:'free',n:'Ученик без тарифа',d:'2 теста в день, без «Учить»',v:{role:'',plan:''}},...(CFG.tariffs||[]).map(t=>({k:t.id,n:'Ученик · '+t.name,d:(+t.price||0).toLocaleString('ru-RU')+' ₸',v:{role:'',plan:t.id}})),{k:'manager',n:'Менеджер',d:'чаты, ученики, заявки',v:{role:'manager',plan:''}},{k:'admin',n:'Администратор',d:'всё, кроме ролей',v:{role:'admin',plan:''}}];
+function setViewAs(v){try{if(v)sessionStorage.setItem('ent-viewas',JSON.stringify(v));else sessionStorage.removeItem('ent-viewas')}catch(e){}location.reload()}
+function vaName(){const v=viewAs();if(!v)return'';const o=VAOPTS().find(x=>x.v.role===(v.role||'')&&x.v.plan===(v.plan||''));return o?o.n:'другая роль'}
+function vaCard(){if(!realOwner())return'';const v=viewAs();
+ return`<div class="card"><h3 style="margin-top:0">${ICO('search',18)} Посмотреть сайт как…</h3><p class="small mut" style="margin-top:0">Увидишь сайт глазами ученика с нужным тарифом, менеджера или админа. Твой аккаунт и данные не меняются. Выйти — кнопкой в жёлтой полосе вверху.</p>
+ <div class="vagrid">${VAOPTS().map(o=>`<button class="vab ${v&&o.v.role===(v.role||'')&&o.v.plan===(v.plan||'')?'on':''}" data-va='${JSON.stringify(o.v)}'><b>${esc(o.n)}</b><span>${esc(o.d)}</span></button>`).join('')}</div>${v?`<button class="btn alt" id="va_off" style="margin-top:10px">${ICO('crown',16)} Вернуться к виду владельца</button>`:''}</div>`}
+function vaBind(){document.querySelectorAll('[data-va]').forEach(b=>b.onclick=()=>setViewAs(JSON.parse(b.dataset.va)));const o=document.getElementById('va_off');if(o)o.onclick=()=>setViewAs(null)}
+function vaBar(){let b=document.getElementById('vabar');if(!viewAs()){if(b)b.remove();document.body.classList.remove('vamode');return}
+ if(!b){b=document.createElement('div');b.id='vabar';document.body.prepend(b)}document.body.classList.add('vamode');
+ b.innerHTML=`<span>${ICO('search',15)} Ты смотришь как: <b>${esc(vaName())}</b></span><span class="row" style="gap:6px"><button id="vab_ch">Сменить</button><button id="vab_x">${ICO('crown',14)} Выйти</button></span>`;
+ document.getElementById('vab_x').onclick=()=>setViewAs(null);document.getElementById('vab_ch').onclick=()=>{showProfile();setTimeout(()=>{const c=document.querySelector('.vagrid');if(c)c.scrollIntoView({behavior:'smooth',block:'center'})},300)}}
+
 /* ---- рефералы: пригласи друга ---- */
 let REFS=null;
 function refDiscount(){if(!ACC)return 0;const per=+(CFG.refPct??10),mx=+(CFG.refMax??30);const n=Math.max(0,(REFS?REFS.length:0)-(ACC.refUsed||0));let d=Math.min(mx,n*per);if(ACC.refBy&&!ACC.refFriendUsed&&!planOn())d=Math.max(d,+(CFG.refFriend??10));return CFG.refOn===false?0:d}
@@ -3647,7 +3695,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 59 от 26.11 22:51</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 60 от 26.11 22:54</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
