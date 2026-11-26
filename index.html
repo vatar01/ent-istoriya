@@ -560,6 +560,26 @@ select.fshid{position:absolute!important;opacity:0!important;pointer-events:none
 input.pfill{border-color:#F0457A!important;background:#FFF2F7!important}
 @media(max-width:480px){.pbtitle{font-size:17px}.pbgo{width:100%}}
 @media(prefers-reduced-motion:reduce){.pban,.pbgift,.pbspark{animation:none}}
+
+/* шторка */
+html.shlock{overflow:hidden}
+.shov{position:fixed;inset:0;z-index:1100;background:rgba(16,26,51,0);display:flex;align-items:flex-end;justify-content:center;transition:background .25s}
+.shov.on{background:rgba(16,26,51,.5)}
+.shbox{position:relative;width:100%;max-height:92vh;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:10px 18px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(16,26,51,.25);transform:translateY(100%);transition:transform .38s cubic-bezier(.2,1,.3,1);overscroll-behavior:contain}
+.shov.on .shbox{transform:none}
+.shgrab{width:44px;height:5px;border-radius:3px;background:#CDD5E4;margin:2px auto 12px}
+.shx{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:0;background:#F1F4FA;color:var(--ink);font-size:15px;cursor:pointer;z-index:2}
+@media(min-width:700px){.shov{align-items:center;padding:24px}.shbox{max-width:520px;border-radius:22px;padding:22px 24px;transform:translateY(16px) scale(.96);opacity:0;transition:transform .3s cubic-bezier(.2,1.2,.4,1),opacity .2s;box-shadow:0 24px 60px rgba(16,26,51,.3)}.shov.on .shbox{opacity:1}.shgrab{display:none}}
+.buyh{display:flex;gap:12px;align-items:center;padding-right:40px}.buyic{width:48px;height:48px;border-radius:14px;background:var(--pen);color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 3px 0 var(--pen2)}.buyt{margin:2px 0 0;font:800 20px Unbounded,sans-serif}
+.buyp{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,#EEF2FF,#F7F9FF);border:1.5px solid #D6DEF5}
+.buypr{font:800 32px/1 Unbounded,sans-serif;color:var(--pen)}.buypr span{font-size:20px}.buyd{text-align:right;display:flex;flex-direction:column;gap:4px}.buyd s{color:var(--mut);font-size:14px}.buyd span{font-size:12px;font-weight:700;color:#1B6B3A;background:#E3F6E8;border-radius:999px;padding:3px 8px}
+.buysteps{list-style:none;counter-reset:st;padding:0;margin:16px 0 0;display:flex;flex-direction:column;gap:12px}
+.buysteps li{counter-increment:st;position:relative;padding-left:40px}.buysteps li:before{content:counter(st);position:absolute;left:0;top:-1px;width:28px;height:28px;border-radius:50%;background:var(--hl);color:var(--ink);font:800 14px/28px Unbounded,sans-serif;text-align:center;box-shadow:0 2px 0 #E8C93A}
+.buysteps li>b{display:block;margin-bottom:6px}.buyinfo{white-space:pre-wrap;font-size:14px;line-height:1.45;background:#F7F8FB;border:1.5px dashed #CDD5E4;border-radius:12px;padding:10px 12px;margin-bottom:6px}
+.buysteps textarea{width:100%;min-height:56px;resize:vertical;padding:10px 12px;font-size:15px}
+.buygo{width:100%;margin-top:16px;min-height:52px;font-size:16px}
+.buyok{text-align:center;padding:8px 0 4px}.buyokc{width:84px;height:84px;margin:6px auto 12px;border-radius:50%;background:#22A355;color:#fff;display:grid;place-items:center;box-shadow:0 0 0 10px #E3F6E8;animation:okpop .5s}.buyok h3{font:800 20px Unbounded,sans-serif;margin:0 0 6px}
+@media(prefers-reduced-motion:reduce){.shbox,.shov{transition:none}}
 </style>
 </head>
 <body>
@@ -1590,6 +1610,7 @@ const D={
 'Логин друга, который пригласил':'Сені шақырған достың логині','(необязательно)':'(міндетті емес)','Логин друга не найден. Проверь или оставь поле пустым.':'Достың логині табылмады. Тексер немесе бос қалдыр.',
 'Промокод':'Промокод','Активировать':'Белсендіру','Мини-ЕНТ — бесплатно':'Мини-ҰБТ — тегін','Полное пробное ЕНТ — 120 заданий, 4 часа':'Толық сынақ ҰБТ — 120 тапсырма, 4 сағат','Доступно с тарифом Standart Plus или по промокоду. Есть промокод? Введи его:':'Standart Plus тарифімен немесе промокод арқылы қолжетімді. Промокод бар ма? Енгіз:','Такого промокода нет. Проверь, правильно ли написан.':'Мұндай промокод жоқ. Дұрыс жазылғанын тексер.','Ты уже активировал этот промокод.':'Сен бұл промокодты белсендіріп қойғансың.','Срок действия промокода закончился.':'Промокодтың мерзімі бітті.','Промокод уже использовали максимальное число раз.':'Промокод ең көп рет қолданылып қойған.','Проверяем…':'Тексеріп жатырмыз…','Мини-ЕНТ':'Мини-ҰБТ',
 'Подарок для тебя':'Саған сыйлық','Полное пробное ЕНТ — бесплатно':'Толық сынақ ҰБТ — тегін','Пройди настоящий формат: 5 предметов, 120 заданий, 4 часа. Узнай свой балл до экзамена.':'Нақты форматта өт: 5 пән, 120 тапсырма, 4 сағат. Емтиханға дейін балыңды біл.','твой промокод':'сенің промокодың','скопировать':'көшіру','Активировать сейчас':'Қазір белсендіру','Готово!':'Дайын!','Полное пробное ЕНТ ждёт тебя':'Толық сынақ ҰБТ сені күтіп тұр','Перейти к пробному ЕНТ':'Сынақ ҰБТ-ға өту',
+'Оформление тарифа':'Тарифті рәсімдеу','Напиши, от кого перевод':'Аударым кімнен екенін жаз','Отправь заявку':'Өтінім жібер','Владелец проверит оплату и сам откроет доступ — обычно в течение дня.':'Иесі төлемді тексеріп, қолжетімділікті өзі ашады — әдетте бір күн ішінде.','Скопировать сумму':'Соманы көшіру','Я оплатил — отправить заявку':'Төледім — өтінім жіберу','Заявка отправлена!':'Өтінім жіберілді!','Понятно':'Түсінікті',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Установить приложение':'Қосымшаны орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -1627,6 +1648,7 @@ const P=[
  [/^Промокод активирован! Бесплатных полных ЕНТ: (\d+)\.$/,m=>`Промокод белсендірілді! Тегін толық ҰБТ: ${m[1]}.`],
  [/^Начать мини-ЕНТ · (\d+) минут$/,m=>`Мини-ҰБТ бастау · ${m[1]} минут`],
  [/^Начать полное ЕНТ · (\d+) минут$/,m=>`Толық ҰБТ бастау · ${m[1]} минут`],
+ [/^Переведи (.+) ₸$/,m=>`${m[1]} ₸ аудар`],
  [/^(\d+) минут$/,m=>`${m[1]} минут`],
  [/^Начать ЕНТ · (\d+) минут$/,m=>`ҰБТ бастау · ${m[1]} минут`],
  [/^(\d+) предметов · (\d+) заданий · (\d+) мин$/,m=>`${m[1]} пән · ${m[2]} тапсырма · ${m[3]} мин`],
@@ -3538,13 +3560,36 @@ async function showTariffs(why){if(!ACC){if(NEEDAUTH)authShow('in');return}if(RE
  app.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buyTariff(b.dataset.buy));
  try{if(FB){mine=await FB.myReqs(ACC.uid);const pend=mine.filter(r=>r.status==='pending');const box=document.getElementById('reqs');
   if(box&&mine.length)box.innerHTML=`<h3>Мои заявки</h3>${mine.sort((a,b)=>b.t-a.t).slice(0,5).map(r=>`<div class="card small">${esc(r.tname||r.tariff)} · ${fmtD(r.t)} · <b style="color:${r.status==='ok'?'var(--ok)':r.status==='no'?'var(--bad)':'inherit'}">${r.status==='ok'?'одобрена':r.status==='no'?'отклонена':'ждёт проверки'}</b>${r.reply?`<div class="mut">Ответ: ${esc(r.reply)}</div>`:''}</div>`).join('')}`}}catch(e){}}
-function buyTariff(id){if(viewAs()){alert('Это режим просмотра: так ученик увидит окно оплаты. Заявку отсюда отправить нельзя.')}const x0=CFG.tariffs.find(t=>t.id===id);if(!x0)return;const dsc=refDiscount(),x={...x0,price:Math.round((+x0.price||0)*(100-dsc)/100)};
- MODAL('Оформить «'+x.name+'»',`<p><b>${(+x.price||0).toLocaleString('ru-RU')} ₸</b> — ${x.days>=36500?'навсегда':x.days+' дней'}${dsc?` <span class="small" style="color:var(--ok)">(скидка ${dsc}%)</span>`:''}</p><div class="card small" style="white-space:pre-wrap">${esc(CFG.payInfo||'')}</div>
- <label class="small"><b>Комментарий</b> (например, имя отправителя перевода)<textarea id="rq_c" rows="3" style="width:100%;margin-top:4px"></textarea></label>
- <button class="btn" id="rq_go" style="margin-top:10px;width:100%">Я оплатил — отправить заявку</button><p class="small" id="rq_m"></p>`);
- document.getElementById('rq_go').onclick=async()=>{if(viewAs())return alert('В режиме просмотра заявка не отправляется.');const b=document.getElementById('rq_go');b.disabled=true;
+/* окно-«шторка»: на телефоне выезжает снизу, на компьютере — по центру */
+function SHEET(html,opt){opt=opt||{};SHEETCLOSE(true);const ov=document.createElement('div');ov.className='shov';ov.id='shov';
+ ov.innerHTML=`<div class="shbox" role="dialog" aria-modal="true"><div class="shgrab" aria-hidden="true"></div><button class="shx" aria-label="Закрыть">✕</button><div class="shin">${html}</div></div>`;
+ document.body.appendChild(ov);document.documentElement.classList.add('shlock');requestAnimationFrame(()=>requestAnimationFrame(()=>ov.classList.add('on')));
+ ov.onclick=e=>{if(e.target===ov)SHEETCLOSE()};ov.querySelector('.shx').onclick=()=>SHEETCLOSE();
+ const box=ov.querySelector('.shbox'),gr=ov.querySelector('.shgrab');let y0=null,dy=0;
+ const st=e=>{if(innerWidth>=700)return;if(box.scrollTop>0&&e.target!==gr)return;y0=e.touches[0].clientY;dy=0;box.style.transition='none'};
+ const mv=e=>{if(y0==null)return;dy=Math.max(0,e.touches[0].clientY-y0);box.style.transform=`translateY(${dy}px)`};
+ const en=()=>{if(y0==null)return;box.style.transition='';box.style.transform='';if(dy>110)SHEETCLOSE();y0=null};
+ box.addEventListener('touchstart',st,{passive:true});box.addEventListener('touchmove',mv,{passive:true});box.addEventListener('touchend',en);
+ SHEETCLOSE.onEsc=e=>{if(e.key==='Escape')SHEETCLOSE()};addEventListener('keydown',SHEETCLOSE.onEsc);return ov.querySelector('.shin')}
+function SHEETCLOSE(now){const ov=document.getElementById('shov');if(!ov)return;removeEventListener('keydown',SHEETCLOSE.onEsc||(()=>{}));document.documentElement.classList.remove('shlock');if(now){ov.remove();return}ov.classList.remove('on');setTimeout(()=>ov.remove(),300)}
+window.SHEET=SHEET;window.SHEETCLOSE=SHEETCLOSE;
+
+function buyTariff(id){if(viewAs())TOAST('Режим просмотра: так ученик увидит окно оплаты. Заявку отправить нельзя.','info',4500);const x0=CFG.tariffs.find(t=>t.id===id);if(!x0)return;const dsc=refDiscount(),old=+x0.price||0,x={...x0,price:Math.round(old*(100-dsc)/100)};
+ const per=x.days>=36500?'навсегда':x.days+' '+GW(x.days,'день','дня','дней'),pr=(+x.price||0).toLocaleString('ru-RU');
+ const box=SHEET(`<div class="buyh"><span class="buyic">${ICO('gem',24)}</span><div><div class="small mut">Оформление тарифа</div><h3 class="buyt">${esc(x.name)}</h3></div></div>
+ <div class="buyp"><div><div class="buypr">${pr} <span>₸</span></div><div class="small">${per}</div></div>${dsc?`<div class="buyd"><s>${old.toLocaleString('ru-RU')} ₸</s><span>−${dsc}% по приглашению</span></div>`:''}</div>
+ ${x.desc?`<p class="small mut" style="margin:10px 0 0">${esc(x.desc)}</p>`:''}
+ <ol class="buysteps">
+  <li><b>Переведи ${pr} ₸</b><div class="buyinfo">${esc(CFG.payInfo||'Реквизиты для оплаты скоро появятся — напиши в «Помощь».')}</div><button class="linkb" id="rq_cp" type="button">${ICO('list',14)} Скопировать сумму</button></li>
+  <li><b>Напиши, от кого перевод</b><textarea id="rq_c" rows="2" maxlength="500" placeholder="Например: Асан К., Kaspi, 01:15"></textarea></li>
+  <li><b>Отправь заявку</b><div class="small mut">Владелец проверит оплату и сам откроет доступ — обычно в течение дня.</div></li>
+ </ol>
+ <button class="btn gold buygo" id="rq_go">${ICO('check',18)} Я оплатил — отправить заявку</button><div id="rq_m"></div>`);
+ document.getElementById('rq_cp').onclick=async()=>{try{await navigator.clipboard.writeText(String(x.price))}catch(e){}TOAST('Сумма '+pr+' ₸ скопирована','ok')};
+ document.getElementById('rq_go').onclick=async()=>{if(viewAs())return TOAST('В режиме просмотра заявка не отправляется.','info');const b=document.getElementById('rq_go');b.disabled=true;
   try{await FB.addReq({uid:ACC.uid,name:ACC.name||'',email:ACC.email||'',tariff:x.id,tname:x.name,price:+x.price||0,disc:dsc,refN:REFS?REFS.length:0,days:+x.days||30,comment:document.getElementById('rq_c').value.slice(0,500),status:'pending',t:Date.now()});
-   say2('rq_m','✓ Заявка отправлена. Владелец проверит оплату и откроет доступ.',1)}catch(e){b.disabled=false;say2('rq_m',fbErr(e))}}}
+   box.innerHTML=`<div class="buyok"><div class="buyokc">${ICO('check',40)}</div><h3>Заявка отправлена!</h3><p class="small mut">Тариф <b>${esc(x.name)}</b> за ${pr} ₸. Как только владелец проверит оплату, доступ откроется сам — обычно в течение дня. Статус видно в «Тарифах» → «Мои заявки».</p><button class="btn" id="rq_ok" style="width:100%;margin-top:6px">Понятно</button></div>`;
+   if(window.CONFETTI)CONFETTI();document.getElementById('rq_ok').onclick=()=>{SHEETCLOSE();showTariffs()}}catch(e){b.disabled=false;say2('rq_m',fbErr(e))}}}
 
 /* ---- админ-панель ---- */
 let ADM={users:null,reqs:null};
@@ -4083,7 +4128,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 83 от 27.11 01:02</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 84 от 27.11 01:13</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,pend=false;const busy=()=>!!(window.QACTIVE||window.ENTMODE);function updBar(){let u=document.getElementById("updbar");const t=busy()?"Вышло обновление сайта. Применится после теста — ответы не пропадут.":"Вышло обновление сайта";if(!u){u=document.createElement("div");u.id="updbar";u.innerHTML='<span class="ut"></span><button type="button">Обновить</button><button type="button" class="ux" aria-label="Позже">✕</button>';document.body.appendChild(u);u.querySelector("button").onclick=()=>{if(busy()&&!confirm("Тест ещё идёт. Обновить сейчас? Ответы текущего теста пропадут."))return;location.reload()};u.querySelector(".ux").onclick=()=>u.remove();requestAnimationFrame(()=>u.classList.add("on"))}u.querySelector(".ut").textContent=t}navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had){had=true;return}pend=true;if(!busy()&&document.visibilityState==="hidden"){location.reload();return}updBar()});document.addEventListener("visibilitychange",()=>{if(pend&&document.visibilityState==="hidden"&&!busy())location.reload()});setInterval(()=>{if(pend&&document.getElementById("updbar"))updBar()},4000);navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
