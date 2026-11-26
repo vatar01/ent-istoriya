@@ -3639,7 +3639,7 @@ window.admLoad=admLoad;
  const snoozed=()=>{try{const v=JSON.parse(localStorage.getItem(K)||'{}');return v.never||(v.until&&Date.now()<v.until)}catch(e){return false}};
  const snooze=d=>{try{localStorage.setItem(K,JSON.stringify({until:Date.now()+d*864e5}))}catch(e){}};
  function hide(){const b=document.getElementById('instb');if(!b)return;b.classList.remove('on');setTimeout(()=>b.remove(),400)}
- function show(force){if(shown&&!force)return;if(!force&&(snoozed()||document.getElementById('auth')||document.querySelector('.modal')))return;if(!ev&&!IOSSAF)return;shown=true;
+ function show(force){if(shown&&!force)return;if(!force&&snoozed())return;if(!force&&(document.getElementById('auth')||document.querySelector('.modal,.vamod')||window.QACTIVE)){setTimeout(()=>show(),10000);return}if(!ev&&!IOSSAF)return;shown=true;
   let b=document.getElementById('instb');if(b)b.remove();b=document.createElement('div');b.id='instb';b.setAttribute('role','dialog');b.setAttribute('aria-label','Установка приложения');
   b.innerHTML=`<div class="instic"><img src="icon-192-v2.png" alt="" onerror="this.replaceWith(document.createRange().createContextualFragment(ICO('cap',28)))"></div>
   <div class="insttx"><b>Установи приложение</b><span>${ev?'Открывается с главного экрана, как обычное приложение':'Нажми <span class="iosh">'+ICO('upload',15)+'</span> «Поделиться» внизу Safari, затем «На экран „Домой“».'}</span></div>
@@ -3650,7 +3650,7 @@ window.admLoad=admLoad;
  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;window.CANINSTALL=true;setTimeout(()=>show(),12000)});
  window.addEventListener('appinstalled',()=>{hide();try{localStorage.removeItem(K)}catch(e){}});
  if(IOSSAF)setTimeout(()=>show(),15000);
- window.showInstall=()=>{if(ev||IOSSAF)show(true);else alert('Открой сайт в Chrome (Android/ПК) или Safari (iPhone), чтобы установить приложение. Если пункта нет — оно уже установлено.')};
+ window.showInstall=()=>{if(ev||IOSSAF)return show(true);const mob=/Android/i.test(ua);alert(mob?'Нажми ⋮ (три точки) в правом верхнем углу Chrome → «Установить приложение» или «Добавить на главный экран».\n\nЕсли такого пункта нет — приложение уже установлено.':IOS?'Открой сайт в Safari, нажми «Поделиться» → «На экран „Домой“».':'В Chrome или Edge: справа в адресной строке нажми значок «Установить» (монитор со стрелкой) или ⋮ → «Сохранить и поделиться» → «Установить страницу как приложение».\n\nЕсли такого пункта нет — приложение уже установлено: проверь chrome://apps.')};
 })();
 
 setHeader();
@@ -3700,7 +3700,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 63 от 26.11 23:05</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 64 от 26.11 23:08</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
