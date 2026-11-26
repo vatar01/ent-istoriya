@@ -316,6 +316,72 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--pen)!imp
 #adm label.chk,.pg label.chk,label.chk{display:flex!important;align-items:center}
 .chk input[type=checkbox]{display:inline-block!important;margin:0!important}
 .avw{position:relative;display:inline-flex}.odot{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:#22C55E;border:2px solid #fff}.oon{color:#16A34A!important;-webkit-text-fill-color:#16A34A!important}
+
+/* ---- анимации ---- */
+.fade{animation:pgin .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes pgin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.dgrid>.dsub,.pgrid>*,.tgrid>*,.dact>*{animation:pgin .4s cubic-bezier(.2,.8,.2,1) both}
+.dgrid>.dsub:nth-child(2){animation-delay:.04s}.dgrid>.dsub:nth-child(3){animation-delay:.08s}.dgrid>.dsub:nth-child(4){animation-delay:.12s}.dgrid>.dsub:nth-child(5){animation-delay:.16s}.dgrid>.dsub:nth-child(6){animation-delay:.2s}.dgrid>.dsub:nth-child(7){animation-delay:.24s}.dgrid>.dsub:nth-child(8){animation-delay:.28s}
+.dring circle:nth-child(2){animation:ringdraw 1s cubic-bezier(.2,.8,.2,1) both .2s}
+@keyframes ringdraw{from{stroke-dasharray:0 999}}
+.dcount b{animation:countpop .6s cubic-bezier(.3,1.5,.5,1) both .15s}
+@keyframes countpop{from{transform:scale(.6);opacity:0}}
+button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-color .15s}
+@media(hover:hover){button.card:hover,.dsub:hover{transform:translateY(-2px)}}
+.dic{transition:transform .2s cubic-bezier(.3,1.6,.5,1)}@media(hover:hover){.dsub:hover .dic{transform:rotate(-6deg) scale(1.08)}}
+.opt{transition:border-color .12s,background .12s,transform .08s}.opt:active:not(:disabled){transform:scale(.99)}
+.opt.ok{animation:okpop .38s cubic-bezier(.3,1.6,.5,1)}
+@keyframes okpop{0%{transform:scale(1)}45%{transform:scale(1.025)}100%{transform:scale(1)}}
+.opt.bad{animation:shake .32s ease}
+@keyframes shake{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+.bar i{transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.expl,.sol,.hint,.rule{animation:pgin .3s ease both}
+#modal .mbox,#modal>div{animation:modin .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes modin{from{opacity:0;transform:translateY(12px) scale(.98)}}
+#auth .authbox{animation:modin .35s cubic-bezier(.2,.8,.2,1)}
+.bmark{transition:transform .3s cubic-bezier(.3,1.6,.5,1)}.brand:hover .bmark{transform:rotate(-10deg)}
+.res{animation:countpop .5s cubic-bezier(.3,1.5,.5,1) both}
+.confetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:99999}
+.lesson .mut:only-child,.fade>.mut{position:relative}
+@keyframes shimmer{to{background-position:-200% 0}}
+.loadbar{height:14px;border-radius:8px;margin:12px 0;background:linear-gradient(90deg,#E8EEF8 25%,#F4F7FC 37%,#E8EEF8 63%);background-size:200% 100%;animation:shimmer 1.2s linear infinite}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* ---- чат ---- */
+.tbr{display:flex;gap:8px;align-items:center}.helpb{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font:600 14px 'Golos Text',sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 2px 0 var(--line);position:relative}.helpb[hidden]{display:none}
+@media(max-width:520px){.helpb span{display:none}}
+.helpb.dot:after,.acctb.dot:after{content:"";position:absolute;top:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:#E5484D;border:2px solid #fff}.acctb{position:relative}
+.chat{background:#fff;border:1.5px solid var(--line);border-radius:16px;box-shadow:0 3px 0 var(--line);display:flex;flex-direction:column;height:min(62vh,560px);overflow:hidden;margin-top:12px}
+.chlog{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;background-color:#FBFCFE}
+.msg{display:flex}.msg.me{justify-content:flex-end}.mb{max-width:78%;background:#fff;border:1.5px solid var(--line);border-radius:16px 16px 16px 4px;padding:8px 12px 6px;font-size:15px;line-height:1.45;animation:pgin .2s ease both;word-wrap:break-word}
+.msg.me .mb{background:var(--pen);color:#fff;border-color:var(--pen2);border-radius:16px 16px 4px 16px}
+.mn{font-size:12px;font-weight:700;color:var(--pen);margin-bottom:2px}.msg.me .mn{color:#C9D4F5}
+.mt{display:block;text-align:right;font-size:11px;opacity:.6;margin-top:2px}
+.chin{display:flex;gap:8px;padding:10px;border-top:1.5px solid var(--line);background:#fff}.chin textarea{flex:1;resize:none;padding:10px 12px!important;font-size:16px;max-height:140px}.chin .btn{min-width:48px;padding:0 14px}
+.chempty{margin:auto;text-align:center;color:var(--mut);max-width:320px}.chempty .ic{color:var(--pen);opacity:.6}
+.faq{margin-bottom:8px;padding:12px 16px}.faq summary{cursor:pointer;font-weight:600}.faq p{margin:8px 0 0}
+.arow.unr{border-color:var(--pen)!important;background:#F4F7FE}
+.pbadge.sm{font-size:12px;padding:3px 10px;vertical-align:middle}
+
+.pwrap{position:relative;display:block}.pwrap input{padding-right:44px!important}.pweye{position:absolute;right:8px;top:50%;transform:translateY(-50%);margin-top:2px;border:0;background:none;color:var(--mut);cursor:pointer;padding:6px}
+.aor{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:13px;margin:14px 0}.aor:before,.aor:after{content:"";flex:1;height:1px;background:var(--line)}
+.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;border:1.5px solid var(--line);background:#fff;border-radius:999px;font:600 15px 'Golos Text',sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 2px 0 var(--line)}.gbtn:active{transform:translateY(1px)}
+.aswitch{text-align:center;margin-top:10px}.aswitch p{margin:6px 0 0}.linkb.inl{display:inline;margin:0;padding:0;font-weight:700}
+.agree{margin-top:12px!important;font-size:14px!important}.agree a{font-weight:700}
+.refc{background:linear-gradient(135deg,#FFFBEA,#fff)!important}.refh{display:flex;gap:12px;align-items:flex-start}.refh .dbi{background:var(--hl);color:var(--ink);margin:0}
+.reflink{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.reflink input{flex:1;min-width:180px;padding:9px 12px;font-size:14px}
+.refst{display:grid;grid-template-columns:1fr 1fr;gap:10px}.refst div{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px;text-align:center}.refst b{display:block;font:800 22px Unbounded,sans-serif;color:var(--pen)}.refst span{font-size:12px;color:var(--mut)}
+
+#instb{position:fixed;z-index:900;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:12px 12px 12px 14px;box-shadow:0 4px 0 var(--line),0 18px 40px rgba(31,58,147,.18);transform:translateY(140%);opacity:0;transition:transform .45s cubic-bezier(.2,1.2,.4,1),opacity .3s}
+#instb.on{transform:none;opacity:1}
+@media(min-width:760px){#instb{left:auto;right:24px;bottom:24px;max-width:470px}}
+.instic{flex:none;width:44px;height:44px;border-radius:12px;background:var(--pen);color:#fff;display:grid;place-items:center;overflow:hidden}.instic img{width:100%;height:100%;object-fit:cover}
+.insttx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.insttx b{font:700 14px/1.25 Unbounded,sans-serif;color:var(--ink)}.insttx span{font-size:13px;line-height:1.35;color:var(--mut)}
+.iosh{display:inline-flex;vertical-align:-3px;color:var(--pen)}
+.instgo{flex:none;padding:10px 16px!important;min-height:0!important;white-space:nowrap}
+.instx{flex:none;border:0;background:none;color:var(--mut);font-size:18px;cursor:pointer;padding:6px;align-self:flex-start}
+@media(max-width:420px){.instgo{padding:9px 12px!important;font-size:14px}}
+@media(prefers-reduced-motion:reduce){#instb{transition:none}}
 </style>
 </head>
 <body>
@@ -1100,7 +1166,7 @@ Object.assign(MR,PR);
 /* ===== Мини-LaTeX → MathML (без библиотек, работает офлайн) ===== */
 const TEX=(()=>{
  const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
- const SYM={pi:'π',alpha:'α',beta:'β',gamma:'γ',varphi:'φ',phi:'φ',Delta:'Δ',infty:'∞',circ:'°',deg:'°'};
+ const SYM={pi:'π',alpha:'α',beta:'β',gamma:'γ',varphi:'φ',phi:'φ',Delta:'Δ',infty:'∞',circ:'°',deg:'°',tau:'τ',lambda:'λ',nu:'ν',rho:'ρ',eta:'η',Phi:'Φ',mu:'μ',varepsilon:'ε',epsilon:'ε',omega:'ω',Omega:'Ω',Gamma:'Γ',sigma:'σ',theta:'θ',delta:'δ',psi:'ψ',chi:'χ',xi:'ξ',zeta:'ζ',kappa:'κ',Lambda:'Λ',Sigma:'Σ',Psi:'Ψ',Theta:'Θ'};
  const OPS={iff:'⇔',sim:'∼',Leftarrow:'⇐',cdot:'·',times:'×',le:'≤',ge:'≥',leq:'≤',geq:'≥',ne:'≠',neq:'≠',pm:'±',mp:'∓',in:'∈',notin:'∉',cup:'∪',cap:'∩',to:'→',Rightarrow:'⇒',Leftrightarrow:'⇔',approx:'≈',perp:'⊥',parallel:'∥',angle:'∠',triangle:'△',neg:'¬',wedge:'∧',vee:'∨',oplus:'⊕',leftrightarrow:'↔',equiv:'≡',lt:'<',gt:'>',colon:':',mid:'|',div:':',ldots:'…',dots:'…',lbrace:'{',rbrace:'}'};
  const FN=['sin','cos','tg','ctg','tan','cot','log','ln','lg','arcsin','arccos','arctg','arcctg','max','min','lim'];
  function tok(s){const t=[];let i=0;
@@ -1130,6 +1196,7 @@ const TEX=(()=>{
     if(v==='sqrt'){if(t[p]&&t[p].k==='op'&&t[p].v==='['){p++;let n='';while(p<t.length&&!(t[p].k==='op'&&t[p].v===']'))n+=item();p++;const a=group();return '<mroot>'+a+'<mrow>'+n+'</mrow></mroot>'}return '<msqrt>'+group()+'</msqrt>'}
     if(v==='text'){let s='';if(t[p]&&t[p].k==='{'){p++;let d=0;while(p<t.length&&!(t[p].k==='}'&&d===0)){const y=t[p];s+=y.v!==undefined?(y.k==='cmd'?'':y.v):'';p++}p++}return '<mtext>'+E(s)+'</mtext>'}
     if(v==='vec'||v==='overrightarrow'){return '<mover>'+group()+'<mo stretchy="true">→</mo></mover>'}
+    if(v==='mathcal'){const g=group();return g.replace(/<mi>([A-Z])<\/mi>/g,(m,c)=>'<mi mathvariant="script">'+({E:'ℰ',B:'ℬ',F:'ℱ',H:'ℋ',L:'ℒ'}[c]||c)+'</mi>')}
     if(v==='overline'){return '<mover>'+group()+'<mo stretchy="true">‾</mo></mover>'}
     if(v==='int')return '<mo largeop="true">∫</mo>';
     if(v==='sum')return '<mo largeop="true">∑</mo>';
@@ -1267,7 +1334,11 @@ spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8
 check:'<path d="M20 6 9 17l-5-5"/>',
 logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/>',
 shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>',
-home:'<path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/>'};
+home:'<path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/>',
+chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 9h8M8 13h5"/>',
+send:'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+help:'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>',
+headset:'<path d="M3 14v-3a9 9 0 0 1 18 0v3"/><path d="M21 16a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2ZM3 16a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2Z"/><path d="M18 18v1a3 3 0 0 1-3 3h-2"/>'};
 function ICO(n,s){return`<svg class="ic" width="${s||18}" height="${s||18}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICP[n]||''}</svg>`}
 const MATHY=id=>id==='math'||id==='ml'||id==='phys';
 const F=s=>MATHY(cur.id)?TEX.fmt(s):esc(s);
@@ -1523,7 +1594,7 @@ function home(){
 
 /* ---------- Учить ---------- */
 function learn(id){if(id&&!cur.T.some(t=>t.id===id))id=null;
- if(id){const _t=cur.T.find(t=>t.id===id);if(_t&&!_t.html&&window.LESSONLOAD){app.innerHTML='<div class="fade"><button class="btn alt" id="bk">← Все темы</button><p class="mut" style="margin-top:16px">⏳ Загружаем урок…</p></div>';document.getElementById('bk').onclick=()=>go('learn');LESSONLOAD(_t).then(()=>{if(app.querySelector('#bk')&&!window.PAGEMODE)learn(id)},er=>{app.innerHTML=`<div class="fade"><button class="btn alt" id="bk">← Все темы</button><div class="card" style="margin-top:16px">${ICO('lock',16)} ${esc(er.message||String(er))}</div></div>`;const bk=document.getElementById('bk');if(bk)bk.onclick=()=>go('learn')});return}const i=cur.T.findIndex(t=>t.id===id),t=cur.T[i],st=topicStat(id);const dd=cur.ref.rows.filter(d=>d.topic===id);
+ if(id){const _t=cur.T.find(t=>t.id===id);if(_t&&!_t.html&&window.LESSONLOAD){app.innerHTML='<div class="fade"><button class="btn alt" id="bk">← Все темы</button><h2 style="margin-top:16px" class="mut">Загружаем урок…</h2><div class="loadbar" style="width:80%"></div><div class="loadbar"></div><div class="loadbar" style="width:65%"></div><div class="loadbar" style="width:90%"></div></div>';document.getElementById('bk').onclick=()=>go('learn');LESSONLOAD(_t).then(()=>{if(app.querySelector('#bk')&&!window.PAGEMODE)learn(id)},er=>{app.innerHTML=`<div class="fade"><button class="btn alt" id="bk">← Все темы</button><div class="card" style="margin-top:16px">${ICO('lock',16)} ${esc(er.message||String(er))}</div></div>`;const bk=document.getElementById('bk');if(bk)bk.onclick=()=>go('learn')});return}const i=cur.T.findIndex(t=>t.id===id),t=cur.T[i],st=topicStat(id);const dd=cur.ref.rows.filter(d=>d.topic===id);
   app.innerHTML=`<div class="fade lesson"><button class="btn alt" id="bk">← Все темы</button>
   <p class="pill" style="margin-top:16px">${esc(t.per)} · тема ${i+1} из ${cur.T.length}</p><h2>${esc(t.name)}</h2>${MATHY(cur.id)?FIGHTML(TEX.html(t.html)):t.html}
   ${dd.length?`<h3>${esc(cur.ref.label)} по этой теме</h3><table><tbody>${dd.map(d=>`<tr><td class="y">${F(d.a)}</td><td>${F(d.b)}</td></tr>`).join('')}</tbody></table>`:''}
@@ -1688,7 +1759,7 @@ function startQuiz(qs,title,exam){if(window.QUIZGATE&&!QUIZGATE(exam))return;con
   if(exam){total=0;max=0;P.forEach((p,j)=>{max+=pts(p.it);if(!answered(p,ans[j]))return;const g=grade(p,ans[j]);total+=g;record(p.it,g===pts(p.it))});
    if(P.some((p,j)=>answered(p,ans[j]))){S.exams.push({d:new Date().toLocaleDateString('ru-RU'),s:total,m:max});S.exams=S.exams.slice(-30)}save()}
   const wrongs=P.map((p,j)=>({p,j})).filter(({p,j})=>(exam||checked[j])&&grade(p,ans[j])<pts(p.it)&&(exam||answered(p,ans[j])));
-  app.innerHTML=`<div class="fade"><div class="card" style="text-align:center"><div class="mut">${esc(title)}</div><div class="res">${total}/${max}</div><div class="small mut">баллов</div>
+  app.innerHTML=`<div class="fade"><div class="card" style="text-align:center"><div class="mut">${esc(title)}</div><div class="res" data-cel="${max?total/max:0}">${total}/${max}</div><div class="small mut">баллов</div>
   ${exam&&cur.id==='hist'?`<p>${total>=5?'Порог в 5 баллов пройден.':'Ниже порога в 5 баллов — повтори темы с ошибками.'}</p>`:''}
   <div class="row" style="justify-content:center;margin-top:10px"><button class="btn" id="again">Ещё раз</button><button class="btn alt" id="hm">На главную</button></div></div>
   ${(()=>{const L=P.map((p,j)=>({p,j})).filter(({p,j})=>exam||checked[j]).map(({p,j})=>({it:p.it,p,a:ans[j],answered:answered(p,ans[j]),g:answered(p,ans[j])?grade(p,ans[j]):0,max:pts(p.it),num:j+1}));return L.length?`<h3 style="margin-top:20px">Разбор: твои ответы и правильные</h3>${RVW(L,F,cur.id,{topicLink:tn})}`:''})()}</div>`;
@@ -2635,7 +2706,7 @@ function eFinish(R){clearInterval(timerId);
  const H=LSG(ENTK)||[];H.push({t:Date.now(),kind:R.kind,score,max,min,parts:parts.map(p=>p.sc)});LSS(ENTK,H);localStorage.removeItem(ENTRUN);if(window.SYNCNOW)SYNCNOW();
  const passSub=parts.every(p=>p.sc>=ESUB.find(s=>s.id===p.sid).min);
  const full=R.kind==='full';
- app.innerHTML=`<div class="fade"><h2>Результат: ${score} из ${max}</h2><p class="mut small">Время: ${min} мин.</p>
+ app.innerHTML=`<div class="fade"><h2 data-cel="${max?score/max:0}">Результат: <span class="cnum">${score}</span> из ${max}</h2><p class="mut small">Время: ${min} мин.</p>
  <div class="card scroll" style="padding:6px"><table><thead><tr><th>Предмет</th><th>Баллы</th><th>Порог</th></tr></thead><tbody>${parts.map(p=>{const s=ESUB.find(z=>z.id===p.sid);const ok=p.sc>=s.min;return`<tr><td>${s.name}</td><td><b>${p.sc}</b> / ${p.mx}</td><td style="color:${ok?'var(--ok)':'var(--bad)'}">${ok?'✓':'✗'} ${s.min}</td></tr>`}).join('')}</tbody></table></div>
  ${full?`<div class="card" style="margin-top:12px"><b>Куда хватает баллов</b><ul class="small">${[[50,'порог для поступления в вузы'],[65,'национальные вузы'],[70,'здравоохранение'],[75,'педагогика и право']].map(([v,t])=>`<li style="color:${score>=v&&passSub?'var(--ok)':'inherit'}">${score>=v&&passSub?'✓':'✗'} ${v}+ — ${t}</li>`).join('')}</ul>${passSub?'':'<p class="small" style="color:var(--bad)">Не пройден порог хотя бы по одному предмету — на настоящем ЕНТ это значит, что поступить нельзя, даже если общий балл высокий.</p>'}<p class="small mut">Для гранта нужно больше: проходной балл на грант зависит от специальности и конкурса.</p></div>`:''}
  <div class="row" style="margin-top:12px"><button class="btn gold" id="again">Ещё попытка</button><button class="btn alt" id="hm">К пробному ЕНТ</button></div>
@@ -2672,6 +2743,7 @@ const DEFCFG={access:{rus:'paid',eng:'paid'},topics:{},
   {name:'Августовское',appFrom:'2027-07-25',appTo:'2027-08-05',testFrom:'2027-08-10',testTo:'2027-08-20',grant:false}],
  payInfo:'Переведи оплату через Kaspi и в комментарии к переводу укажи почту своего аккаунта. После проверки владелец откроет доступ — обычно в течение дня.',announce:''};
 const ACK='ent-acct',SYK='ent-sync',CFK='ent-cfg';
+try{const _r=new URLSearchParams(location.search).get('ref');if(_r&&/^[A-Za-z0-9]{6,40}$/.test(_r)){localStorage.setItem('ent-ref',_r);const _q=new URLSearchParams(location.search);_q.delete('ref');const _s=_q.toString();history.replaceState(null,'',location.pathname+(_s?'?'+_s:'')+location.hash)}window.REFCODE=localStorage.getItem('ent-ref')||''}catch(e){window.REFCODE=''}
 const pairName=p=>p&&p!=='none'?p.split('-').map(s=>PSUBJ[s]).join(' + '):'Ещё не выбрал';
 const NEEDAUTH=/github\.io$/.test(location.hostname)||/[?&]fb=1/.test(location.search);
 let ACC=LSG(ACK),CFG=Object.assign({},DEFCFG,LSG(CFK)||{});
@@ -2682,10 +2754,16 @@ const FOREVER=4102444800000;
 
 /* ---- доступ ---- */
 const isOwner=()=>!!ACC&&OWNERS.includes(ACC.uid);
+const myRole=()=>!ACC?'':OWNERS.includes(ACC.uid)?'owner':(ACC.role||'');
+const isAdminR=()=>['owner','admin'].includes(myRole());
+const isStaff=()=>['owner','admin','manager'].includes(myRole());
+const ROLEN={owner:'Владелец',admin:'Администратор',manager:'Менеджер'};
+const ROLEI={owner:'crown',admin:'shield',manager:'headset'};
+const roleOf=u=>OWNERS.includes(u.id||u.uid)?'owner':(u.role||'');
 const planOn=()=>!!ACC&&!!ACC.plan&&(ACC.paidUntil||0)>Date.now();
 const myTariff=()=>planOn()?CFG.tariffs.find(t=>t.id===ACC.plan):null;
-function hasFeat(sec){if(isOwner())return true;const t=myTariff();return!!t&&(t.features.includes('all')||t.features.includes(sec))}
-function perk(p){if(isOwner()||!NEEDAUTH&&!ACC)return p==='tests'||p==='ent'?-1:true;const t=myTariff();const src=t&&t.perks?t.perks:(CFG.free||DEFCFG.free);const v=src[p];return v==null?(p==='tests'||p==='ent'?-1:true):v}
+function hasFeat(sec){if(isAdminR())return true;const t=myTariff();return!!t&&(t.features.includes('all')||t.features.includes(sec))}
+function perk(p){if(isAdminR()||!NEEDAUTH&&!ACC)return p==='tests'||p==='ent'?-1:true;const t=myTariff();const src=t&&t.perks?t.perks:(CFG.free||DEFCFG.free);const v=src[p];return v==null?(p==='tests'||p==='ent'?-1:true):v}
 const today=()=>new Date().toISOString().slice(0,10);
 function useGet(){const u=LSG('ent-use');return u&&u.d===today()?u:{d:today(),tests:0,ent:0}}
 function useAdd(k){const u=useGet();u[k]=(u[k]||0)+1;LSS('ent-use',u)}
@@ -2695,16 +2773,16 @@ window.PERKGATE=p=>{if(perk(p))return true;showTariffs(p==='hints'?'Подска
 window.QUIZGATE=()=>{const L=perk('tests');if(L<0)return true;const u=useGet();if(u.tests>=L){showTariffs(`Без тарифа можно решать ${L} ${GW(L,'тест','теста','тестов')} в день — лимит на сегодня закончился. Приходи завтра или оформи тариф.`);return false}useAdd('tests');return true};
 window.ENTGATE=()=>{const L=perk('ent');if(L<0)return true;const u=useGet();if(u.ent>=L){showTariffs(`Пробное ЕНТ без ограничений — с тарифом Standart Plus. Сейчас доступно ${L} в день, на сегодня попытки закончились.`);return false}useAdd('ent');return true};
 const secMode=s=>(CFG.access||{})[s]||'free';
-function canSec(s){if(isOwner()||!NEEDAUTH&&!ACC)return true;const m=secMode(s);return m==='free'||(m==='paid'&&hasFeat(s))}
+function canSec(s){if(isAdminR()||!NEEDAUTH&&!ACC)return true;const m=secMode(s);return m==='free'||(m==='paid'&&hasFeat(s))}
 function topicSec(tid){for(const k in SUBJ_ALL)if((SUBJ_ALL[k].T||[]).some(t=>t.id===tid))return k;return cur.id}
-function canTopic(tid,sec){sec=sec||topicSec(tid);if(isOwner()||!NEEDAUTH&&!ACC)return true;const m=(CFG.topics||{})[tid];if(m==='hidden')return false;if(m==='free')return secMode(sec)!=='hidden';if(m==='paid')return hasFeat(sec);return canSec(sec)}
-const topicHidden=(tid,sec)=>!isOwner()&&((CFG.topics||{})[tid]==='hidden');
+function canTopic(tid,sec){sec=sec||topicSec(tid);if(isAdminR()||!NEEDAUTH&&!ACC)return true;const m=(CFG.topics||{})[tid];if(m==='hidden')return false;if(m==='free')return secMode(sec)!=='hidden';if(m==='paid')return hasFeat(sec);return canSec(sec)}
+const topicHidden=(tid,sec)=>!isAdminR()&&((CFG.topics||{})[tid]==='hidden');
 function entPair(){return ACC&&ACC.pair?ACC.pair:(localStorage.getItem('ent-guest-pair')||'math-inf')}
 function entProfiles(){const p=entPair();return p==='none'?[]:p.split('-').filter(s=>PHAVE[s]&&ESUB_ALL.some(x=>x.id===s))}
 window.ENTPAIRUI=()=>{const p=entPair();if(ACC)return`<p class="small" style="margin:0 0 10px">Профильные предметы: <b>${esc(pairName(p))}</b>. Изменить можно в профиле (👤 вверху).</p>`;return`<label class="small" style="display:block;margin:0 0 10px">Профильные предметы для пробного ЕНТ: <select id="entpair">${PAIRS.filter(x=>x.split('-').every(s=>PHAVE[s])).map(x=>`<option value="${x}" ${x===p?'selected':''}>${pairName(x)}</option>`).join('')}</select></label>`};
 window.ENTPAIRSET=v=>{localStorage.setItem('ent-guest-pair',v);applyAccess()};
 function profSubs(){if(!ACC||!ACC.pair||ACC.pair==='none')return[];return ACC.pair.split('-')}
-function visibleSecs(){if(!ACC&&!NEEDAUTH)return null;if(isOwner())return SECS.map(s=>s[0]);
+function visibleSecs(){if(!ACC&&!NEEDAUTH)return null;if(isAdminR())return SECS.map(s=>s[0]);
  const v=[...CORE,...profSubs().filter(s=>PHAVE[s]),...EXTRA.filter(s=>canSec(s)),'ent'];
  return v.filter(s=>secMode(s)!=='hidden')}
 function applyAccess(){const vis=visibleSecs();
@@ -2721,7 +2799,7 @@ function applyAccess(){const vis=visibleSecs();
  if(vis&&!window.ENTMODE&&!window.PAGEMODE&&(!vis.includes(cur.id)||!canSec(cur.id))){const f=vis.find(s=>s!=='ent'&&canSec(s)&&SUBJ[s])||'hist';cur=SUBJ[f];try{localStorage.setItem('ent-subj',f)}catch(e){}S=loadS();setHeader();go('home')}}
 window.SUBJGATE=s=>{if(canSec(s))return true;showTariffs(`Раздел «${SECN[s]||s}» доступен по подписке.`);return false};
 window.TOPICGATE=tid=>{if(canTopic(tid,cur.id))return true;showTariffs('Эта тема доступна по подписке.');return false};
-window.AFTERGO=()=>{if(!ACC||isOwner())return;app.querySelectorAll('[data-id]').forEach(el=>{const t=el.dataset.id;if(!t||canTopic(t,cur.id))return;el.classList.add('lockd');if(!el.querySelector('.lk'))el.insertAdjacentHTML('afterbegin','<span class="lk">'+ICO('lock',14)+'</span>')})};
+window.AFTERGO=()=>{if(!ACC||isAdminR())return;app.querySelectorAll('[data-id]').forEach(el=>{const t=el.dataset.id;if(!t||canTopic(t,cur.id))return;el.classList.add('lockd');if(!el.querySelector('.lk'))el.insertAdjacentHTML('afterbegin','<span class="lk">'+ICO('lock',14)+'</span>')})};
 const ENTQN=id=>({hist:20,ml:10,rl:10}[id]||40);
 const ENTMIN=()=>ESUB.reduce((s,x)=>s+ENTQN(x.id),0)*2;
 const ENTMAX=()=>ESUB.reduce((s,x)=>s+x.max,0);
@@ -2767,8 +2845,8 @@ function AVH(a,sz,name){sz=sz||40;a=a||'';const st=`width:${sz}px;height:${sz}px
 function photoToAvatar(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(im.width,im.height),c=document.createElement('canvas');c.width=c.height=192;const x=c.getContext('2d');x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,192,192);res(c.toDataURL('image/jpeg',.82))};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
 
 /* ---- шапка и объявление ---- */
-function headerAcct(){const b=document.getElementById('acctbtn');if(!b)return;b.hidden=!ACC;if(!ACC)return;
- b.innerHTML=`${AVH(ACC.avatar,26,ACC.name)}<span>${esc(ACC.name||'Профиль')}</span>${isOwner()?'<span class="tag own">'+ICO('crown',13)+'</span>':planOn()?'<span class="tag pro">'+ICO('gem',13)+'</span>':''}`}
+function headerAcct(){const b=document.getElementById('acctbtn');if(!b)return;b.hidden=!ACC;const hb=document.getElementById('helpbtn');if(hb)hb.hidden=!ACC||!NEEDAUTH&&!FB;if(!ACC)return;
+ b.innerHTML=`${AVH(ACC.avatar,26,ACC.name)}<span>${esc(ACC.name||'Профиль')}</span>${isStaff()?'<span class="tag own">'+ICO(ROLEI[myRole()],13)+'</span>':planOn()?'<span class="tag pro">'+ICO('gem',13)+'</span>':''}`}
 function annBar(){let a=document.getElementById('annbar');const t=(CFG.announce||'').trim();if(!t||!ACC){if(a)a.remove();return}
  if(!a){a=document.createElement('div');a.id='annbar';const h=document.querySelector('.top .in');h&&h.appendChild(a)}a.innerHTML=ICO('mega',16)+' '+esc(t)}
 
@@ -2777,33 +2855,49 @@ const FBERR={'auth/email-already-in-use':'Эта почта уже зареги�
 const fbErr=e=>FBERR[e&&e.code]||('Ошибка: '+((e&&(e.code||e.message))||e));
 const pairOpts=sel=>`<option value="" disabled ${sel?'':'selected'}>— выбери пару предметов —</option>${PAIRS.map(p=>`<option value="${p}" ${sel===p?'selected':''}>${pairName(p)}${p.split('-').some(s=>!PHAVE[s])?' *':''}</option>`).join('')}<option value="none" ${sel==='none'?'selected':''}>Ещё не выбрал / творческий экзамен</option>`;
 const PNOTE='<p class="small mut" style="margin:.4em 0 0">* Этих предметов пока нет в приложении — они появятся позже. Сейчас есть математика, информатика и физика, а обязательные предметы доступны всем.</p>';
+const PHDOM='@phone.ent2027.app';
+const isPhoneMail=m=>(m||'').endsWith(PHDOM);
+const showId=m=>isPhoneMail(m)?'+'+m.replace(PHDOM,'').replace(/^(\d)(\d{3})(\d{3})(\d{2})(\d{2})$/,'$1 $2 $3 $4 $5'):(m||'');
+const phDigits=v=>{let d=(v||'').replace(/\D/g,'');if(d.length>11&&/^7[78]/.test(d))d=d.slice(1);if(d.startsWith('8'))d='7'+d.slice(1);if(!d.startsWith('7'))d='7'+d;return d.slice(0,11)};
+const fmtPh=v=>{const d=phDigits(v).slice(1);let s='+7';if(d.length)s+=' '+d.slice(0,3);if(d.length>3)s+=' '+d.slice(3,6);if(d.length>6)s+=' '+d.slice(6,8);if(d.length>8)s+=' '+d.slice(8,10);return s};
+let AUTHBY=localStorage.getItem('ent-authby')||'mail';
+const GICON='<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>';
+const eye=id=>`<button type="button" class="pweye" data-eye="${id}" aria-label="Показать пароль"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>`;
 function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=document.createElement('div');w.id='auth';document.body.appendChild(w)}
- document.documentElement.style.overflow='hidden';mode=mode||'in';const ready=!!FB;
- w.innerHTML=`<div class="authbox"><div class="authlogo">${ICO('cap',40)}</div><h2 style="margin:.2em 0">ЕНТ 2027: подготовка</h2><p class="small mut" style="margin:0 0 14px">${mode==='up'?'Создай аккаунт: прогресс будет сохраняться и на телефоне, и на компьютере.':mode==='reset'?'Пришлём на почту ссылку для нового пароля.':'Войди, чтобы продолжить.'}</p>
- ${mode!=='reset'?`<div class="authtabs"><button data-m="in" class="${mode==='in'?'on':''}">Вход</button><button data-m="up" class="${mode==='up'?'on':''}">Регистрация</button></div>`:''}
+ document.documentElement.style.overflow='hidden';mode=mode||'in';const ready=!!FB,up=mode==='up',ph=AUTHBY==='phone'&&mode!=='reset';
+ w.innerHTML=`<div class="authbox"><div class="authlogo">${ICO('cap',40)}</div><h2 style="margin:.2em 0">${up?'Регистрация':mode==='reset'?'Новый пароль':'Вход'}</h2><p class="small mut" style="margin:0 0 14px">${up?'Аккаунт нужен, чтобы сохранять результаты и следить за прогрессом.':mode==='reset'?'Пришлём на почту ссылку для нового пароля.':'С возвращением! Войди, чтобы продолжить.'}</p>
+ ${mode!=='reset'?`<div class="authtabs"><button data-by="mail" class="${!ph?'on':''}">По e-mail</button><button data-by="phone" class="${ph?'on':''}">По телефону</button></div>`:''}
  <form id="authf" novalidate>
- ${mode==='up'?`<label>Имя<input id="a_name" autocomplete="nickname" maxlength="30" placeholder="Как к тебе обращаться"></label>`:''}
- <label>Почта<input id="a_mail" type="email" autocomplete="email" inputmode="email" placeholder="name@mail.com"></label>
- ${mode!=='reset'?`<label>Пароль<input id="a_pass" type="password" autocomplete="${mode==='up'?'new-password':'current-password'}" placeholder="${mode==='up'?'минимум 6 символов':''}"></label>`:''}
- ${mode==='up'?`<label>Профильные предметы<select id="a_pair">${pairOpts('')}</select></label>${PNOTE}`:''}
- <div id="a_msg" class="authmsg">${msg||(ready?'':'⏳ Подключение к серверу…')}</div>
- <button class="btn" id="a_go" style="width:100%;margin-top:8px" ${ready?'':'disabled'}>${mode==='up'?'Зарегистрироваться':mode==='reset'?'Отправить ссылку':'Войти'}</button>
+ ${up?`<label>Имя<input id="a_name" autocomplete="nickname" maxlength="30" placeholder="Как к тебе обращаться"></label>`:''}
+ ${ph?`<label>Номер телефона<input id="a_phone" type="tel" inputmode="tel" autocomplete="tel" value="+7" placeholder="+7 7xx xxx xx xx"></label>`:`<label>E-mail<input id="a_mail" type="email" autocomplete="email" inputmode="email" placeholder="name@mail.com"></label>`}
+ ${mode!=='reset'?`<label>Пароль<span class="pwrap"><input id="a_pass" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="${up?'Минимум 8 символов':''}">${eye('a_pass')}</span></label>`:''}
+ ${up?`<label>Повтори пароль<span class="pwrap"><input id="a_pass2" type="password" autocomplete="new-password">${eye('a_pass2')}</span></label><label>Профильные предметы<select id="a_pair">${pairOpts('')}</select></label>${PNOTE}
+  <label class="chk agree"><input type="checkbox" id="a_ok"> <span>Согласен с <a href="privacy.html" target="_blank">политикой конфиденциальности</a></span></label>`:''}
+ ${window.REFCODE&&up?`<p class="small" style="margin:8px 0 0;color:var(--ok)">${ICO('spark',14)} Тебя пригласил друг — скидка ${CFG.refFriend||10}% на первый тариф.</p>`:''}
+ <div id="a_msg" class="authmsg">${msg||(ready?'':'Подключение к серверу…')}</div>
+ <button class="btn" id="a_go" style="width:100%;margin-top:6px" ${ready?'':'disabled'}>${up?'Создать аккаунт':mode==='reset'?'Отправить ссылку':'Войти'}</button>
  </form>
- ${mode==='in'?`<button class="linkb" data-m="reset">Забыли пароль?</button>`:mode==='reset'?`<button class="linkb" data-m="in">← Назад ко входу</button>`:''}
- ${!NEEDAUTH?`<button class="linkb" id="a_guest">Продолжить без аккаунта</button>`:''}${mode==='up'?'<p class="small mut" style="text-align:center;margin:10px 0 0">Регистрируясь, ты соглашаешься с <a href="privacy.html" target="_blank">политикой конфиденциальности</a>.</p>':'<p style="text-align:center;margin:8px 0 0"><a class="small mut" href="privacy.html" target="_blank">Политика конфиденциальности</a></p>'}</div>`;
- w.querySelectorAll('[data-m]').forEach(b=>b.onclick=e=>{e.preventDefault();const m=document.getElementById('a_mail');const v=m?m.value:'';authShow(b.dataset.m);const n=document.getElementById('a_mail');if(n)n.value=v});
+ ${mode!=='reset'?`<div class="aor"><span>или</span></div><button class="gbtn" id="a_google" ${ready?'':'disabled'}>${GICON}<span>${up?'Регистрация':'Войти'} с помощью Google</span></button>`:''}
+ <div class="aswitch">${mode==='in'?`<button class="linkb" data-m="reset">Забыли пароль?</button><p class="small">Нет аккаунта? <button class="linkb inl" data-m="up">Зарегистрироваться</button></p>`:mode==='up'?`<p class="small">Уже есть аккаунт? <button class="linkb inl" data-m="in">Войти</button></p>`:`<button class="linkb" data-m="in">← Назад ко входу</button>`}</div>
+ ${!NEEDAUTH?`<button class="linkb" id="a_guest">Продолжить без аккаунта</button>`:''}</div>`;
+ w.querySelectorAll('[data-m]').forEach(b=>b.onclick=e=>{e.preventDefault();authShow(b.dataset.m)});
+ w.querySelectorAll('[data-by]').forEach(b=>b.onclick=e=>{e.preventDefault();AUTHBY=b.dataset.by;localStorage.setItem('ent-authby',AUTHBY);authShow(mode)});
+ w.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=document.getElementById(b.dataset.eye);i.type=i.type==='password'?'text':'password'});
+ const pe=document.getElementById('a_phone');if(pe){pe.oninput=()=>{pe.value=fmtPh(pe.value)};pe.onfocus=()=>{if(!pe.value)pe.value='+7'}}
  const g=document.getElementById('a_guest');if(g)g.onclick=()=>authHide();
  const msgEl=document.getElementById('a_msg'),say=(t,ok)=>{msgEl.textContent=t;msgEl.style.color=ok?'var(--ok)':'var(--bad)'};
+ const gb=document.getElementById('a_google');if(gb)gb.onclick=async()=>{if(!FB)return;try{if(up){window.PENDINGPROF={name:'',pair:'',avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)],google:1}}say('Открываем Google…',true);await FB.google()}catch(e){window.PENDINGPROF=null;say(e&&e.code==='auth/operation-not-allowed'?'Вход через Google ещё не включён владельцем.':e&&e.code==='auth/popup-closed-by-user'?'Окно Google закрыто.':fbErr(e))}};
  document.getElementById('authf').onsubmit=async e=>{e.preventDefault();if(!FB)return;const btn=document.getElementById('a_go');
-  const mail=document.getElementById('a_mail').value.trim(),pe=document.getElementById('a_pass'),pass=pe?pe.value:'';
-  if(!/^\S+@\S+\.\S+$/.test(mail))return say('Введи почту, например name@mail.com');
+  let mail;if(ph){const d=phDigits(document.getElementById('a_phone').value);if(d.length!==11)return say('Введи номер полностью: +7 и 10 цифр');mail=d+PHDOM}else{mail=document.getElementById('a_mail').value.trim();if(!/^\S+@\S+\.\S+$/.test(mail))return say('Введи e-mail, например name@mail.com')}
+  const pe2=document.getElementById('a_pass'),pass=pe2?pe2.value:'';
   try{btn.disabled=true;
    if(mode==='reset'){await FB.reset(mail);say('Готово! Проверь почту (и папку «Спам») и перейди по ссылке.',true);btn.disabled=false;return}
-   if(mode==='up'){const name=document.getElementById('a_name').value.trim(),pair=document.getElementById('a_pair').value;
-    if(!name){btn.disabled=false;return say('Напиши имя.')}if(!pair){btn.disabled=false;return say('Выбери профильные предметы.')}if(pass.length<6){btn.disabled=false;return say('Пароль — минимум 6 символов.')}
-    say('Создаём аккаунт…',true);window.PENDINGPROF={name,pair,avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)]};await FB.signUp(mail,pass)}
+   if(up){const name=document.getElementById('a_name').value.trim(),pair=document.getElementById('a_pair').value;const fail=t=>{btn.disabled=false;say(t)};
+    if(!name)return fail('Напиши имя.');if(pass.length<8)return fail('Пароль — минимум 8 символов.');if(pass!==document.getElementById('a_pass2').value)return fail('Пароли не совпадают.');if(!pair)return fail('Выбери профильные предметы.');if(!document.getElementById('a_ok').checked)return fail('Нужно согласиться с политикой конфиденциальности.');
+    say('Создаём аккаунт…',true);window.PENDINGPROF={name,pair,phone:ph?'+'+phDigits(document.getElementById('a_phone').value):'',avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)]};await FB.signUp(mail,pass)}
    else{if(!pass){btn.disabled=false;return say('Введи пароль.')}say('Входим…',true);await FB.signIn(mail,pass)}
-  }catch(err){btn.disabled=false;window.PENDINGPROF=null;say(fbErr(err))}};
+  }catch(err){btn.disabled=false;window.PENDINGPROF=null;say(err&&err.code==='auth/email-already-in-use'?(ph?'Этот номер уже зарегистрирован. Нажми «Войти».':'Эта почта уже зарегистрирована. Нажми «Войти».'):err&&(err.code==='auth/invalid-credential'||err.code==='auth/wrong-password')?(ph?'Неверный номер или пароль.':'Неверная почта или пароль.'):fbErr(err))}};
+ if(mode==='reset'&&AUTHBY==='phone')say('Восстановить пароль по номеру телефона можно через поддержку: напиши владельцу. По e-mail — введи почту.',false);
  setTimeout(()=>{const f=w.querySelector('input');if(f&&innerWidth>700)f.focus()},50)}
 function authHide(){const w=document.getElementById('auth');if(w)w.remove();document.documentElement.style.overflow=''}
 function askMigrate(isNew){return new Promise(res=>{const w=document.createElement('div');w.id='auth';w.innerHTML=`<div class="authbox"><div class="authlogo">${ICO('cloud',40)}</div><h3 style="margin:.3em 0">На этом устройстве уже есть прогресс</h3><p class="small mut">Здесь раньше решали тесты без аккаунта. ${isNew?'Перенести эти результаты в новый аккаунт или начать с нуля?':'Добавить эти результаты в аккаунт или оставить только то, что сохранено в аккаунте?'}</p><button class="btn" id="mg_keep" style="width:100%;margin-top:8px">${isNew?'Перенести в аккаунт':'Добавить в аккаунт'}</button><button class="btn alt" id="mg_drop" style="width:100%;margin-top:8px">${isNew?'Начать с нуля':'Не добавлять'}</button></div>`;document.body.appendChild(w);
@@ -2820,19 +2914,20 @@ function page(title,html,noback){document.body.classList.add('pgmode');clearInte
 const say2=(id,t,ok)=>{const m=document.getElementById(id);if(m){m.textContent=t;m.style.color=ok?'var(--ok)':'var(--bad)'}};
 
 function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
- const badge=isOwner()?'<span class="pbadge own">'+ICO('crown',15)+' Владелец</span>':t?`<span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)} · до ${ACC.paidUntil>=FOREVER?'∞':fmtD(ACC.paidUntil)}</span>`:'<span class="pbadge">Бесплатный доступ</span>';
+ const badge=isStaff()?'<span class="pbadge own">'+ICO(ROLEI[myRole()],15)+' '+ROLEN[myRole()]+'</span>'+(t?` <span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)}</span>`:''):t?`<span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)} · до ${ACC.paidUntil>=FOREVER?'∞':fmtD(ACC.paidUntil)}</span>`:'<span class="pbadge">Бесплатный доступ</span>';
  page('profile',`<div class="phero"><div class="pava" id="pf_av">${AVH(ACC.avatar,96,ACC.name)}<span class="pedit">${ICO('pencil',14)}</span></div>
- <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pmail">${esc(ACC.email||'')}</div>${badge}</div>
+ <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pmail">${esc(showId(ACC.email))}</div>${badge}</div>
  <div class="pstats"><div><b>${st.n}</b><span>решено заданий</span></div><div><b>${st.acc}%</b><span>точность</span></div><div><b>${st.ent}</b><span>пробных ЕНТ</span></div><div><b>${st.best!=null?st.best:'—'}</b><span>лучший ЕНТ${st.bestMax?' из '+st.bestMax:''}</span></div></div>
  <div class="card"><h3 style="margin-top:0">Профильные предметы</h3><select id="pf_pair">${pairOpts(ACC.pair)}</select>${profSubs().some(s=>!PHAVE[s])?PNOTE:''}<button class="btn sm" id="pf_psave" style="margin-top:10px">Сохранить</button> <span class="small" id="pf_pmsg"></span></div>
  <div class="pgrid"><button class="card ptile" id="pf_tar"><span class="dbi">${ICO('gem',24)}</span><b>Тарифы</b><small>${t?'Подписка активна':'Открой все разделы'}</small></button>
- ${isOwner()?'<button class="card ptile" id="pf_adm"><span class="dbi">'+ICO('wrench',24)+'</span><b>Админ-панель</b><small>Пользователи, доступ, заявки</small></button>':''}
+ ${isStaff()?'<button class="card ptile" id="pf_adm"><span class="dbi">'+ICO('wrench',24)+'</span><b>Админ-панель</b><small>'+(myRole()==='manager'?'Чаты поддержки и ученики':'Ученики, доступ, заявки, чаты')+'</small></button>':''}
  <button class="card ptile" id="pf_lead" disabled><span class="dbi">${ICO('trophy',24)}</span><b>Таблица лидеров</b><small>Скоро</small></button></div>
+ ${refCard()}
  ${remCard()}
  <p class="small mut" style="text-align:center">${syncState==='err'?'Не удалось сохранить прогресс — повторим, когда будет интернет.':'Прогресс сохраняется в аккаунте автоматически.'}</p>
  <div class="row" style="justify-content:center;gap:10px"><button class="btn alt" id="pf_out">Выйти</button><button class="btn alt" id="pf_reset" style="color:var(--bad)">Сбросить прогресс</button></div>
- <div style="text-align:center;margin-top:10px"><button class="linkb" id="pf_priv">Политика конфиденциальности</button><button class="linkb" id="pf_del" style="color:var(--bad)">Удалить аккаунт</button></div>`);
- remBind();document.getElementById('pf_priv').onclick=showPrivacy;document.getElementById('pf_del').onclick=deleteAccount;
+ <div style="text-align:center;margin-top:10px">${matchMedia('(display-mode: standalone)').matches||navigator.standalone?'':'<button class="linkb" id="pf_inst">Установить приложение</button>'}<button class="linkb" id="pf_priv">Политика конфиденциальности</button><button class="linkb" id="pf_del" style="color:var(--bad)">Удалить аккаунт</button></div>`);
+ remBind();refBind();{const ib=document.getElementById('pf_inst');if(ib)ib.onclick=()=>window.showInstall()}if(REFS===null)loadRefs().then(()=>{if(window.PAGEMODE==='profile')showProfile()});document.getElementById('pf_priv').onclick=showPrivacy;document.getElementById('pf_del').onclick=deleteAccount;
  document.getElementById('pf_av').onclick=avatarPicker;
  document.getElementById('pf_name').onclick=async()=>{const n=prompt('Как тебя зовут?',ACC.name||'');if(n==null)return;const v=n.trim().slice(0,30);if(!v)return;ACC.name=v;LSS(ACK,ACC);headerAcct();try{await FB.setUser(ACC.uid,{name:v})}catch(e){}showProfile()};
  document.getElementById('pf_psave').onclick=async()=>{const pair=document.getElementById('pf_pair').value||'none';ACC.pair=pair;LSS(ACK,ACC);applyAccess();try{if(FB)await FB.setUser(ACC.uid,{pair});say2('pf_pmsg','✓ Сохранено',1)}catch(e){say2('pf_pmsg',fbErr(e))}};
@@ -2854,11 +2949,11 @@ function avatarPicker(){let sel=ACC.avatar&&ACC.avatar.startsWith('e|')?ACC.avat
  document.getElementById('avsave').onclick=async()=>{const a=photo||('e|'+sel[0]+'|'+sel[1]);ACC.avatar=a;LSS(ACK,ACC);headerAcct();
   try{if(FB)await FB.setUser(ACC.uid,{avatar:a});const m=document.getElementById('modal');if(m)m.remove();showProfile()}catch(e){say2('avmsg',fbErr(e))}}}
 
-async function showTariffs(why){if(!ACC){if(NEEDAUTH)authShow('in');return}const t=myTariff();let mine=[];
+async function showTariffs(why){if(!ACC){if(NEEDAUTH)authShow('in');return}if(REFS===null){await loadRefs()}const t=myTariff();let mine=[];
  page('tariffs',`<h2 style="margin:.6em 0 .2em">Тарифы</h2>${why?`<div class="card why">${ICO('lock',18)} ${esc(why)}</div>`:''}
  ${isOwner()?'<p class="small mut">Ты владелец — тебе доступно всё. Тарифы настраиваются в админ-панели.</p>':''}
  ${t?`<div class="card" style="border-color:var(--ok)">${ICO('check',18)} Твой тариф: <b>${esc(t.name)}</b>, действует до <b>${ACC.paidUntil>=FOREVER?'бессрочно':fmtD(ACC.paidUntil)}</b>.</div>`:''}
- <div class="tgrid">${CFG.tariffs.map((x,i)=>`<div class="card tcard ${i===1?'hot':''}">${i===1?'<span class="thot">Популярный</span>':''}<div class="tname">${esc(x.name)}</div><div class="tprice">${(+x.price||0).toLocaleString('ru-RU')} ₸<small> / ${x.days>=36500?'навсегда':x.days+' дн.'}</small></div><p class="small">${esc(x.desc||'')}</p>
+ <div class="tgrid">${CFG.tariffs.map((x,i)=>`<div class="card tcard ${i===1?'hot':''}">${i===1?'<span class="thot">Популярный</span>':''}<div class="tname">${esc(x.name)}</div>${refDiscount()?`<div class="small" style="color:var(--ok);font-weight:700">${ICO('spark',13)} −${refDiscount()}% по приглашению</div><div class="tprice"><s class="small mut" style="-webkit-text-fill-color:var(--mut)">${(+x.price||0).toLocaleString('ru-RU')}</s> ${Math.round((+x.price||0)*(100-refDiscount())/100).toLocaleString('ru-RU')} ₸<small>`:`<div class="tprice">${(+x.price||0).toLocaleString('ru-RU')} ₸<small>`} / ${x.days>=36500?'навсегда':x.days+' дн.'}</small></div><p class="small">${esc(x.desc||'')}</p>
  <button class="btn" data-buy="${x.id}" style="width:100%">${t&&t.id===x.id?'Продлить':'Оформить'}</button></div>`).join('')||'<p class="mut">Тарифы пока не настроены.</p>'}</div>
  <div class="card scroll" style="padding:6px"><table class="tcmp"><thead><tr><th></th><th>Без тарифа</th>${CFG.tariffs.map(x=>`<th>${esc(x.name)}</th>`).join('')}</tr></thead><tbody>
  ${PERKS.map(([k,n])=>{const cell=v=>k==='tests'||k==='ent'?(v<0||v==null?'∞':v):(v===false?'<span class="no">✗</span>':'<span class="yes">✓</span>');return`<tr><td>${n}</td><td>${cell((CFG.free||{})[k])}</td>${CFG.tariffs.map(x=>`<td>${cell((x.perks||{})[k])}</td>`).join('')}</tr>`}).join('')}
@@ -2867,22 +2962,24 @@ async function showTariffs(why){if(!ACC){if(NEEDAUTH)authShow('in');return}const
  app.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buyTariff(b.dataset.buy));
  try{if(FB){mine=await FB.myReqs(ACC.uid);const pend=mine.filter(r=>r.status==='pending');const box=document.getElementById('reqs');
   if(box&&mine.length)box.innerHTML=`<h3>Мои заявки</h3>${mine.sort((a,b)=>b.t-a.t).slice(0,5).map(r=>`<div class="card small">${esc(r.tname||r.tariff)} · ${fmtD(r.t)} · <b style="color:${r.status==='ok'?'var(--ok)':r.status==='no'?'var(--bad)':'inherit'}">${r.status==='ok'?'одобрена':r.status==='no'?'отклонена':'ждёт проверки'}</b>${r.reply?`<div class="mut">Ответ: ${esc(r.reply)}</div>`:''}</div>`).join('')}`}}catch(e){}}
-function buyTariff(id){const x=CFG.tariffs.find(t=>t.id===id);if(!x)return;
- MODAL('Оформить «'+x.name+'»',`<p><b>${(+x.price||0).toLocaleString('ru-RU')} ₸</b> — ${x.days>=36500?'навсегда':x.days+' дней'}</p><div class="card small" style="white-space:pre-wrap">${esc(CFG.payInfo||'')}</div>
+function buyTariff(id){const x0=CFG.tariffs.find(t=>t.id===id);if(!x0)return;const dsc=refDiscount(),x={...x0,price:Math.round((+x0.price||0)*(100-dsc)/100)};
+ MODAL('Оформить «'+x.name+'»',`<p><b>${(+x.price||0).toLocaleString('ru-RU')} ₸</b> — ${x.days>=36500?'навсегда':x.days+' дней'}${dsc?` <span class="small" style="color:var(--ok)">(скидка ${dsc}%)</span>`:''}</p><div class="card small" style="white-space:pre-wrap">${esc(CFG.payInfo||'')}</div>
  <label class="small"><b>Комментарий</b> (например, имя отправителя перевода)<textarea id="rq_c" rows="3" style="width:100%;margin-top:4px"></textarea></label>
  <button class="btn" id="rq_go" style="margin-top:10px;width:100%">Я оплатил — отправить заявку</button><p class="small" id="rq_m"></p>`);
  document.getElementById('rq_go').onclick=async()=>{const b=document.getElementById('rq_go');b.disabled=true;
-  try{await FB.addReq({uid:ACC.uid,name:ACC.name||'',email:ACC.email||'',tariff:x.id,tname:x.name,price:+x.price||0,days:+x.days||30,comment:document.getElementById('rq_c').value.slice(0,500),status:'pending',t:Date.now()});
+  try{await FB.addReq({uid:ACC.uid,name:ACC.name||'',email:ACC.email||'',tariff:x.id,tname:x.name,price:+x.price||0,disc:dsc,refN:REFS?REFS.length:0,days:+x.days||30,comment:document.getElementById('rq_c').value.slice(0,500),status:'pending',t:Date.now()});
    say2('rq_m','✓ Заявка отправлена. Владелец проверит оплату и откроет доступ.',1)}catch(e){b.disabled=false;say2('rq_m',fbErr(e))}}}
 
 /* ---- админ-панель ---- */
 let ADM={users:null,reqs:null};
 async function admLoad(force){if(force||!ADM.users){const [u,r]=await Promise.all([FB.listUsers(),FB.allReqs()]);ADM.users=u;ADM.reqs=r}}
-async function showAdmin(tab){if(!isOwner()||!FB)return;tab=tab||'dash';
- const tabs=[['dash','chart','Обзор'],['users','users','Ученики'],['reqs','receipt','Заявки'],['tar','gem','Тарифы'],['acc','lock','Доступ'],['cont','cloud','Уроки'],['cal','cal','Календарь'],['set','sliders','Настройки']];
- page('admin',`<h2 style="margin:.6em 0 .3em">Админ-панель</h2><div class="atabs">${tabs.map(([k,ic,n])=>`<button data-t="${k}" class="${k===tab?'on':''}">${ICO(ic,16)}<span>${n}</span></button>`).join('')}</div><div id="adm"><p class="mut">Загрузка…</p></div>`);
+async function showAdmin(tab){if(!isStaff()||!FB)return;const R0=myRole();tab=tab||(R0==='manager'?'chats':'dash');
+ let tabs=[['chats','chat','Чаты'],['dash','chart','Обзор'],['users','users','Ученики'],['reqs','receipt','Заявки'],['tar','gem','Тарифы'],['acc','lock','Доступ'],['cont','cloud','Уроки'],['cal','cal','Календарь'],['set','sliders','Настройки']];
+ if(R0==='manager')tabs=tabs.filter(t=>['chats','users','reqs'].includes(t[0]));if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
+ page('admin',`<h2 style="margin:.6em 0 .3em">Админ-панель <span class="pbadge own sm">${ICO(ROLEI[R0],13)} ${ROLEN[R0]}</span></h2><div class="atabs">${tabs.map(([k,ic,n])=>`<button data-t="${k}" class="${k===tab?'on':''}">${ICO(ic,16)}<span>${n}</span></button>`).join('')}</div><div id="adm"><p class="mut">Загрузка…</p></div>`);
  app.querySelectorAll('.atabs [data-t]').forEach(b=>b.onclick=()=>showAdmin(b.dataset.t));
  const box=document.getElementById('adm');
+ if(tab==='chats'){admChats(box);return}
  try{await admLoad(tab==='dash')}catch(e){box.innerHTML=`<p style="color:var(--bad)">${esc(fbErr(e))}</p><p class="small">Проверь, что в правилах Firestore указан твой UID как владелец.</p>`;return}
  ({dash:admDash,users:admUsers,reqs:admReqs,tar:admTar,acc:admAcc,cont:admCont,cal:admCal,set:admSet})[tab](box)}
 function admDash(box){const U=ADM.users,now=Date.now(),wk=now-7*864e5;const pro=U.filter(u=>u.plan&&(u.paidUntil||0)>now);
@@ -2894,21 +2991,25 @@ function admDash(box){const U=ADM.users,now=Date.now(),wk=now-7*864e5;const pro=
  <div class="card"><h3 style="margin-top:0">Самые активные</h3>${U.slice().sort((a,b)=>((b.stats||{}).n||0)-((a.stats||{}).n||0)).slice(0,10).map((u,i)=>`<div class="arow" data-u="${u.id}">${i+1}. ${AVH(u.avatar,28,u.name)} <b>${esc(u.name||'—')}</b><span class="mut small">${(u.stats||{}).n||0} заданий · ${(u.stats||{}).acc||0}%</span></div>`).join('')}</div>`;
  box.querySelectorAll('[data-u]').forEach(r=>r.onclick=()=>admUser(r.dataset.u))}
 function admUsers(box){const draw=q=>{q=(q||'').toLowerCase();const now=Date.now();const fo=(document.getElementById('aufo')||{}).checked;const L=ADM.users.filter(u=>(!q||(u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q))&&(!fo||onl(u))).sort((a,b)=>(onl(b)-onl(a))||((b.seen||0)-(a.seen||0)));
-  document.getElementById('aul').innerHTML=L.map(u=>`<div class="arow" data-u="${u.id}"><span class="avw">${AVH(u.avatar,34,u.name)}${onl(u)?'<i class="odot"></i>':''}</span><div style="flex:1;min-width:0"><b>${esc(u.name||'—')}</b>${OWNERS.includes(u.id)?' <span class="tag own">'+ICO('crown',12)+'</span>':''}${u.blocked?' <span class="tag bad">заблокирован</span>':''}<div class="small mut ell">${esc(u.email||'')} · ${esc(pairName(u.pair))}</div></div><div class="small" style="text-align:right">${u.plan&&(u.paidUntil||0)>now?`<span class="tag pro">${ICO('gem',12)} до ${u.paidUntil>=FOREVER?'∞':new Date(u.paidUntil).toLocaleDateString('ru-RU')}</span>`:'<span class="mut">бесплатно</span>'}<div class="mut">${(u.stats||{}).n||0} зад.</div><div class="${onl(u)?'oon':'mut'}">${ago(u.seen)}</div></div></div>`).join('')||'<p class="mut">Никого не найдено</p>';
+  document.getElementById('aul').innerHTML=L.map(u=>`<div class="arow" data-u="${u.id}"><span class="avw">${AVH(u.avatar,34,u.name)}${onl(u)?'<i class="odot"></i>':''}</span><div style="flex:1;min-width:0"><b>${esc(u.name||'—')}</b>${roleOf(u)?' <span class="tag own" title="'+ROLEN[roleOf(u)]+'">'+ICO(ROLEI[roleOf(u)],12)+'</span>':''}${u.blocked?' <span class="tag bad">заблокирован</span>':''}<div class="small mut ell">${esc(showId(u.email))} · ${esc(pairName(u.pair))}</div></div><div class="small" style="text-align:right">${u.plan&&(u.paidUntil||0)>now?`<span class="tag pro">${ICO('gem',12)} до ${u.paidUntil>=FOREVER?'∞':new Date(u.paidUntil).toLocaleDateString('ru-RU')}</span>`:'<span class="mut">бесплатно</span>'}<div class="mut">${(u.stats||{}).n||0} зад.</div><div class="${onl(u)?'oon':'mut'}">${ago(u.seen)}</div></div></div>`).join('')||'<p class="mut">Никого не найдено</p>';
   document.querySelectorAll('#aul [data-u]').forEach(r=>r.onclick=()=>admUser(r.dataset.u))};
  box.innerHTML=`<div class="row"><input id="aus" placeholder="Поиск по имени или почте" style="flex:1"><button class="btn alt sm" id="aur">${ICO('repeat',15)} Обновить</button></div><div class="row" style="justify-content:space-between;margin:8px 0"><span class="small mut">Всего: ${ADM.users.length} · <b class="oon">в сети: ${ADM.users.filter(onl).length}</b></span><label class="chk small"><input type="checkbox" id="aufo"> Только кто в сети</label></div><div id="aul"></div>`;
  document.getElementById('aufo').onchange=()=>draw(document.getElementById('aus').value);clearInterval(window.AUTIMER);window.AUTIMER=setInterval(async()=>{if(!document.getElementById('aul')){clearInterval(window.AUTIMER);return}try{await admLoad(true);draw(document.getElementById('aus').value)}catch(e){}},60000);
  document.getElementById('aus').oninput=e=>draw(e.target.value);document.getElementById('aur').onclick=async()=>{await admLoad(true);admUsers(box)};draw('')}
 async function admUser(uid){const u=ADM.users.find(x=>x.id===uid);if(!u)return;const now=Date.now(),on=u.plan&&(u.paidUntil||0)>now;
- page('admin',`<h2 style="margin:.6em 0 .3em">${AVH(u.avatar,44,u.name)} ${esc(u.name||'—')}</h2><p class="small mut">${esc(u.email||'')} · UID: <code>${u.id}</code><br>Зарегистрирован: ${u.created?fmtD(u.created):'—'} · ${onl(u)?'<b class="oon">● в сети</b>':'Был в сети: '+ago(u.seen)}</p>
+ page('admin',`<h2 style="margin:.6em 0 .3em">${AVH(u.avatar,44,u.name)} ${esc(u.name||'—')}</h2><p><button class="btn alt sm" id="au_chat">${ICO('chat',15)} Написать в чат</button> ${roleOf(u)?`<span class="pbadge own sm">${ICO(ROLEI[roleOf(u)],13)} ${ROLEN[roleOf(u)]}</span>`:''}</p><p class="small mut">${esc(showId(u.email))} · UID: <code>${u.id}</code><br>Зарегистрирован: ${u.created?fmtD(u.created):'—'} · ${onl(u)?'<b class="oon">● в сети</b>':'Был в сети: '+ago(u.seen)}</p>
  <div class="card"><h3 style="margin-top:0">${ICO('gem',18)} Подписка</h3><p>${on?`Активна: <b>${esc((CFG.tariffs.find(t=>t.id===u.plan)||{}).name||u.plan)}</b> до <b>${u.paidUntil>=FOREVER?'бессрочно':fmtD(u.paidUntil)}</b>`:'Нет активной подписки'}</p>
  <div class="row"><select id="au_t">${CFG.tariffs.map(t=>`<option value="${t.id}" ${u.plan===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select><select id="au_d"><option value="7">7 дней</option><option value="30" selected>30 дней</option><option value="90">90 дней</option><option value="180">180 дней</option><option value="365">1 год</option><option value="0">Навсегда</option></select></div>
  <div class="row" style="margin-top:8px"><button class="btn" id="au_give">${on?'Продлить':'Выдать'}</button>${on?'<button class="btn alt" id="au_take" style="color:var(--bad)">Забрать подписку</button>':''}</div></div>
  <div class="card"><h3 style="margin-top:0">${ICO('user',18)} Данные</h3><label class="small">Имя<input id="au_n" value="${esc(u.name||'')}"></label><label class="small">Профильные предметы<select id="au_p">${pairOpts(u.pair)}</select></label><label class="small">Заметка (видишь только ты)<textarea id="au_note" rows="2" style="width:100%">${esc(u.note||'')}</textarea></label><button class="btn sm" id="au_save" style="margin-top:8px">Сохранить</button></div>
  <div class="card"><h3 style="margin-top:0">${ICO('chart',18)} Прогресс</h3><div id="au_prog" class="small mut">Загрузка…</div></div>
+ ${isOwner()&&!OWNERS.includes(u.id)?`<div class="card"><h3 style="margin-top:0">${ICO('shield',18)} Роль</h3><div class="row"><select id="au_role"><option value="" ${!u.role?'selected':''}>Ученик</option><option value="manager" ${u.role==='manager'?'selected':''}>Менеджер — отвечает в чатах, видит учеников и заявки</option><option value="admin" ${u.role==='admin'?'selected':''}>Администратор — всё, кроме ролей</option></select><button class="btn sm" id="au_rsave">Сохранить роль</button></div></div>`:''}
  <div class="card"><h3 style="margin-top:0">${ICO('alert',18)} Опасная зона</h3><div class="row"><button class="btn alt" id="au_blk">${u.blocked?'Разблокировать':'Заблокировать'}</button><button class="btn alt" id="au_rst" style="color:var(--bad)">Сбросить прогресс</button></div><p class="small mut">Удалить сам аккаунт (почту и пароль) можно в Firebase → Authentication → Users.</p></div>
  <p class="small" id="au_m"></p>`);
  document.getElementById('pg_back').onclick=()=>showAdmin('users');
+ const rs=document.getElementById('au_rsave');if(rs)rs.onclick=()=>{const r=document.getElementById('au_role').value;upd({role:r},r?'Роль: '+ROLEN[r]:'Роль снята')};
+ if(!isAdminR()){document.querySelectorAll('#au_give,#au_take,#au_save,#au_blk,#au_rst').forEach(b=>{b.disabled=true;b.title='Доступно администратору'})}
+ const cw=document.getElementById('au_chat');if(cw)cw.onclick=()=>admChat(u.id,u.name);
  const upd=async(d,msg)=>{try{await FB.setUser(uid,d);Object.assign(u,d);say2('au_m','✓ '+msg,1);setTimeout(()=>admUser(uid),600)}catch(e){say2('au_m',fbErr(e))}};
  document.getElementById('au_give').onclick=()=>{const t=document.getElementById('au_t').value,d=+document.getElementById('au_d').value;const base=on&&u.plan===t?u.paidUntil:now;const T0=CFG.tariffs.find(x=>x.id===t)||{};upd({plan:t,paidUntil:d?base+d*864e5:FOREVER,feat:T0.features||['all'],learn:!T0.perks||T0.perks.learn!==false},'Подписка выдана')};
  const tk=document.getElementById('au_take');if(tk)tk.onclick=()=>{if(confirm('Забрать подписку?'))upd({plan:null,paidUntil:0,feat:[],learn:false},'Подписка снята')};
@@ -2920,10 +3021,10 @@ async function admUser(uid){const u=ADM.users.find(x=>x.id===uid);if(!u)return;c
   document.getElementById('au_prog').innerHTML=(rows?`<table><thead><tr><th>Предмет</th><th>Ответов</th><th>Верно</th></tr></thead><tbody>${rows}</tbody></table>`:'Ещё ничего не решал.')+(H.length?`<p>Пробные ЕНТ: ${H.slice(-5).reverse().map(h=>`<b>${h.score}/${h.max}</b>`).join(', ')}</p>`:'')}catch(e){document.getElementById('au_prog').textContent=fbErr(e)}}
 function admReqs(box){const now=Date.now();const R=ADM.reqs.slice().sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||b.t-a.t);
  box.innerHTML=R.length?R.map(r=>`<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(r.name||'—')}</b><span class="small mut">${new Date(r.t).toLocaleString('ru-RU')}</span></div>
- <div class="small">${esc(r.email||'')}<br>Тариф: <b>${esc(r.tname||r.tariff)}</b> · ${(r.price||0).toLocaleString('ru-RU')} ₸ · ${r.days>=36500?'навсегда':r.days+' дн.'}${r.comment?`<br>Комментарий: «${esc(r.comment)}»`:''}</div>
- ${r.status==='pending'?`<div class="row" style="margin-top:8px"><button class="btn sm" data-ok="${r.id}">✓ Одобрить и выдать</button><button class="btn alt sm" data-no="${r.id}">✗ Отклонить</button></div>`:`<div class="small" style="margin-top:6px;color:${r.status==='ok'?'var(--ok)':'var(--bad)'}">${r.status==='ok'?'Одобрена':'Отклонена'}${r.reply?' · '+esc(r.reply):''}</div>`}</div>`).join(''):'<p class="mut">Заявок пока нет.</p>';
+ <div class="small">${esc(r.email||'')}<br>Тариф: <b>${esc(r.tname||r.tariff)}</b> · ${(r.price||0).toLocaleString('ru-RU')} ₸${r.disc?` <span style="color:var(--ok)">(скидка ${r.disc}%)</span>`:''} · ${r.days>=36500?'навсегда':r.days+' дн.'}${r.comment?`<br>Комментарий: «${esc(r.comment)}»`:''}</div>
+ ${r.status==='pending'&&isAdminR()?`<div class="row" style="margin-top:8px"><button class="btn sm" data-ok="${r.id}">✓ Одобрить и выдать</button><button class="btn alt sm" data-no="${r.id}">✗ Отклонить</button></div>`:r.status==='pending'?'<div class="small mut" style="margin-top:6px">Ждёт решения администратора</div>':`<div class="small" style="margin-top:6px;color:${r.status==='ok'?'var(--ok)':'var(--bad)'}">${r.status==='ok'?'Одобрена':'Отклонена'}${r.reply?' · '+esc(r.reply):''}</div>`}</div>`).join(''):'<p class="mut">Заявок пока нет.</p>';
  box.querySelectorAll('[data-ok]').forEach(b=>b.onclick=async()=>{const r=ADM.reqs.find(x=>x.id===b.dataset.ok);const u=ADM.users.find(x=>x.id===r.uid)||{};const base=u.plan===r.tariff&&(u.paidUntil||0)>now?u.paidUntil:now;
-  const T0=CFG.tariffs.find(x=>x.id===r.tariff)||{};try{await FB.setUser(r.uid,{plan:r.tariff,paidUntil:r.days>=36500?FOREVER:base+r.days*864e5,feat:T0.features||['all'],learn:!T0.perks||T0.perks.learn!==false});await FB.setReq(r.id,{status:'ok',done:Date.now()});await admLoad(true);admReqs(box)}catch(e){alert(fbErr(e))}});
+  const T0=CFG.tariffs.find(x=>x.id===r.tariff)||{};try{await FB.setUser(r.uid,{plan:r.tariff,paidUntil:r.days>=36500?FOREVER:base+r.days*864e5,feat:T0.features||['all'],learn:!T0.perks||T0.perks.learn!==false,...(r.disc?{refUsed:r.refN||0,refFriendUsed:true}:{})});await FB.setReq(r.id,{status:'ok',done:Date.now()});await admLoad(true);admReqs(box)}catch(e){alert(fbErr(e))}});
  box.querySelectorAll('[data-no]').forEach(b=>b.onclick=async()=>{const why=prompt('Причина (увидит ученик):','Оплата не найдена');if(why==null)return;try{await FB.setReq(b.dataset.no,{status:'no',reply:why,done:Date.now()});await admLoad(true);admReqs(box)}catch(e){alert(fbErr(e))}})}
 async function saveCfg(d,msgId){Object.assign(CFG,d);LSS(CFK,CFG);applyAccess();try{await FB.setCfg(d);say2(msgId,'✓ Сохранено',1)}catch(e){say2(msgId,fbErr(e))}}
 function admTar(box){const T=JSON.parse(JSON.stringify(CFG.tariffs)),FR=Object.assign({},DEFCFG.free,CFG.free||{});
@@ -2966,10 +3067,11 @@ function admCont(box){box.innerHTML=`<div class="card"><h3 style="margin-top:0">
   catch(err){say2('ac_m',err.message||fbErr(err))}}}
 function admSet(box){box.innerHTML=`<div class="card"><h3 style="margin-top:0">${ICO('mega',18)} Объявление</h3><p class="small mut">Покажется всем вверху страницы. Оставь пустым, чтобы убрать.</p><textarea id="as_ann" rows="2" style="width:100%">${esc(CFG.announce||'')}</textarea></div>
  <div class="card"><h3 style="margin-top:0">${ICO('card',18)} Как оплатить</h3><p class="small mut">Ученик увидит этот текст, когда нажмёт «Оформить» (номер Kaspi, кому писать и т. п.).</p><textarea id="as_pay" rows="4" style="width:100%">${esc(CFG.payInfo||'')}</textarea></div>
+ <div class="card"><h3 style="margin-top:0">${ICO('users',18)} Пригласи друга</h3><label class="chk"><input type="checkbox" id="as_ron" ${CFG.refOn===false?'':'checked'}> Включить реферальную программу</label><div class="row" style="margin-top:6px"><label class="small">% за друга<input type="number" id="as_rp" value="${CFG.refPct??10}" style="width:80px"></label><label class="small">Максимум %<input type="number" id="as_rm" value="${CFG.refMax??30}" style="width:80px"></label><label class="small">% другу<input type="number" id="as_rf" value="${CFG.refFriend??10}" style="width:80px"></label></div><p class="small mut">Скидка учитывается в заявке на тариф. После одобрения заявки использованные приглашения списываются.</p></div>
  <div class="card"><h3 style="margin-top:0">${ICO('mail',18)} Контакт для связи</h3><p class="small mut">Почта или Telegram — указывается в политике конфиденциальности.</p><input id="as_contact" value="${esc(CFG.contact||'')}" style="width:100%"></div>
  <div class="card"><h3 style="margin-top:0">${ICO('cal',18)} Дата ЕНТ</h3><p class="small mut">Для обратного отсчёта на главной. Если пусто — отсчёт идёт до начала периода «на грант» из календаря.</p><input type="date" id="as_date" value="${esc(CFG.entDate||'')}"></div>
  <button class="btn" id="as_save">Сохранить</button><p class="small" id="as_m"></p>`;
- document.getElementById('as_save').onclick=()=>saveCfg({contact:document.getElementById('as_contact').value.slice(0,120),entDate:document.getElementById('as_date').value,announce:document.getElementById('as_ann').value.slice(0,300),payInfo:document.getElementById('as_pay').value.slice(0,1500)},'as_m')}
+ document.getElementById('as_save').onclick=()=>saveCfg({refOn:document.getElementById('as_ron').checked,refPct:+document.getElementById('as_rp').value||0,refMax:+document.getElementById('as_rm').value||0,refFriend:+document.getElementById('as_rf').value||0,contact:document.getElementById('as_contact').value.slice(0,120),entDate:document.getElementById('as_date').value,announce:document.getElementById('as_ann').value.slice(0,300),payInfo:document.getElementById('as_pay').value.slice(0,1500)},'as_m')}
 
 
 
@@ -3047,6 +3149,54 @@ function admCal(box){const C=JSON.parse(JSON.stringify(CFG.calendar||[]));
   document.getElementById('acl_add').onclick=()=>{C.push({name:'Новое',appFrom:'',appTo:'',testFrom:'',testTo:'',grant:false});draw()};
   document.getElementById('acl_save').onclick=()=>saveCfg({calendar:C,calShow:document.getElementById('acl_show').checked},'acl_m')};draw()}
 
+
+/* ---- помощь: чат с поддержкой ---- */
+let CHUNSUB=null,CHMETA=null,STAFFUNSUB=null;
+const tmf=t=>{const d=new Date(t),n=new Date();return d.toDateString()===n.toDateString()?d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})};
+function chatView(cid,mine){return`<div class="chat"><div class="chlog" id="chlog"><p class="mut small" style="text-align:center">Загрузка…</p></div><form class="chin" id="chf"><textarea id="cht" rows="1" maxlength="2000" placeholder="Напиши сообщение…"></textarea><button class="btn" id="chs" aria-label="Отправить">${ICO('send',18)}</button></form></div>`}
+function chatBind(cid,asStaff,uname){if(CHUNSUB){CHUNSUB();CHUNSUB=null}const log=document.getElementById('chlog'),ta=document.getElementById('cht');
+ CHUNSUB=FB.chatListen(cid,(L,err)=>{if(!document.getElementById('chlog')){if(CHUNSUB){CHUNSUB();CHUNSUB=null}return}if(err){log.innerHTML=`<p class="small" style="color:var(--bad)">${esc(fbErr(err))}</p>`;return}
+  log.innerHTML=L.length?L.map(m=>{const me=asStaff?m.from==='staff':m.from==='user';return`<div class="msg ${me?'me':''}"><div class="mb">${m.from==='staff'&&!asStaff?`<div class="mn">${ICO('headset',12)} ${esc(m.byName||'Поддержка')}</div>`:asStaff&&m.from==='staff'?`<div class="mn">${esc(m.byName||'')}</div>`:''}${esc(m.text).replace(/\n/g,'<br>')}<span class="mt">${tmf(m.t)}</span></div></div>`}).join(''):`<div class="chempty">${ICO('chat',36)}<p>${asStaff?'Сообщений пока нет.':'Задай вопрос — менеджер ответит здесь. Например: «Как оплатить тариф?» или «Не открывается урок».'}</p></div>`;
+  log.scrollTop=log.scrollHeight;FB.chatSet(cid,asStaff?{unreadStaff:false}:{unreadUser:false}).catch(()=>{})});
+ ta.oninput=()=>{ta.style.height='auto';ta.style.height=Math.min(140,ta.scrollHeight)+'px'};
+ ta.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&innerWidth>700){e.preventDefault();document.getElementById('chf').requestSubmit()}};
+ document.getElementById('chf').onsubmit=async e=>{e.preventDefault();const t=ta.value.trim();if(!t)return;ta.value='';ta.style.height='auto';const now=Date.now();
+  const m={from:asStaff?'staff':'user',by:ACC.uid,byName:asStaff?(ACC.name||'Поддержка'):(ACC.name||''),text:t.slice(0,2000),t:now};
+  const meta=asStaff?{last:t.slice(0,120),lastAt:now,lastFrom:'staff',unreadUser:true,unreadStaff:false,status:'open'}:{uid:ACC.uid,name:ACC.name||'',email:ACC.email||'',last:t.slice(0,120),lastAt:now,lastFrom:'user',unreadStaff:true,unreadUser:false,status:'open'};
+  try{await FB.chatSend(cid,m,meta)}catch(err){ta.value=t;alert(fbErr(err))}}}
+function showHelp(){if(!ACC){if(NEEDAUTH)authShow('in');return}
+ page('help',`<h2 style="margin:.6em 0 .2em">${ICO('help',24)} Помощь</h2><p class="small mut" style="margin:0 0 12px">Пиши — менеджер ответит в этом чате. Обычно в течение дня.</p>
+ <details class="card faq"><summary>Как оформить тариф?</summary><p class="small">Профиль → «Тарифы» → «Оформить». Оплати по инструкции и отправь заявку — после проверки доступ откроется сам.</p></details>
+ <details class="card faq"><summary>Не открывается урок</summary><p class="small">Уроки доступны с тарифом и нужен интернет при первом открытии. Если тариф есть, а урок не открывается — напиши в чат.</p></details>
+ <details class="card faq"><summary>Как поменять профильные предметы?</summary><p class="small">Профиль → «Профильные предметы» → выбери пару → «Сохранить».</p></details>
+ ${chatView(ACC.uid)}`);chatBind(ACC.uid,false)}
+window.showHelp=showHelp;
+function admChats(box){if(STAFFUNSUB){STAFFUNSUB();STAFFUNSUB=null}box.innerHTML='<p class="mut">Загрузка…</p>';
+ STAFFUNSUB=FB.chatsListen((L,err)=>{if(!document.getElementById('adm')||!box.isConnected){if(STAFFUNSUB){STAFFUNSUB();STAFFUNSUB=null}return}if(err){box.innerHTML=`<p style="color:var(--bad)">${esc(fbErr(err))}</p><p class="small">Проверь, что вставлены новые правила Firestore.</p>`;return}
+  const un=L.filter(c=>c.unreadStaff).length;
+  box.innerHTML=`<p class="small mut">Новых: <b class="oon">${un}</b> · всего диалогов: ${L.length}</p>${L.map(c=>`<div class="arow ${c.unreadStaff?'unr':''}" data-c="${c.id}"><span class="avw">${AVH('',34,c.name)}${c.unreadStaff?'<i class="odot"></i>':''}</span><div style="flex:1;min-width:0"><b>${esc(c.name||'—')}</b> <span class="small mut">${esc(c.email||'')}</span><div class="small ell ${c.unreadStaff?'':'mut'}">${c.lastFrom==='staff'?'Вы: ':''}${esc(c.last||'')}</div></div><div class="small mut">${c.lastAt?tmf(c.lastAt):''}</div></div>`).join('')||'<div class="chempty">'+ICO('chat',36)+'<p>Пока никто не писал.</p></div>'}`;
+  box.querySelectorAll('[data-c]').forEach(r=>r.onclick=()=>{const c=L.find(x=>x.id===r.dataset.c);admChat(c.id,c.name,c.email)})})}
+function admChat(cid,name,email){if(STAFFUNSUB){STAFFUNSUB();STAFFUNSUB=null}
+ page('admin',`<h2 style="margin:.6em 0 .2em">${ICO('chat',22)} ${esc(name||'Ученик')}</h2><p class="small mut" style="margin:0 0 10px">${esc(email||'')} <button class="linkb" id="ac_user" style="display:inline;margin:0 0 0 8px">Открыть карточку ученика</button></p>${chatView(cid)}`);
+ document.getElementById('pg_back').onclick=()=>{if(CHUNSUB){CHUNSUB();CHUNSUB=null}showAdmin('chats')};
+ document.getElementById('ac_user').onclick=async()=>{try{await admLoad(true);admUser(cid)}catch(e){alert(fbErr(e))}};
+ chatBind(cid,true)}
+function helpBadge(){if(!FB||!ACC)return;if(CHMETA){CHMETA();CHMETA=null}
+ CHMETA=FB.chatMeta(ACC.uid,d=>{const b=document.getElementById('helpbtn');if(b)b.classList.toggle('dot',!!(d&&d.unreadUser))});
+ if(isStaff()){FB.chatsListen((L,err)=>{const b=document.getElementById('acctbtn');if(b&&L)b.classList.toggle('dot',L.some(c=>c.unreadStaff))})}}
+
+
+/* ---- рефералы: пригласи друга ---- */
+let REFS=null;
+function refDiscount(){if(!ACC)return 0;const per=+(CFG.refPct??10),mx=+(CFG.refMax??30);const n=Math.max(0,(REFS?REFS.length:0)-(ACC.refUsed||0));let d=Math.min(mx,n*per);if(ACC.refBy&&!ACC.refFriendUsed&&!planOn())d=Math.max(d,+(CFG.refFriend??10));return CFG.refOn===false?0:d}
+async function loadRefs(){if(!FB||!ACC)return;try{REFS=await FB.myRefs(ACC.uid)}catch(e){REFS=[]}}
+function refCard(){if(CFG.refOn===false)return'';const link=location.origin+location.pathname+'?ref='+ACC.uid,per=CFG.refPct??10,mx=CFG.refMax??30,n=REFS?REFS.length:0,d=refDiscount();
+ return`<div class="card refc"><div class="refh"><span class="dbi">${ICO('users',24)}</span><div><h3 style="margin:0">Пригласи друга — получи скидку</h3><p class="small mut" style="margin:2px 0 0">За каждого друга, который зарегистрируется по твоей ссылке, — <b>${per}%</b> скидки на тариф (до ${mx}%). Другу — ${CFG.refFriend??10}% на первый тариф.</p></div></div>
+ <div class="reflink"><input id="rf_l" readonly value="${esc(link)}"><button class="btn sm" id="rf_c">Скопировать</button>${navigator.share?'<button class="btn alt sm" id="rf_s">Поделиться</button>':''}</div>
+ <div class="refst"><div><b>${REFS?n:'…'}</b><span>${GW(n,'друг','друга','друзей')} пришли</span></div><div><b>${d}%</b><span>твоя скидка сейчас</span></div></div></div>`}
+function refBind(){const c=document.getElementById('rf_c');if(!c)return;c.onclick=async()=>{const i=document.getElementById('rf_l');try{await navigator.clipboard.writeText(i.value)}catch(e){i.select();document.execCommand('copy')}c.textContent='Скопировано ✓';setTimeout(()=>c.textContent='Скопировать',1500)};
+ const s=document.getElementById('rf_s');if(s)s.onclick=()=>navigator.share({title:'ЕНТ 2027: подготовка',text:'Готовлюсь к ЕНТ здесь — присоединяйся, по моей ссылке скидка на тариф:',url:document.getElementById('rf_l').value}).catch(()=>{})}
+
 /* ---- главная (дашборд) ---- */
 const SICON={hist:'landmark',ml:'calc',rl:'book',math:'sigma',inf:'code',phys:'atom',rus:'scroll',eng:'lang'};
 function subjProg(k){const X=SUBJ[k];if(!X)return{read:0,tot:0,n:0,acc:0};const st=LSG(X.key)||{};let n=0,ok=0;Object.values(st.q||{}).forEach(r=>{n+=r.n||0;ok+=r.ok||0});const tot=(X.T||[]).length,read=Object.keys(st.read||{}).filter(t=>(X.T||[]).some(x=>x.id===t)).length;return{read,tot,n,acc:n?Math.round(ok/n*100):0}}
@@ -3060,10 +3210,10 @@ function showDash(){const vis=(visibleSecs()||SECS.map(s=>s[0])).filter(s=>s!=='
  ${Lt>=0||Le>=0?`<div class="card dlim"><div>Сегодня без тарифа: тестов <b>${Math.max(0,Lt-u.tests)} из ${Lt}</b>${Le>=0?`, пробных ЕНТ <b>${Math.max(0,Le-u.ent)} из ${Le}</b>`:''}</div><button class="btn sm" id="d_tar">${ICO('gem',16)} Тарифы</button></div>`:''}
  <h3 style="margin:14px 0 8px">Мои предметы</h3><div class="dgrid">${vis.map((k,i)=>{const p=subjProg(k),pc=p.tot?Math.round(p.read/p.tot*100):0,lk=ACC&&!canSec(k);return`<button class="card dsub ${lk?'lockd':''}" data-go="${k}"><div class="dic" style="background:${cols[i%cols.length]}1a;color:${cols[i%cols.length]}">${ICO(SICON[k]||'book',24)}</div><div class="dtx"><b>${esc(SUBJ[k].title||SUBJ[k].name)}</b><small>${lk?'по подписке':p.tot?`Темы: ${p.read} из ${p.tot}`:''}${p.n&&!lk?` · верно ${p.acc}%`:''}</small></div><div class="dring" style="color:${cols[i%cols.length]}">${ring(pc,cols[i%cols.length])}</div></button>`}).join('')}</div>
  <div class="dact"><button class="card dbig" id="d_ent"><span class="dbi">${ICO('exam',26)}</span><b>Пробное ЕНТ</b><small>${ESUB.length} предмет${ESUB.length===5?'ов':'а'} · ${ENTQ()} заданий · ${ENTMIN()} мин</small></button>
- ${ACC?'<button class="card dbig" id="d_prof"><span class="dbi">'+ICO('user',26)+'</span><b>Профиль</b><small>Аватар, статистика, предметы</small></button>':''}</div>${calCard()}`,1);
+ ${ACC?'<button class="card dbig" id="d_help"><span class="dbi">'+ICO('chat',26)+'</span><b>Помощь</b><small>Чат с менеджером</small></button>':''}${ACC?'<button class="card dbig" id="d_prof"><span class="dbi">'+ICO('user',26)+'</span><b>Профиль</b><small>Аватар, статистика, предметы</small></button>':''}</div>${calCard()}`,1);
  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const s=b.dataset.go;if(!canSec(s)){showTariffs(`Раздел «${SECN[s]}» доступен по подписке.`);return}window.PAGEMODE=null;cur=SUBJ[s];try{localStorage.setItem('ent-subj',s)}catch(e){}S=loadS();document.querySelectorAll('#subj button').forEach(x=>x.setAttribute('aria-current',x.dataset.s===s));setHeader();go('home')});
  document.getElementById('d_ent').onclick=()=>{window.PAGEMODE=null;eMode()};
- const dp=document.getElementById('d_prof');if(dp)dp.onclick=showProfile;const dt=document.getElementById('d_tar');if(dt)dt.onclick=()=>showTariffs()}
+ const dp=document.getElementById('d_prof');if(dp)dp.onclick=showProfile;const dh=document.getElementById('d_help');if(dh)dh.onclick=showHelp;const dt=document.getElementById('d_tar');if(dt)dt.onclick=()=>showTariffs()}
 window.showDash=showDash;
 /* ---- подключение Firebase ---- */
 function blockedScreen(){const w=document.createElement('div');w.id='auth';w.innerHTML=`<div class="authbox"><div class="authlogo">${ICO('lock',40)}</div><h3>Аккаунт заблокирован</h3><p class="small mut">Если это ошибка, напиши владельцу приложения.</p><button class="btn alt" id="bl_out">Выйти</button></div>`;document.body.appendChild(w);document.getElementById('bl_out').onclick=async()=>{localStorage.removeItem(ACK);try{await FB.out()}catch(e){}location.reload()}}
@@ -3071,24 +3221,62 @@ async function onUser(u){
  if(!u){if(NEEDAUTH){if(ACC){localStorage.removeItem(ACK);ACC=null;applyAccess()}authShow('in')}return}
  try{const [p0,cfg]=await Promise.all([FB.getUser(u.uid),FB.getCfg().catch(()=>null)]);let p=p0;const pend=window.PENDINGPROF;window.PENDINGPROF=null;
   if(cfg){CFG=Object.assign({},DEFCFG,cfg);LSS(CFK,CFG)}
-  if(!p&&pend){p={...pend,email:u.email,created:Date.now()};await FB.setUser(u.uid,p)}
-  if(!p)p={name:(u.email||'').split('@')[0],email:u.email,pair:''};
-  const first=!ACC||ACC.uid!==u.uid;if(p.remind&&!LSG(RMK))LSS(RMK,Object.assign(remGet(),p.remind));ACC={uid:u.uid,email:u.email,name:p.name,pair:p.pair,avatar:p.avatar||'',plan:p.plan||null,paidUntil:p.paidUntil||0,blocked:!!p.blocked};LSS(ACK,ACC);
+  if(!p&&pend){p={...pend,name:pend.name||u.displayName||'',email:u.email,created:Date.now()};delete p.google;if(window.REFCODE&&window.REFCODE!==u.uid){p.refBy=window.REFCODE}await FB.setUser(u.uid,p);if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
+  if(!p){p={name:u.displayName||(isPhoneMail(u.email)?'':(u.email||'').split('@')[0]),email:u.email,pair:'',created:Date.now(),avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)]};if(window.REFCODE&&window.REFCODE!==u.uid)p.refBy=window.REFCODE;await FB.setUser(u.uid,p).catch(()=>{});if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
+  const first=!ACC||ACC.uid!==u.uid;if(p.remind&&!LSG(RMK))LSS(RMK,Object.assign(remGet(),p.remind));ACC={uid:u.uid,email:u.email,name:p.name,pair:p.pair,avatar:p.avatar||'',plan:p.plan||null,paidUntil:p.paidUntil||0,blocked:!!p.blocked,role:p.role||'',refBy:p.refBy||'',refUsed:p.refUsed||0,phone:p.phone||''};LSS(ACK,ACC);
   authHide();if(ACC.blocked&&!isOwner()){blockedScreen();return}lsnPrefill();applyAccess();
   if(!SYNC.uid&&SYNCKEYS().some(k=>localStorage.getItem(k)!=null)){const keep=await askMigrate(!!pend);if(!keep){SYNCKEYS().forEach(k=>localStorage.removeItem(k));localStorage.removeItem('ent-mock-run')}SYNC={uid:u.uid,h:{},t:{}};saveSync();S=loadS()}
   const changed=await pullProg();if(changed&&!window.PAGEMODE){S=loadS();if(window.ENTMODE)eMode();else go(location.hash.slice(1)||'home')}
   lastBeat=Date.now();FB.setUser(u.uid,{seen:lastBeat,stats:myStats(),email:u.email}).catch(()=>{});
+  helpBadge();
   if(first&&!p.pair)showProfile()}
  catch(e){console.warn(e);if(!ACC)authShow('in',fbErr(e))}}
-function fbBoot(api){FB=api;FB.onAuth(onUser);const w=document.getElementById('auth');if(w&&!ACC)authShow(document.querySelector('.authtabs .on')?.dataset.m||'in')}
+function fbBoot(api){FB=api;if(FB.redirectResult)FB.redirectResult().catch(e=>{if(document.getElementById('auth'))authShow('in',fbErr(e))});FB.onAuth(onUser);const w=document.getElementById('auth');if(w&&!ACC)authShow(document.querySelector('.authtabs .on')?.dataset.m||'in')}
 if(window.FBAPI)fbBoot(window.FBAPI);else addEventListener('fbready',()=>fbBoot(window.FBAPI));
-(function(){const h=document.querySelector('.top .in');if(h&&!document.getElementById('acctbtn')){const tb=document.createElement('div');tb.className='topbar';tb.innerHTML='<button id="homebtn" class="brand"><span class="bmark">'+ICO('cap',20)+'</span><b>ЕНТ 2027</b></button>';const b=document.createElement('button');b.id='acctbtn';b.className='acctb';b.hidden=true;b.onclick=showProfile;tb.appendChild(b);h.prepend(tb);document.getElementById('homebtn').onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showDash()}}
+(function(){const h=document.querySelector('.top .in');if(h&&!document.getElementById('acctbtn')){const tb=document.createElement('div');tb.className='topbar';tb.innerHTML='<button id="homebtn" class="brand"><span class="bmark">'+ICO('cap',20)+'</span><b>ЕНТ 2027</b></button>';const b=document.createElement('button');b.id='acctbtn';b.className='acctb';b.hidden=true;b.onclick=showProfile;const hb=document.createElement('button');hb.id='helpbtn';hb.className='helpb';hb.hidden=true;hb.innerHTML=ICO('chat',18)+'<span>Помощь</span>';hb.onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showHelp()};const rt=document.createElement('div');rt.className='tbr';rt.append(hb,b);tb.appendChild(rt);h.prepend(tb);document.getElementById('homebtn').onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showDash()}}
  lsnPrefill();applyAccess();
  const sj=document.getElementById('subj');if(sj){sj.addEventListener('wheel',e=>{if(sj.scrollWidth>sj.clientWidth&&Math.abs(e.deltaY)>Math.abs(e.deltaX)){sj.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});const ae=()=>sj.classList.toggle('atend',sj.scrollLeft+sj.clientWidth>=sj.scrollWidth-4);sj.addEventListener('scroll',ae);addEventListener('resize',ae);setTimeout(ae,300);sj.addEventListener('click',e=>{const b=e.target.closest('button');if(b)b.scrollIntoView({inline:'nearest',block:'nearest',behavior:'smooth'})})}
  if(NEEDAUTH&&!ACC){authShow('in');setTimeout(()=>{if(!FB&&document.getElementById('auth'))authShow('in','Не удалось подключиться к серверу. Проверь интернет и обнови страницу.')},12000)}
  else if(ACC&&ACC.blocked&&!isOwner())blockedScreen();
  try{if(!sessionStorage.getItem('ent-dash')&&!LSG('ent-mock-run')){sessionStorage.setItem('ent-dash','1');setTimeout(()=>{if(!window.QACTIVE)showDash()},0)}}catch(e){}})();
 window.showTariffs=showTariffs;window.showAdmin=showAdmin;window.admUser=admUser;window.pushProg=pushProg;
+
+/* ---------- Анимации: счётчики, конфетти, появление ---------- */
+(function(){const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function countUp(el){if(el.dataset.cu)return;el.dataset.cu=1;const t=el.textContent.trim(),m=t.match(/^(\d+)(.*)$/);if(!m||RM)return;const to=+m[1],rest=m[2];if(to<2)return;const d=Math.min(900,300+to*4),t0=performance.now();
+  const step=now=>{const k=Math.min(1,(now-t0)/d),v=Math.round(to*(1-Math.pow(1-k,3)));el.textContent=v+rest;if(k<1)requestAnimationFrame(step)};el.textContent='0'+rest;requestAnimationFrame(step)}
+ function confetti(){if(RM)return;const c=document.createElement('canvas');c.className='confetti';document.body.appendChild(c);const x=c.getContext('2d');const W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;
+  const cols=['#1F3A93','#FFD43B','#00AFCA','#12864A','#E5484D','#7C3AED'];const P=Array.from({length:140},()=>({x:W/2+(Math.random()-.5)*W*.3,y:H*.35,vx:(Math.random()-.5)*16*devicePixelRatio,vy:(-Math.random()*14-6)*devicePixelRatio,s:(4+Math.random()*6)*devicePixelRatio,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.floor(Math.random()*cols.length)]}));
+  const t0=performance.now();(function fr(now){x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=.45*devicePixelRatio;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/3,p.s,p.s*.66);x.restore()});if(now-t0<2600)requestAnimationFrame(fr);else c.remove()})(t0)}
+ window.CONFETTI=confetti;
+ const SEL='.dmini b,.pstats b,.astats b,.dcount b,.res,.cnum,.stat';
+ const scan=root=>{root.querySelectorAll(SEL).forEach(countUp);root.querySelectorAll('[data-cel]').forEach(el=>{if(el.dataset.celDone)return;el.dataset.celDone=1;if(+el.dataset.cel>=.7)setTimeout(confetti,350)})};
+ const app=document.getElementById('app');if(app){new MutationObserver(()=>scan(app)).observe(app,{childList:true,subtree:false});scan(app)}})();
+
+window.showHelp=showHelp;window.admChat=admChat;
+window.admLoad=admLoad;
+
+/* ---- баннер «Установи приложение» ---- */
+(function(){
+ const K='ent-inst',SA=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;if(SA)return;
+ const ua=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),IOSSAF=IOS&&!/CriOS|FxiOS|EdgiOS|YaBrowser/.test(ua);
+ let ev=null,shown=false;
+ const snoozed=()=>{try{const v=JSON.parse(localStorage.getItem(K)||'{}');return v.never||(v.until&&Date.now()<v.until)}catch(e){return false}};
+ const snooze=d=>{try{localStorage.setItem(K,JSON.stringify({until:Date.now()+d*864e5}))}catch(e){}};
+ function hide(){const b=document.getElementById('instb');if(!b)return;b.classList.remove('on');setTimeout(()=>b.remove(),400)}
+ function show(force){if(shown&&!force)return;if(!force&&(snoozed()||document.getElementById('auth')||document.querySelector('.modal')))return;if(!ev&&!IOSSAF)return;shown=true;
+  let b=document.getElementById('instb');if(b)b.remove();b=document.createElement('div');b.id='instb';b.setAttribute('role','dialog');b.setAttribute('aria-label','Установка приложения');
+  b.innerHTML=`<div class="instic"><img src="icon-192.png" alt="" onerror="this.replaceWith(document.createRange().createContextualFragment(ICO('cap',28)))"></div>
+  <div class="insttx"><b>Установи приложение</b><span>${ev?'Открывается с главного экрана, как обычное приложение':'Нажми <span class="iosh">'+ICO('upload',15)+'</span> «Поделиться» внизу Safari, затем «На экран „Домой“».'}</span></div>
+  ${ev?'<button class="btn instgo">Установить</button>':''}<button class="instx" aria-label="Закрыть">✕</button>`;
+  document.body.appendChild(b);requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('on')));
+  b.querySelector('.instx').onclick=()=>{snooze(7);hide()};
+  const g=b.querySelector('.instgo');if(g)g.onclick=async()=>{hide();try{ev.prompt();const r=await ev.userChoice;if(r&&r.outcome==='accepted')localStorage.setItem(K,JSON.stringify({never:1}));else snooze(3)}catch(e){}ev=null}}
+ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;window.CANINSTALL=true;setTimeout(()=>show(),12000)});
+ window.addEventListener('appinstalled',()=>{hide();try{localStorage.setItem(K,JSON.stringify({never:1}))}catch(e){}});
+ if(IOSSAF)setTimeout(()=>show(),15000);
+ window.showInstall=()=>{if(ev||IOSSAF)show(true);else alert('Открой сайт в Chrome (Android/ПК) или Safari (iPhone), чтобы установить приложение. Если пункта нет — оно уже установлено.')};
+})();
 
 setHeader();
 const start=(location.hash||'#home').slice(1);
@@ -3105,6 +3293,10 @@ try{const [A,U,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'fireb
 const app=A.initializeApp({apiKey:"AIzaSyA5X-VTE9Ekb_Oa2BrFEGBAPuEFHpF40ns",authDomain:"ent-2027.firebaseapp.com",projectId:"ent-2027",storageBucket:"ent-2027.firebasestorage.app",messagingSenderId:"919819745087",appId:"1:919819745087:web:182ab25143c0c023db058a"});
 const auth=U.getAuth(app);auth.languageCode='ru';const db=D.getFirestore(app);
 window.FBAPI={onAuth:cb=>U.onAuthStateChanged(auth,cb),signUp:(e,p)=>U.createUserWithEmailAndPassword(auth,e,p),signIn:(e,p)=>U.signInWithEmailAndPassword(auth,e,p),reset:e=>U.sendPasswordResetEmail(auth,e),out:()=>U.signOut(auth),
+google:()=>{const pr=new U.GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;return sa?U.signInWithRedirect(auth,pr):U.signInWithPopup(auth,pr).catch(e=>{if(e&&(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'))return U.signInWithRedirect(auth,pr);throw e})},
+redirectResult:()=>U.getRedirectResult(auth),
+addRef:(owner,uid,d)=>D.setDoc(D.doc(db,'refs',owner,'list',uid),d),
+myRefs:uid=>D.getDocs(D.collection(db,'refs',uid,'list')).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o}),
 getUser:uid=>D.getDoc(D.doc(db,'users',uid)).then(s=>s.exists()?s.data():null),setUser:(uid,d)=>D.setDoc(D.doc(db,'users',uid),d,{merge:true}),
 getProg:uid=>D.getDocs(D.collection(db,'users',uid,'progress')).then(q=>{const o={};q.forEach(d=>o[d.id]=d.data());return o}),
 putProg:(uid,m)=>{const b=D.writeBatch(db);for(const k in m)b.set(D.doc(db,'users',uid,'progress',k),m[k]);return b.commit()},
@@ -3116,10 +3308,15 @@ reauth:p=>U.reauthenticateWithCredential(auth.currentUser,U.EmailAuthProvider.cr
 delMe:async(uid,keys)=>{const R=await D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid)));const b=D.writeBatch(db);keys.forEach(k=>b.delete(D.doc(db,'users',uid,'progress',k)));R.forEach(d=>b.delete(d.ref));b.delete(D.doc(db,'users',uid));await b.commit();await U.deleteUser(auth.currentUser)},
 getContent:id=>D.getDoc(D.doc(db,'content',id)).then(s=>s.exists()?s.data():null),
 putContent:list=>{const b=D.writeBatch(db);list.forEach(x=>b.set(D.doc(db,'content',x.id),x.d));return b.commit()},
+chatListen:(cid,cb)=>D.onSnapshot(D.query(D.collection(db,'chats',cid,'msgs'),D.orderBy('t'),D.limitToLast(200)),q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));cb(o)},e=>cb(null,e)),
+chatsListen:cb=>D.onSnapshot(D.query(D.collection(db,'chats'),D.orderBy('lastAt','desc'),D.limit(200)),q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));cb(o)},e=>cb(null,e)),
+chatMeta:(cid,cb)=>D.onSnapshot(D.doc(db,'chats',cid),s=>cb(s.exists()?s.data():null),()=>cb(null)),
+chatSend:async(cid,m,meta)=>{await D.addDoc(D.collection(db,'chats',cid,'msgs'),m);await D.setDoc(D.doc(db,'chats',cid),meta,{merge:true})},
+chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 50 от 26.11 21:51</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 51 от 26.11 22:06</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
