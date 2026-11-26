@@ -1484,6 +1484,7 @@ const D={
 'Выбери хотя бы один день':'Кемінде бір күнді таңда','✓ Сохранено — напоминания включены':'✓ Сақталды — еске салу қосулы','✓ Сохранено — напоминания выключены':'✓ Сақталды — еске салу өшірулі','Напоминание придёт в выбранное время, если в этот день ты ещё не решал тесты.':'Сол күні әлі тест шешпеген болсаң, таңдалған уақытта еске салу келеді.',
 'Сохранено — напоминания включены':'Сақталды — еске салу қосулы','Сохранено — напоминания выключены':'Сақталды — еске салу өшірулі','Приложение установлено — ищи его на главном экране':'Қосымша орнатылды — оны басты экраннан ізде','Сохранено':'Сақталды',
 'Ссылка скопирована — отправь её другу':'Сілтеме көшірілді — оны досыңа жібер',
+'Решено заданий':'Шешілген тапсырма','Верно из решённых':'Шешілгеннің дұрысы','разных заданий решено':'түрлі тапсырма шешілді','решены верно':'дұрыс шешілді',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Установить приложение':'Қосымшаны орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -1507,6 +1508,9 @@ const P=[
  [/^(\d+) задач по (\d+) темам НЦТ, с подробными решениями$/,m=>`ҰТО-ның ${m[2]} тақырыбы бойынша ${m[1]} есеп, толық шешімдерімен`],
  [/^(\d+) варианта? по (\d+) текста$/,m=>`${m[1]} нұсқа, әрқайсысында ${m[2]} мәтін`],
  [/^(\d+) заданий, максимум (\d+) баллов$/,m=>`${m[1]} тапсырма, ең көбі ${m[2]} ұпай`],
+ [/^Решено (\d+) из (\d+) · верно (\d+)$/,m=>`${m[2]}-ден ${m[1]} шешілді · дұрыс ${m[3]}`],
+ [/^(\d+) заданий · ещё не решал$/,m=>`${m[1]} тапсырма · әлі шешілмеген`],
+ [/^По всем предметам\. Повторные ответы на то же задание не считаются заново(?: \(всего ответов: (\d+)\))?\.$/,m=>`Барлық пән бойынша. Бір тапсырмаға қайта жауап қайта саналмайды${m[1]?` (барлық жауап: ${m[1]})`:''}.`],
  [/^(\d+) минут$/,m=>`${m[1]} минут`],
  [/^Начать ЕНТ · (\d+) минут$/,m=>`ҰБТ бастау · ${m[1]} минут`],
  [/^(\d+) предметов · (\d+) заданий · (\d+) мин$/,m=>`${m[1]} пән · ${m[2]} тапсырма · ${m[3]} мин`],
@@ -1861,7 +1865,7 @@ document.addEventListener('click',e=>{const s=e.target.closest('[data-say]');if(
  const w=e.target.closest('[data-word]');if(w){e.stopPropagation();if('speechSynthesis' in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.dataset.word);u.lang='en-GB';const V=TTS.pick();if(V[0]){u.voice=V[0];u.lang=V[0].lang}u.rate=0.9;speechSynthesis.speak(u)}}},true);
 const tn=id=>(cur.T.find(t=>t.id===id)||{name:''}).name;
 const ctxById=id=>cur.ctx.find(c=>c.id===id);
-const topicStat=id=>{const qs=all().filter(q=>q.topic===id);let ok=0;qs.forEach(q=>{const r=S.q[k(q)];if(r&&r.last)ok++});return{n:qs.length,ok}};
+const topicStat=id=>{const qs=all().filter(q=>q.topic===id);let ok=0,seen=0;qs.forEach(q=>{const r=S.q[k(q)];if(r){seen++;if(r.last)ok++}});return{n:qs.length,ok,seen}};
 const pts=it=>it.t==='s'?1:2;
 
 const app=document.getElementById('app'),nav=document.getElementById('nav');let timerId=null;
@@ -1906,8 +1910,8 @@ function home(){
  app.innerHTML=`<div class="fade">
  <div class="grid stats">
   <div class="card"><div class="mut small">Темы</div><div class="stat">${read}/${cur.T.length}</div><div class="bar"><i style="width:${read/cur.T.length*100}%"></i></div></div>
-  <div class="card"><div class="mut small">Решено</div><div class="stat">${seen}/${A.length}</div><div class="bar"><i style="width:${seen/A.length*100}%"></i></div></div>
-  <div class="card"><div class="mut small">Точность</div><div class="stat">${seen?Math.round(ok/seen*100):0}%</div><div class="bar"><i style="width:${seen?ok/seen*100:0}%"></i></div></div>
+  <div class="card"><div class="mut small">Решено заданий</div><div class="stat">${seen}/${A.length}</div><div class="bar"><i style="width:${seen/A.length*100}%"></i></div></div>
+  <div class="card"><div class="mut small">Верно из решённых</div><div class="stat">${seen?Math.round(ok/seen*100):0}%</div><div class="bar"><i style="width:${seen?ok/seen*100:0}%"></i></div></div>
  </div>
  <div class="row" style="margin:18px 0"><button class="btn gold" id="ex">${EXN()} · ${examCount()} заданий</button><button class="btn" id="cont">Продолжить учить</button>${S.wrong.length?`<button class="btn alt" id="mw">Ошибки (${S.wrong.length})</button>`:''}</div>
  <div class="grid">
@@ -1936,7 +1940,7 @@ function learn(id){if(id&&!cur.T.some(t=>t.id===id))id=null;
   const nx=document.getElementById('nx');if(nx)nx.onclick=()=>{S.read[id]=1;save();go('learn',cur.T[i+1].id)};
   return}
  app.innerHTML=`<div class="fade"><input type="search" id="sr" placeholder="Поиск по конспектам…" aria-label="Поиск"><div id="srr"></div>
- <div class="grid" id="tl" style="margin-top:16px">${cur.T.map((t,i)=>{const st=topicStat(t.id);return`<button class="card topic" data-id="${t.id}"><div class="per">${i+1}. ${esc(t.per)}${S.read[t.id]?' · ✓':''}</div><h3 style="margin:.3em 0 .6em">${esc(t.name)}</h3><div class="small mut">Заданий: ${st.n} · верно: ${st.ok}</div><div class="bar" style="margin-top:8px"><i style="width:${st.n?st.ok/st.n*100:0}%"></i></div></button>`}).join('')}</div></div>`;
+ <div class="grid" id="tl" style="margin-top:16px">${cur.T.map((t,i)=>{const st=topicStat(t.id);return`<button class="card topic" data-id="${t.id}"><div class="per">${i+1}. ${esc(t.per)}${S.read[t.id]?' · ✓':''}</div><h3 style="margin:.3em 0 .6em">${esc(t.name)}</h3><div class="small mut">${st.seen?`Решено ${st.seen} из ${st.n} · верно ${st.ok}`:`${st.n} заданий · ещё не решал`}</div><div class="bar" style="margin-top:8px"><i style="width:${st.n?st.seen/st.n*100:0}%"></i></div></button>`}).join('')}</div></div>`;
  document.getElementById('tl').onclick=e=>{const b=e.target.closest('[data-id]');if(b)go('learn',b.dataset.id)};
  const sr=document.getElementById('sr'),srr=document.getElementById('srr');
  sr.oninput=()=>{const v=sr.value.trim().toLowerCase();if(v.length<2){srr.innerHTML='';return}
@@ -3146,8 +3150,8 @@ const ENTMAX=()=>ESUB.reduce((s,x)=>s+x.max,0);
 const ENTQ=()=>ESUB.reduce((s,x)=>s+ENTQN(x.id),0);
 
 /* ---- статистика ---- */
-function myStats(){let n=0,ok=0;Object.values(SUBJ).forEach(s=>{const st=LSG(s.key);if(st&&st.q)Object.values(st.q).forEach(r=>{n+=r.n||0;ok+=r.ok||0})});
- const H=LSG('ent-mock-v1')||[],full=H.filter(h=>h.kind==='full');return{n,ok,acc:n?Math.round(ok/n*100):0,ent:H.length,best:full.length?Math.max(...full.map(h=>h.score)):null,bestMax:full.length?full.reduce((a,h)=>h.score>a.score?h:a).max:null}}
+function myStats(){let n=0,ok=0,att=0;Object.values(SUBJ).forEach(s=>{const st=LSG(s.key);if(st&&st.q)Object.values(st.q).forEach(r=>{if(!(r.n>0))return;n++;if(r.last)ok++;att+=r.n||0})});
+ const H=LSG('ent-mock-v1')||[],full=H.filter(h=>h.kind==='full');return{n,ok,att,acc:n?Math.round(ok/n*100):0,ent:H.length,best:full.length?Math.max(...full.map(h=>h.score)):null,bestMax:full.length?full.reduce((a,h)=>h.score>a.score?h:a).max:null}}
 
 /* ---- синхронизация ---- */
 const SYNCKEYS=()=>[...new Set(Object.values(SUBJ).map(s=>s.key).concat(['ent-mock-v1']))];
@@ -3270,7 +3274,7 @@ function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  const badge=isStaff()?'<span class="pbadge own">'+ICO(ROLEI[myRole()],15)+' '+ROLEN[myRole()]+'</span>'+(t?` <span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)}</span>`:''):t?`<span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)} · до ${myUntil()>=FOREVER?'∞':fmtD(myUntil())}</span>`:'<span class="pbadge">Бесплатный доступ</span>';
  page('profile',`<div class="phero"><div class="pava" id="pf_av">${AVH(ACC.avatar,96,ACC.name)}<span class="pedit">${ICO('pencil',14)}</span></div>
  <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pnick" id="pf_nick">${ACC.nick?'@'+esc(ACC.nick):'+ добавить логин (@ник)'}</div><div class="pmail">${esc(showId(ACC.email))}</div>${badge}</div>
- <div class="pstats"><div><b>${st.n}</b><span>решено заданий</span></div><div><b>${st.acc}%</b><span>точность</span></div><div><b>${st.ent}</b><span>пробных ЕНТ</span></div><div><b>${st.best!=null?st.best:'—'}</b><span>лучший ЕНТ${st.bestMax?' из '+st.bestMax:''}</span></div></div>
+ <div class="pstats"><div><b>${st.n}</b><span>разных заданий решено</span></div><div><b>${st.acc}%</b><span>решены верно</span></div><div><b>${st.ent}</b><span>пробных ЕНТ</span></div><div><b>${st.best!=null?st.best:'—'}</b><span>лучший ЕНТ${st.bestMax?' из '+st.bestMax:''}</span></div></div><p class="small mut" style="text-align:center;margin:6px 0 0">По всем предметам. Повторные ответы на то же задание не считаются заново${st.att>st.n?` (всего ответов: ${st.att})`:''}.</p>
  <div class="card"><h3 style="margin-top:0">Профильные предметы</h3><select id="pf_pair">${pairOpts(ACC.pair)}</select>${profSubs().some(s=>!PHAVE[s])?PNOTE:''}<button class="btn sm" id="pf_psave" style="margin-top:10px">Сохранить</button> <span class="small" id="pf_pmsg"></span></div>
  <div class="pgrid"><button class="card ptile" id="pf_tar"><span class="dbi">${ICO('gem',24)}</span><b>Тарифы</b><small>${t?'Подписка активна':'Открой все разделы'}</small></button>
  ${isStaff()?'<button class="card ptile" id="pf_adm"><span class="dbi">'+ICO('wrench',24)+'</span><b>Админ-панель</b><small>'+(myRole()==='manager'?'Чаты поддержки и ученики':'Ученики, доступ, заявки, чаты')+'</small></button>':''}
@@ -3784,7 +3788,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 69 от 26.11 23:33</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 70 от 26.11 23:40</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>

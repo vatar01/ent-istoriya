@@ -1,4 +1,4 @@
-const CACHE="ent-hk-v69";
+const CACHE="ent-hk-v70";
 const FILES=["./","./index.html","./privacy.html","./manifest.json","./apple-touch-icon-v2.png","./icon-192-v2.png","./icon-512-v2.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>Promise.all(FILES.map(u=>fetch(new Request(u,{cache:"reload"})).then(r=>{if(r.ok)return c.put(u,r)}).catch(()=>{})))));self.skipWaiting()});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
