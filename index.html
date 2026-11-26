@@ -463,6 +463,36 @@ svg.ring{transform-origin:50% 10%;animation:ring 1s ease-in-out}@keyframes ring{
 .rpr{border-top:1px solid var(--line)}.rpr span b{display:block;font-size:14px}.rpr span small{color:var(--mut);font-size:12px}
 .rpc{justify-content:center;margin:0!important}
 @media(max-width:480px){.rph,.rpr{grid-template-columns:1fr 66px 66px;padding:8px}.rph b{font-size:11px}}
+
+/* B: свои выпадающие списки */
+select.fshid{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important;overflow:hidden}
+.fsbtn{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:9px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font:500 15px 'Golos Text',sans-serif;color:var(--ink);cursor:pointer;text-align:left;box-shadow:0 2px 0 var(--line);transition:border-color .15s}
+.fsbtn:hover{border-color:#A9B8D6}.fsbtn[aria-expanded=true]{border-color:var(--pen);box-shadow:0 0 0 3px rgba(31,58,147,.12)}.fsbtn:disabled{opacity:.55;cursor:default}
+.fsbtn .fstx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fsbtn .fstx.ph{color:var(--mut)}.fsbtn .fsar{flex:none;color:var(--mut);transition:transform .2s}.fsbtn[aria-expanded=true] .fsar{transform:rotate(180deg);color:var(--pen)}
+.fsem{flex:none;font-size:16px;letter-spacing:1px}
+.row .fsbtn,.atabs+div .fsbtn{width:auto;min-width:140px;flex:1}
+.fspop{position:absolute;z-index:1200;background:#fff;border:1.5px solid var(--line);border-radius:16px;box-shadow:0 18px 40px rgba(16,26,51,.18);max-height:360px;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(-6px) scale(.98);transform-origin:top;transition:opacity .18s,transform .22s cubic-bezier(.2,1.2,.4,1)}
+.fspop.up{transform-origin:bottom;transform:translateY(6px) scale(.98)}.fspop.on{opacity:1;transform:none}
+.fspop.sheet{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto!important;max-height:72vh;border-radius:22px 22px 0 0;transform:translateY(100%);opacity:1;padding-bottom:env(safe-area-inset-bottom)}.fspop.sheet.on{transform:none}
+.fsbd{position:fixed;inset:0;z-index:1190;background:rgba(16,26,51,.4);opacity:0;transition:opacity .2s}.fsbd.on{opacity:1}
+.fsgr{width:40px;height:5px;border-radius:3px;background:#C9D3E6;margin:10px auto 4px;flex:none}.fsttl{font:700 16px Unbounded,sans-serif;padding:6px 18px 8px;flex:none}
+.fssr{padding:10px 10px 6px;flex:none}.fssr input{width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:14px}
+.fsl{overflow:auto;padding:4px 6px 8px}.fsg{font-size:11px;font-weight:700;color:var(--mut);text-transform:none;padding:8px 10px 4px}
+.fsopt{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:10px;border-radius:10px;font:500 14.5px 'Golos Text',sans-serif;color:var(--ink);cursor:pointer;text-align:left}
+.fsopt:hover{background:#F1F4FA}.fsopt.on{background:#EEF2FF;color:var(--pen);font-weight:700}.fsopt.dis{opacity:.4}.fsopt .fstx{flex:1}
+.fsck{color:var(--pen);font-weight:800}.fssoon{font-size:11px;font-weight:700;background:var(--hl);color:var(--ink);border-radius:6px;padding:2px 6px}
+.fspop.sheet .fsopt{padding:13px 12px;font-size:15.5px}
+/* C: пара в два шага */
+.pplab{font-weight:600;font-size:14px;margin:12px 0 4px}
+.pairpick{margin-top:4px}.ppstep{font-size:12.5px;font-weight:700;color:var(--mut);margin:8px 0 6px}
+.ppchips{display:flex;flex-wrap:wrap;gap:6px}
+.ppc{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px 7px 9px;font:600 13.5px 'Golos Text',sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 2px 0 var(--line);transition:transform .12s,background .15s}
+.ppc:hover{border-color:#A9B8D6}.ppc:active{transform:translateY(1px)}.ppc span{font-size:15px}
+.ppc i{font-style:normal;font-size:10px;font-weight:700;background:var(--hl);border-radius:5px;padding:1px 5px}
+.ppc.on{background:var(--pen);border-color:var(--pen2);color:#fff;box-shadow:0 2px 0 var(--pen2);animation:okpop .3s}.ppc.on i{background:rgba(255,255,255,.25);color:#fff}
+.ppchips[data-st="2"]{animation:pgin .25s}
+.ppres{display:none}.ppres.on{display:flex;align-items:center;gap:8px;margin-top:10px;background:#EAF8EE;color:#1B6B3A;border-radius:12px;padding:9px 12px;font-size:14px;animation:sayin .35s}.ppres small{color:#3E7F55}
+.ppnone{margin-top:8px!important;font-size:13px!important}
 </style>
 </head>
 <body>
@@ -1485,6 +1515,7 @@ const D={
 'Сохранено — напоминания включены':'Сақталды — еске салу қосулы','Сохранено — напоминания выключены':'Сақталды — еске салу өшірулі','Приложение установлено — ищи его на главном экране':'Қосымша орнатылды — оны басты экраннан ізде','Сохранено':'Сақталды',
 'Ссылка скопирована — отправь её другу':'Сілтеме көшірілді — оны досыңа жібер',
 'Решено заданий':'Шешілген тапсырма','Верно из решённых':'Шешілгеннің дұрысы','разных заданий решено':'түрлі тапсырма шешілді','решены верно':'дұрыс шешілді',
+'1. Первый предмет':'1. Бірінші пән','2. Второй предмет':'2. Екінші пән','скоро':'жақында','Твоя пара:':'Сенің жұбың:','(часть предметов появится позже)':'(кейбір пәндер кейін қосылады)','Пока без профильных предметов — выберешь позже в профиле':'Әзірге бейіндік пәнсіз — кейін профильде таңдайсың','Поиск…':'Іздеу…','Есть в приложении':'Қосымшада бар','Скоро':'Жақында','Выбери':'Таңда',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Установить приложение':'Қосымшаны орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -3054,6 +3085,58 @@ function eFinish(R){clearInterval(timerId);
  window.scrollTo({top:0});
 }
 
+/* ---------- Красивые выпадающие списки (вариант B) и выбор пары в два шага (вариант C) ---------- */
+const SEM={'Математика':'📐','Физика':'⚛️','Информатика':'💻','География':'🌍','Биология':'🧬','Химия':'🧪','Иностранный язык':'🌐','Всемирная история':'📜','Основы права':'⚖️','Казахский язык':'🗣️','Казахская литература':'📚','Русский язык':'🔤','Русская литература':'📕','История Казахстана':'🏛️','История России':'🏰','Английский · IELTS':'🇬🇧'};
+const semOf=t=>{const parts=String(t).replace(/\s*\*$/,'').split(' + ');const em=parts.map(p=>SEM[p.trim()]).filter(Boolean);return em.length===parts.length?em.join(''):''};
+(function(){
+ const REG=new Set();let openEl=null;
+ function label(sel){const o=sel.options[sel.selectedIndex];return o?o.text:''}
+ function render(sel,btn){const t=label(sel),em=semOf(t),ph=!sel.value&&/^—/.test(t);btn.innerHTML=`${em?`<span class="fsem">${em}</span>`:''}<span class="fstx${ph?' ph':''}">${esc(t.replace(/\s*\*$/,''))}</span><svg class="fsar" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>`;btn.disabled=sel.disabled}
+ function close(){if(!openEl)return;const {pop,btn,bd}=openEl;pop.classList.remove('on');bd&&bd.classList.remove('on');btn.setAttribute('aria-expanded','false');setTimeout(()=>{pop.remove();bd&&bd.remove()},220);openEl=null}
+ function open(sel,btn){close();const mob=innerWidth<640,opts=[...sel.options];const soon=opts.filter(o=>/\*\s*$/.test(o.text)),main=opts.filter(o=>!/\*\s*$/.test(o.text));
+  const pop=document.createElement('div');pop.className='fspop'+(mob?' sheet':'');pop.setAttribute('role','listbox');
+  const item=o=>`<button type="button" class="fsopt${o.value===sel.value?' on':''}${o.disabled?' dis':''}" data-v="${esc(o.value)}" ${o.disabled?'disabled':''}>${semOf(o.text)?`<span class="fsem">${semOf(o.text)}</span>`:''}<span class="fstx">${esc(o.text.replace(/\s*\*$/,''))}</span>${o.value===sel.value?'<span class="fsck">✓</span>':soon.includes(o)?'<span class="fssoon">скоро</span>':''}</button>`;
+  const ttl=(btn.closest('label')&&btn.closest('label').firstChild&&btn.closest('label').firstChild.nodeType===3?btn.closest('label').firstChild.nodeValue.trim():'')||'Выбери';
+  pop.innerHTML=`${mob?`<div class="fsgr"></div><div class="fsttl">${esc(ttl)}</div>`:''}${opts.length>8?'<div class="fssr"><input type="search" placeholder="Поиск…" aria-label="Поиск"></div>':''}<div class="fsl">${soon.length&&main.length?`<div class="fsg">Есть в приложении</div>${main.map(item).join('')}<div class="fsg">Скоро</div>${soon.map(item).join('')}`:opts.map(item).join('')}</div>`;
+  let bd=null;if(mob){bd=document.createElement('div');bd.className='fsbd';bd.onclick=close;document.body.appendChild(bd)}
+  document.body.appendChild(pop);
+  if(!mob){const r=btn.getBoundingClientRect(),h=Math.min(360,pop.scrollHeight),below=innerHeight-r.bottom>h+12||r.top<h;pop.style.left=(r.left+scrollX)+'px';pop.style.width=Math.max(r.width,220)+'px';pop.style.top=(below?r.bottom+scrollY+6:r.top+scrollY-h-6)+'px';pop.classList.toggle('up',!below)}
+  requestAnimationFrame(()=>{pop.classList.add('on');bd&&bd.classList.add('on')});btn.setAttribute('aria-expanded','true');openEl={pop,btn,bd,sel};
+  pop.querySelectorAll('.fsopt').forEach(b=>b.onclick=()=>{sel.value=b.dataset.v;sel.dispatchEvent(new Event('change',{bubbles:true}));sel.dispatchEvent(new Event('input',{bubbles:true}));render(sel,btn);close();btn.focus()});
+  const s=pop.querySelector('.fssr input');if(s){s.oninput=()=>{const q=s.value.toLowerCase();pop.querySelectorAll('.fsopt').forEach(b=>b.hidden=!b.textContent.toLowerCase().includes(q));pop.querySelectorAll('.fsg').forEach(g=>g.hidden=!!q)};if(!mob)setTimeout(()=>s.focus(),30)}
+  const on=pop.querySelector('.fsopt.on');if(on)on.scrollIntoView({block:'nearest'})}
+ function enhance(sel){if(REG.has(sel)||sel.multiple||sel.classList.contains('nofancy')||sel.closest('.nofancy'))return;REG.add(sel);
+  const btn=document.createElement('button');btn.type='button';btn.className='fsbtn';btn.setAttribute('aria-haspopup','listbox');btn.setAttribute('aria-expanded','false');
+  if(sel.id)btn.dataset.for=sel.id;if(sel.getAttribute('style'))btn.setAttribute('style',sel.getAttribute('style'));
+  sel.classList.add('fshid');sel.tabIndex=-1;sel.setAttribute('aria-hidden','true');sel.after(btn);render(sel,btn);sel.__fsbtn=btn;
+  btn.onclick=e=>{e.preventDefault();openEl&&openEl.sel===sel?close():open(sel,btn)};
+  btn.onkeydown=e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const i=Math.max(0,Math.min(sel.options.length-1,sel.selectedIndex+(e.key==='ArrowDown'?1:-1)));if(i!==sel.selectedIndex){sel.selectedIndex=i;sel.dispatchEvent(new Event('change',{bubbles:true}));render(sel,btn)}}};
+  sel.addEventListener('change',()=>render(sel,btn))}
+ function scan(root){(root.querySelectorAll?root.querySelectorAll('select'):[]).forEach(enhance);if(root.tagName==='SELECT')enhance(root)}
+ let raf=0;const mo=new MutationObserver(ms=>{ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1)scan(n)}));cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{REG.forEach(s=>{if(!s.isConnected){REG.delete(s);return}const b=s.__fsbtn;if(b&&b.isConnected)render(s,b)})})});
+ const go=()=>{scan(document.body);mo.observe(document.body,{childList:true,subtree:true})};if(document.body)go();else addEventListener('DOMContentLoaded',go);
+ addEventListener('keydown',e=>{if(e.key==='Escape')close()});addEventListener('resize',()=>{if(openEl&&!openEl.pop.classList.contains('sheet'))close()});
+ document.addEventListener('click',e=>{if(openEl&&!openEl.pop.contains(e.target)&&!openEl.btn.contains(e.target)&&!(openEl.bd&&openEl.bd.contains(e.target)))close()},true);
+ window.FSCLOSE=close;
+})();
+/* выбор пары профильных предметов в два шага */
+function pairPick(id,cur){cur=cur||'';const subs=[...new Set(PAIRS.flatMap(p=>p.split('-')))];const [a,b]=cur&&cur!=='none'?cur.split('-'):['',''];
+ return`<div class="pairpick" data-pp="${id}"><input type="hidden" id="${id}" value="${esc(cur)}">
+ <div class="ppstep">1. Первый предмет</div><div class="ppchips" data-st="1">${subs.map(s=>`<button type="button" class="ppc${s===a?' on':''}" data-s="${s}"><span>${SEM[PSUBJ[s]]||''}</span>${PSUBJ[s]}${PHAVE[s]?'':'<i>скоро</i>'}</button>`).join('')}</div>
+ <div class="ppstep" data-st2>2. Второй предмет</div><div class="ppchips" data-st="2"></div>
+ <div class="ppres"></div><button type="button" class="linkb ppnone">Ещё не выбрал / творческий экзамен</button></div>`}
+function pairPickBind(id,onChange){const w=document.querySelector(`[data-pp="${id}"]`);if(!w)return;const inp=document.getElementById(id);let a='',b='';
+ if(inp.value&&inp.value!=='none'){const p=inp.value.split('-');const pr=PAIRS.find(x=>x===inp.value);if(pr){a=p[0];b=p[1]}}
+ const partners=s=>PAIRS.filter(p=>p.split('-').includes(s)).map(p=>p.split('-').find(x=>x!==s));
+ const pid=(x,y)=>PAIRS.find(p=>p===x+'-'+y||p===y+'-'+x)||'';
+ function draw(){w.querySelectorAll('[data-st="1"] .ppc').forEach(c=>c.classList.toggle('on',c.dataset.s===a));
+  const s2=w.querySelector('[data-st="2"]'),st2=w.querySelector('[data-st2]'),res=w.querySelector('.ppres');
+  if(!a){s2.innerHTML='';st2.hidden=true;s2.hidden=true}else{st2.hidden=false;s2.hidden=false;s2.innerHTML=partners(a).map(s=>`<button type="button" class="ppc${s===b?' on':''}" data-s="${s}"><span>${SEM[PSUBJ[s]]||''}</span>${PSUBJ[s]}${PHAVE[s]?'':'<i>скоро</i>'}</button>`).join('');
+   s2.querySelectorAll('.ppc').forEach(c=>c.onclick=()=>{b=c.dataset.s;inp.value=pid(a,b);draw();onChange&&onChange(inp.value)})}
+  const v=inp.value;res.className='ppres'+(v?' on':'');res.innerHTML=v==='none'?`${ICO('check',16)}<span>Пока без профильных предметов — выберешь позже в профиле</span>`:v?`${ICO('check',16)}<span>Твоя пара: <b>${esc(pairName(v))}</b>${v.split('-').some(s=>!PHAVE[s])?' <small>(часть предметов появится позже)</small>':''}</span>`:''}
+ w.querySelectorAll('[data-st="1"] .ppc').forEach(c=>c.onclick=()=>{a=c.dataset.s;const ok=partners(a);if(!ok.includes(b))b='';inp.value=b?pid(a,b):'';if(ok.length===1){b=ok[0];inp.value=pid(a,b)}draw();onChange&&onChange(inp.value);const s2=w.querySelector('[data-st="2"]');if(!b&&s2)setTimeout(()=>s2.scrollIntoView({block:'nearest',behavior:'smooth'}),50)});
+ w.querySelector('.ppnone').onclick=()=>{a='';b='';inp.value='none';draw();onChange&&onChange('none')};draw()}
+
 const LOGO9='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="logo9" aria-hidden="true"><defs><linearGradient id="lt9" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0" stop-color="#18C3DE"/><stop offset="1" stop-color="#0A7FB0"/></linearGradient><linearGradient id="lg9" x1="0" y1="0" x2="0.6" y2="1"><stop offset="0" stop-color="#3D63E0"/><stop offset="1" stop-color="#142766"/></linearGradient><filter id="ls9" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#07143D" flood-opacity=".35"/></filter></defs><rect width="512" height="512" rx="112" fill="url(#lg9)"/><rect x="90" y="110" width="18" height="10" rx="3" fill="#FFD23F" transform="rotate(30 90 110)"/><rect x="150" y="70" width="18" height="10" rx="3" fill="#18C3DE" transform="rotate(-20 150 70)"/><rect x="380" y="420" width="18" height="10" rx="3" fill="#FFD23F" transform="rotate(50 380 420)"/><rect x="430" y="360" width="18" height="10" rx="3" fill="#E5484D" transform="rotate(-30 430 360)"/><rect x="70" y="380" width="18" height="10" rx="3" fill="#18C3DE" transform="rotate(15 70 380)"/><rect x="110" y="450" width="18" height="10" rx="3" fill="#FFD23F" transform="rotate(-40 110 450)"/><rect x="440" y="120" width="18" height="10" rx="3" fill="#E5484D" transform="rotate(25 440 120)"/><path d="M120 400 Q150 330 190 300 M90 350 Q120 300 160 280" stroke="#fff" stroke-opacity=".35" stroke-width="10" fill="none" stroke-linecap="round"/><g filter="url(#ls9)" transform="rotate(-16 256 256)"><g transform="translate(18 -6) translate(256 256) scale(0.9) translate(-256 -256)"> <path d="M150 252 V338 Q256 398 362 338 V252 L256 300 Z" fill="#E3EAFF"/> <path d="M256 118 L456 210 L256 302 L56 210 Z" fill="#fff" stroke="#fff" stroke-width="14" stroke-linejoin="round"/> <path d="M256 210 L404 236 V318" fill="none" stroke="#FFD23F" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/> <circle cx="256" cy="210" r="15" fill="#FFD23F"/> <path d="M390 314 h28 l8 52 q-22 12 -44 0 z" fill="#FFD23F"/></g></g></svg>';
 /* ---------- Аккаунт: вход, профиль, тарифы, доступ, админ-панель, синхронизация (Firebase) ---------- */
 const OWNERS=['gDKh7wPgxvZPounAJivTCUQKT4u2','3XxHDqXXWSQyocAY0o4U0OXEL1H3'];const OWNER=OWNERS[0];
@@ -3220,7 +3303,7 @@ function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=docum
  ${up?`<label>Имя<input id="a_name" autocomplete="given-name" maxlength="30" placeholder="Как к тебе обращаться"></label><label>Логин (ник)<span class="nickw"><span class="at">@</span><input id="a_nick" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="20" placeholder="например, aruzhan_07"></span></label><div class="nickst" id="a_nst"></div>`:''}
  ${ph?`<label>Номер телефона<input id="a_phone" type="tel" inputmode="tel" autocomplete="tel" value="+7" placeholder="+7 7xx xxx xx xx"></label>`:`<label>E-mail<input id="a_mail" type="email" autocomplete="email" inputmode="email" placeholder="name@mail.com"></label>`}
  ${mode!=='reset'?`<label>Пароль<span class="pwrap"><input id="a_pass" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="${up?'Минимум 8 символов':''}">${eye('a_pass')}</span></label>`:''}
- ${up?`<label>Повтори пароль<span class="pwrap"><input id="a_pass2" type="password" autocomplete="new-password">${eye('a_pass2')}</span></label><label>Профильные предметы<select id="a_pair">${pairOpts('')}</select></label>${PNOTE}
+ ${up?`<label>Повтори пароль<span class="pwrap"><input id="a_pass2" type="password" autocomplete="new-password">${eye('a_pass2')}</span></label><div class="pplab">Профильные предметы</div>${pairPick('a_pair','')}
   <label class="chk agree"><input type="checkbox" id="a_ok"> <span>Согласен с <a href="privacy.html" target="_blank">политикой конфиденциальности</a></span></label>`:''}
  ${window.REFCODE&&up?`<p class="small" style="margin:8px 0 0;color:var(--ok)">${ICO('spark',14)} Тебя пригласил друг — скидка ${CFG.refFriend||10}% на первый тариф.</p>`:''}
  <div id="a_msg" class="authmsg">${msg||(ready?'':'Подключение к серверу…')}</div>
@@ -3234,6 +3317,7 @@ function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=docum
  w.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=document.getElementById(b.dataset.eye);i.type=i.type==='password'?'text':'password'});
  const pe=document.getElementById('a_phone');if(pe){pe.oninput=()=>{pe.value=fmtPh(pe.value)};pe.onfocus=()=>{if(!pe.value)pe.value='+7'}}
  const ni=document.getElementById('a_nick'),nmI=document.getElementById('a_name');if(ni&&nmI){const sug=()=>{const ns=document.getElementById('a_nst'),v=nickSuggest(nmI.value);if(ni.value||!ns)return;if(v.length>=3){ns.innerHTML='Подсказка: <button type="button" class="linkb inl" id="a_sug">@'+v+'</button> — нажми, чтобы взять';ns.style.color='var(--mut)';document.getElementById('a_sug').onclick=()=>{ni.value=v;ni.oninput&&ni.oninput()}}else ns.textContent=''};nmI.addEventListener('input',sug)}if(ni){let nt;ni.oninput=()=>{const v=ni.value.replace(/[^A-Za-z0-9_.]/g,'').toLowerCase();if(v!==ni.value)ni.value=v;const ns=document.getElementById('a_nst'),er=nickErr(v);clearTimeout(nt);if(!v){ns.textContent='';return}if(er){ns.textContent=er;ns.style.color='var(--mut)';return}ns.textContent='Проверяем…';ns.style.color='var(--mut)';nt=setTimeout(async()=>{if(!FB)return;const ok=await nickFreeCheck(v);if(ni.value!==v)return;ns.textContent=ok?'✓ Логин свободен':'✗ Этот логин уже занят';ns.style.color=ok?'var(--ok)':'var(--bad)'},450)}}
+ pairPickBind('a_pair');
  const g=document.getElementById('a_guest');if(g)g.onclick=()=>authHide();
  const msgEl=document.getElementById('a_msg'),say=(t,ok)=>{msgEl.textContent=t;msgEl.style.color=ok?'var(--ok)':'var(--bad)'};
  const gb=document.getElementById('a_google');if(gb)gb.onclick=async()=>{if(!FB)return;try{if(up){window.PENDINGPROF={name:'',pair:'',avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)],google:1}}say('Открываем Google…',true);await FB.google()}catch(e){window.PENDINGPROF=null;say(e&&e.code==='auth/operation-not-allowed'?'Вход через Google ещё не включён владельцем.':e&&e.code==='auth/popup-closed-by-user'?'Окно Google закрыто.':fbErr(e))}};
@@ -3275,7 +3359,7 @@ function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  page('profile',`<div class="phero"><div class="pava" id="pf_av">${AVH(ACC.avatar,96,ACC.name)}<span class="pedit">${ICO('pencil',14)}</span></div>
  <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pnick" id="pf_nick">${ACC.nick?'@'+esc(ACC.nick):'+ добавить логин (@ник)'}</div><div class="pmail">${esc(showId(ACC.email))}</div>${badge}</div>
  <div class="pstats"><div><b>${st.n}</b><span>разных заданий решено</span></div><div><b>${st.acc}%</b><span>решены верно</span></div><div><b>${st.ent}</b><span>пробных ЕНТ</span></div><div><b>${st.best!=null?st.best:'—'}</b><span>лучший ЕНТ${st.bestMax?' из '+st.bestMax:''}</span></div></div><p class="small mut" style="text-align:center;margin:6px 0 0">По всем предметам. Повторные ответы на то же задание не считаются заново${st.att>st.n?` (всего ответов: ${st.att})`:''}.</p>
- <div class="card"><h3 style="margin-top:0">Профильные предметы</h3><select id="pf_pair">${pairOpts(ACC.pair)}</select>${profSubs().some(s=>!PHAVE[s])?PNOTE:''}<button class="btn sm" id="pf_psave" style="margin-top:10px">Сохранить</button> <span class="small" id="pf_pmsg"></span></div>
+ <div class="card"><h3 style="margin-top:0">Профильные предметы</h3>${pairPick('pf_pair',ACC.pair||'')}<button class="btn sm" id="pf_psave" style="margin-top:10px">Сохранить</button> <span class="small" id="pf_pmsg"></span></div>
  <div class="pgrid"><button class="card ptile" id="pf_tar"><span class="dbi">${ICO('gem',24)}</span><b>Тарифы</b><small>${t?'Подписка активна':'Открой все разделы'}</small></button>
  ${isStaff()?'<button class="card ptile" id="pf_adm"><span class="dbi">'+ICO('wrench',24)+'</span><b>Админ-панель</b><small>'+(myRole()==='manager'?'Чаты поддержки и ученики':'Ученики, доступ, заявки, чаты')+'</small></button>':''}
  <button class="card ptile" id="pf_lead" disabled><span class="dbi">${ICO('trophy',24)}</span><b>Таблица лидеров</b><small>Скоро</small></button></div>
@@ -3289,6 +3373,7 @@ function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  document.getElementById('pf_av').onclick=avatarPicker;
  document.getElementById('pf_nick').onclick=()=>nickEdit();
  document.getElementById('pf_name').onclick=async()=>{const n=prompt('Как тебя зовут?',ACC.name||'');if(n==null)return;const v=n.trim().slice(0,30);if(!v)return;ACC.name=v;LSS(ACK,ACC);headerAcct();try{await FB.setUser(ACC.uid,{name:v})}catch(e){}showProfile()};
+ pairPickBind('pf_pair');
  document.getElementById('pf_psave').onclick=async()=>{const pair=document.getElementById('pf_pair').value||'none';ACC.pair=pair;LSS(ACK,ACC);applyAccess();try{if(FB)await FB.setUser(ACC.uid,{pair});say2('pf_pmsg','✓ Сохранено',1)}catch(e){say2('pf_pmsg',fbErr(e))}};
  document.getElementById('pf_tar').onclick=()=>showTariffs();
  const ad=document.getElementById('pf_adm');if(ad)ad.onclick=()=>showAdmin('dash');
@@ -3788,7 +3873,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 70 от 26.11 23:40</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 71 от 26.11 23:46</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
