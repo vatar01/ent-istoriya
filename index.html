@@ -398,6 +398,8 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 .brand b.wm{display:inline-flex;align-items:center;gap:6px;font:800 19px/1 Unbounded,sans-serif;color:var(--pen2)!important;-webkit-text-fill-color:var(--pen2);letter-spacing:-.01em}
 .brand b.wm i{font-style:normal;font-size:12px;background:var(--hl);color:var(--pen2);-webkit-text-fill-color:var(--pen2);padding:4px 6px;border-radius:6px;transform:rotate(-4deg);box-shadow:0 2px 0 #E8C93A}
 .authlogo9{width:64px;height:64px;filter:drop-shadow(0 6px 10px rgba(20,39,102,.3))}.authlogo9 svg{width:100%;height:100%}
+
+.grecaptcha-badge{visibility:hidden!important}.rcnote{font-size:11px;color:var(--mut);text-align:center;margin:12px 0 0;line-height:1.4}.rcnote a{color:var(--mut)}
 </style>
 </head>
 <body>
@@ -1408,6 +1410,7 @@ const D={
 '40 фраз: числа, имена по буквам, академические предложения':'40 фраза: сандар, әріптеп айтылатын есімдер, академиялық сөйлемдер',
 '. Изменить можно в профиле (👤 вверху).':'. Профильде өзгертуге болады (👤 жоғарыда).','баллов (национальные вузы —':'ұпай (ұлттық ЖОО —',
 '(профильный предмет).':'(бейіндік пән).','максимум 10 баллов':'ең көбі 10 ұпай','порог — 5 баллов':'шегі — 5 ұпай','порог — 3 балла':'шегі — 3 ұпай',
+'Защищено reCAPTCHA ·':'reCAPTCHA қорғайды ·','Конфиденциальность':'Құпиялылық','Условия':'Шарттар',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -3135,7 +3138,7 @@ function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=docum
  </form>
  ${mode!=='reset'?`<div class="aor"><span>или</span></div><button class="gbtn" id="a_google" ${ready?'':'disabled'}>${GICON}<span>${up?'Регистрация':'Войти'} с помощью Google</span></button>`:''}
  <div class="aswitch">${mode==='in'?`<button class="linkb" data-m="reset">Забыли пароль?</button><p class="small">Нет аккаунта? <button class="linkb inl" data-m="up">Зарегистрироваться</button></p>`:mode==='up'?`<p class="small">Уже есть аккаунт? <button class="linkb inl" data-m="in">Войти</button></p>`:`<button class="linkb" data-m="in">← Назад ко входу</button>`}</div>
- ${!NEEDAUTH?`<button class="linkb" id="a_guest">Продолжить без аккаунта</button>`:''}</div>`;
+ ${window.APPCHECK?'<p class="rcnote">Защищено reCAPTCHA · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Конфиденциальность</a> · <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Условия</a> Google</p>':''}${!NEEDAUTH?`<button class="linkb" id="a_guest">Продолжить без аккаунта</button>`:''}</div>`;
  w.querySelectorAll('[data-m]').forEach(b=>b.onclick=e=>{e.preventDefault();authShow(b.dataset.m)});
  w.querySelectorAll('[data-by]').forEach(b=>b.onclick=e=>{e.preventDefault();AUTHBY=b.dataset.by;localStorage.setItem('ent-authby',AUTHBY);authShow(mode)});
  w.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=document.getElementById(b.dataset.eye);i.type=i.type==='password'?'text':'password'});
@@ -3548,7 +3551,7 @@ const V='https://www.gstatic.com/firebasejs/12.17.1/';
 try{const [A,U,D]=await Promise.all([import(V+'firebase-app.js'),import(V+'firebase-auth.js'),import(V+'firebase-firestore.js')]);
 const app=A.initializeApp({apiKey:"AIzaSyA5X-VTE9Ekb_Oa2BrFEGBAPuEFHpF40ns",authDomain:"ent-2027.firebaseapp.com",projectId:"ent-2027",storageBucket:"ent-2027.firebasestorage.app",messagingSenderId:"919819745087",appId:"1:919819745087:web:182ab25143c0c023db058a"});
 /* reCAPTCHA v3 через Firebase App Check: вставь сюда ключ сайта (site key) — пусто = выключено */
-const RECAPTCHA_SITE_KEY='';
+const RECAPTCHA_SITE_KEY='6Le_9TMuAAAAAJXLHHFnFisBBdlBohvNM2GmSrvy';
 if(RECAPTCHA_SITE_KEY){try{const AC=await import(V+'firebase-app-check.js');AC.initializeAppCheck(app,{provider:new AC.ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),isTokenAutoRefreshEnabled:true});window.APPCHECK=true}catch(e){console.warn('AppCheck',e)}}
 const auth=U.getAuth(app);auth.languageCode=window.LANG==='kk'?'kk':'ru';const db=D.getFirestore(app);
 window.FBAPI={onAuth:cb=>U.onAuthStateChanged(auth,cb),signUp:(e,p)=>U.createUserWithEmailAndPassword(auth,e,p),signIn:(e,p)=>U.signInWithEmailAndPassword(auth,e,p),reset:e=>U.sendPasswordResetEmail(auth,e),out:()=>U.signOut(auth),
@@ -3575,7 +3578,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 54 от 26.11 22:28</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 55 от 26.11 22:30</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
