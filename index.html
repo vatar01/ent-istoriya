@@ -422,6 +422,15 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 .vab{text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;box-shadow:0 2px 0 var(--line);font:inherit;color:var(--ink)}
 .vab b{font-size:14px}.vab span{font-size:12px;color:var(--mut)}.vab.on{border-color:var(--pen);background:#EEF2FF;box-shadow:0 2px 0 var(--pen)}
 .vamod{position:fixed;inset:0;z-index:960;background:rgba(16,26,51,.45);display:flex;align-items:center;justify-content:center;padding:16px;animation:pgin .2s}.vamodbox{background:#fff;border-radius:18px;padding:18px;max-width:640px;width:100%;max-height:85vh;overflow:auto;box-shadow:0 20px 50px rgba(16,26,51,.3)}
+
+.rmdays2{display:flex;gap:6px;flex-wrap:wrap}
+.rmd{position:relative;min-width:48px;height:48px;border-radius:12px;border:1.5px dashed #C3CCDD;background:#fff;color:var(--mut);font:700 14px 'Golos Text',sans-serif;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:0;transition:all .15s}
+.rmd .rmk{font-size:11px;line-height:1;height:11px}
+.rmd.on{border:1.5px solid var(--pen2);background:var(--pen);color:#fff;box-shadow:0 2px 0 var(--pen2)}
+.rmpre{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.rmpre button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:600 13px 'Golos Text',sans-serif;cursor:pointer;color:var(--ink)}.rmpre button:hover{border-color:var(--pen);color:var(--pen)}
+#rm_body.rmoff{opacity:.45;pointer-events:none;filter:grayscale(1)}
+.rmsum{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding:10px 12px;border-radius:12px;background:#F1F4FA;font-size:14px;color:var(--mut)}.rmsum.ok{background:#EAF8EE;color:#1B6B3A}
+#rm_save.pulse{animation:okpop .5s}
 </style>
 </head>
 <body>
@@ -1438,6 +1447,9 @@ const D={
 'Логин: 3–20 символов — латинские буквы, цифры, _ и точка.':'Логин: 3–20 таңба — латын әріптері, сандар, _ және нүкте.','Логин не может начинаться или заканчиваться на точку или _.':'Логин нүктемен немесе _ белгісімен басталмауы және аяқталмауы керек.',
 'Логин (ник): 3–20 символов — латинские буквы, цифры, _ и точка':'Логин (лақап ат): 3–20 таңба — латын әріптері, сандар, _ және нүкте',
 'Посмотреть сайт как…':'Сайтты басқа рөлмен көру…','Ты смотришь как:':'Сен былай көріп тұрсың:','Сменить':'Ауыстыру','Ученик без тарифа':'Тарифсіз оқушы','Вернуться к виду владельца':'Иесінің көрінісіне қайту',
+'Во сколько:':'Қай уақытта:','В какие дни':'Қай күндері','— нажми на день, чтобы включить или выключить':'— қосу не өшіру үшін күнді бас','Каждый день':'Күн сайын','Будни':'Жұмыс күндері','Выходные':'Демалыс күндері',
+'Напоминания выключены':'Еске салу өшірулі','Не выбран ни один день — напоминаний не будет':'Бірде-бір күн таңдалмаған — еске салу болмайды','Напомню в':'Еске саламын:','каждый день':'күн сайын','по будням (Пн–Пт)':'жұмыс күндері (Дс–Жм)','по выходным (Сб, Вс)':'демалыс күндері (Сн, Жс)',
+'Выбери хотя бы один день':'Кемінде бір күнді таңда','✓ Сохранено — напоминания включены':'✓ Сақталды — еске салу қосулы','✓ Сохранено — напоминания выключены':'✓ Сақталды — еске салу өшірулі','Напоминание придёт в выбранное время, если в этот день ты ещё не решал тесты.':'Сол күні әлі тест шешпеген болсаң, таңдалған уақытта еске салу келеді.',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -3464,13 +3476,26 @@ setInterval(remTick,60000);setTimeout(remTick,4000);
 function remCard(){const r=remGet(),perm=typeof Notification==='undefined'?'none':Notification.permission;const ios=/iPhone|iPad/.test(navigator.userAgent),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
  return`<div class="card" id="remc"><h3 style="margin-top:0">${ICO('bell',18)} Напоминания о занятиях</h3>
  <label class="chk" style="font-size:15px"><input type="checkbox" id="rm_on" ${r.on?'checked':''}> Напоминать заниматься</label>
- <div class="row" style="margin:8px 0;align-items:center">Время: <input type="time" id="rm_t" value="${r.time}"></div>
- <div class="rmdays">${DAYS.map((n,i)=>`<label><input type="checkbox" data-d="${i}" ${r.days.includes(i)?'checked':''}><span>${n}</span></label>`).join('')}</div>
+ <div id="rm_body" class="${r.on?'':'rmoff'}">
+ <div class="row" style="margin:12px 0 6px;align-items:center;gap:10px"><b class="small">Во сколько:</b><input type="time" id="rm_t" value="${r.time}"></div>
+ <div class="small" style="margin:12px 0 6px"><b>В какие дни</b> <span class="mut">— нажми на день, чтобы включить или выключить</span></div>
+ <div class="rmdays2">${DAYS.map((n,i)=>`<button type="button" class="rmd ${r.days.includes(i)?'on':''}" data-d="${i}" aria-pressed="${r.days.includes(i)}"><span class="rmk">${r.days.includes(i)?'✓':''}</span>${n}</button>`).join('')}</div>
+ <div class="rmpre"><button type="button" data-pre="all">Каждый день</button><button type="button" data-pre="wd">Будни</button><button type="button" data-pre="we">Выходные</button></div>
+ </div>
+ <div class="rmsum" id="rm_sum"></div>
  <button class="btn sm" id="rm_save" style="margin-top:10px">Сохранить</button> <span class="small" id="rm_m"></span>
  <p class="small mut" style="margin:8px 0 0">${perm==='none'?'Этот браузер не поддерживает уведомления.':perm==='denied'?'Уведомления запрещены в настройках браузера — разреши их для этого сайта.':ios&&!standalone?'На iPhone уведомления работают, если добавить сайт на экран «Домой» (Поделиться → На экран «Домой») и открыть оттуда.':'Напоминание придёт в выбранное время, если в этот день ты ещё не решал тесты.'}</p></div>`}
-function remBind(){const b=document.getElementById('rm_save');if(!b)return;b.onclick=async()=>{const r=remGet();r.on=document.getElementById('rm_on').checked;r.time=document.getElementById('rm_t').value||'19:00';r.days=[...document.querySelectorAll('#remc [data-d]')].filter(c=>c.checked).map(c=>+c.dataset.d);
+function remSum(){const s=document.getElementById('rm_sum');if(!s)return;const on=document.getElementById('rm_on').checked,t=document.getElementById('rm_t').value||'19:00',d=[...document.querySelectorAll('#remc .rmd.on')].map(c=>+c.dataset.d);
+ document.getElementById('rm_body').classList.toggle('rmoff',!on);
+ const k=d.join(''),txt=d.length===7?'каждый день':k==='01234'?'по будням (Пн–Пт)':k==='56'?'по выходным (Сб, Вс)':d.map(i=>DAYS[i]).join(', ');
+ s.className='rmsum '+(on&&d.length?'ok':'');s.innerHTML=!on?`${ICO('bell',16)}<span>Напоминания выключены</span>`:!d.length?`${ICO('alert',16)}<span>Не выбран ни один день — напоминаний не будет</span>`:`${ICO('bell',16)}<span>Напомню в <b>${t}</b>: <b>${txt}</b></span>`;
+ const sv=document.getElementById('rm_save');if(sv)sv.classList.add('pulse')}
+function remBind(){const b=document.getElementById('rm_save');if(!b)return;
+ document.querySelectorAll('#remc .rmd').forEach(x=>x.onclick=()=>{x.classList.toggle('on');x.setAttribute('aria-pressed',x.classList.contains('on'));x.querySelector('.rmk').textContent=x.classList.contains('on')?'✓':'';remSum()});
+ document.querySelectorAll('#remc [data-pre]').forEach(p=>p.onclick=()=>{const set=p.dataset.pre==='all'?[0,1,2,3,4,5,6]:p.dataset.pre==='wd'?[0,1,2,3,4]:[5,6];document.querySelectorAll('#remc .rmd').forEach(x=>{const on=set.includes(+x.dataset.d);x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);x.querySelector('.rmk').textContent=on?'✓':''});remSum()});
+ document.getElementById('rm_on').onchange=remSum;document.getElementById('rm_t').oninput=remSum;remSum();document.getElementById('rm_save').classList.remove('pulse');b.onclick=async()=>{const r=remGet();r.on=document.getElementById('rm_on').checked;r.time=document.getElementById('rm_t').value||'19:00';r.days=[...document.querySelectorAll('#remc .rmd.on')].map(c=>+c.dataset.d);if(r.on&&!r.days.length){say2('rm_m','Выбери хотя бы один день');return}
  if(r.on&&typeof Notification!=='undefined'&&Notification.permission==='default'){const p=await Notification.requestPermission();if(p!=='granted'){say2('rm_m','Уведомления не разрешены');r.on=false}}
- r.last='';await remSave(r);say2('rm_m',r.on?'✓ Напоминания включены':'✓ Напоминания выключены',1)}}
+ r.last='';await remSave(r);say2('rm_m',r.on?'✓ Сохранено — напоминания включены':'✓ Сохранено — напоминания выключены',1);b.classList.remove('pulse')}}
 
 
 /* ---- уроки с сервера (в публичной версии тексты уроков не лежат в файле) ---- */
@@ -3700,7 +3725,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 64 от 26.11 23:08</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 65 от 26.11 23:10</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
