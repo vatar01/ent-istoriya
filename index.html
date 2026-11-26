@@ -431,6 +431,31 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 #rm_body.rmoff{opacity:.45;pointer-events:none;filter:grayscale(1)}
 .rmsum{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding:10px 12px;border-radius:12px;background:#F1F4FA;font-size:14px;color:var(--mut)}.rmsum.ok{background:#EAF8EE;color:#1B6B3A}
 #rm_save.pulse{animation:okpop .5s}
+.instb2{color:var(--pen)!important}@media(max-width:600px){.instb2 span{display:none}}
+
+.say{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;font-size:14px;font-weight:600;vertical-align:middle;margin-left:6px}
+.say.ok{background:#E3F6E8;color:#1B6B3A}.say.bad{background:#FDE8EA;color:#B42332}
+.say .sayi{width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;font-size:13px;font-weight:800;color:#fff}.say.ok .sayi{background:#22A355}.say.bad .sayi{background:#E5484D}
+.say.sayin{animation:sayin .4s cubic-bezier(.3,1.5,.5,1)}@keyframes sayin{from{opacity:0;transform:translateX(-8px) scale(.92)}to{opacity:1;transform:none}}
+#toasts{position:fixed;z-index:1000;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:min(92vw,420px)}
+.toast{pointer-events:auto;position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;width:100%;background:#101A33;color:#fff;border-radius:16px;padding:12px 16px 14px 12px;box-shadow:0 14px 34px rgba(16,26,51,.35);font-size:14.5px;font-weight:600;line-height:1.35;cursor:pointer;transform:translateY(30px) scale(.96);opacity:0;transition:transform .45s cubic-bezier(.2,1.3,.4,1),opacity .3s}
+.toast.on{transform:none;opacity:1}.toast.out{transform:translateY(16px) scale(.97);opacity:0;transition:transform .3s,opacity .25s}
+.toast .ti{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+.toast.ok .ti{background:#22A355}.toast.bad .ti{background:#E5484D}.toast.info .ti{background:var(--pen)}
+.toast .tbar{position:absolute;left:0;bottom:0;height:3px;width:100%;transform-origin:left;background:rgba(255,255,255,.35);animation:tbar var(--d,3200ms) linear forwards}.toast.ok .tbar{background:#5EE38E}.toast.bad .tbar{background:#FF8A8F}
+@keyframes tbar{to{transform:scaleX(0)}}
+@media(min-width:760px){#toasts{left:auto;right:24px;transform:none;bottom:24px;align-items:flex-end}}
+@media(prefers-reduced-motion:reduce){.toast,.say.sayin{transition:none;animation:none}}
+.say.info{background:#EEF2FF;color:var(--pen)}.say.info .sayi{background:var(--pen)}
+
+/* микро-анимации */
+.bar i{transform-origin:left;animation:barfill 1s cubic-bezier(.2,.8,.2,1) both}@keyframes barfill{from{transform:scaleX(0)}}
+.dbi svg,.atabs button svg,.bmark9 svg{transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+:hover>.dbi svg,.dbi:hover svg,button:hover>.dbi svg,.atabs button:hover svg{transform:rotate(-10deg) scale(1.12)}
+svg.ring{transform-origin:50% 10%;animation:ring 1s ease-in-out}@keyframes ring{0%,100%{transform:rotate(0)}15%{transform:rotate(18deg)}30%{transform:rotate(-16deg)}45%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}75%{transform:rotate(4deg)}}
+.okflash{background:#22A355!important;border-color:#1B8A46!important;box-shadow:0 2px 0 #1B8A46!important;color:#fff!important;animation:okpop .45s}
+.toast .ti svg{animation:ticon .5s .15s cubic-bezier(.3,1.6,.5,1) both}@keyframes ticon{from{transform:scale(0) rotate(-30deg)}}
+@media(prefers-reduced-motion:reduce){.bar i,svg.ring,.okflash,.toast .ti svg{animation:none}}
 </style>
 </head>
 <body>
@@ -1450,8 +1475,10 @@ const D={
 'Во сколько:':'Қай уақытта:','В какие дни':'Қай күндері','— нажми на день, чтобы включить или выключить':'— қосу не өшіру үшін күнді бас','Каждый день':'Күн сайын','Будни':'Жұмыс күндері','Выходные':'Демалыс күндері',
 'Напоминания выключены':'Еске салу өшірулі','Не выбран ни один день — напоминаний не будет':'Бірде-бір күн таңдалмаған — еске салу болмайды','Напомню в':'Еске саламын:','каждый день':'күн сайын','по будням (Пн–Пт)':'жұмыс күндері (Дс–Жм)','по выходным (Сб, Вс)':'демалыс күндері (Сн, Жс)',
 'Выбери хотя бы один день':'Кемінде бір күнді таңда','✓ Сохранено — напоминания включены':'✓ Сақталды — еске салу қосулы','✓ Сохранено — напоминания выключены':'✓ Сақталды — еске салу өшірулі','Напоминание придёт в выбранное время, если в этот день ты ещё не решал тесты.':'Сол күні әлі тест шешпеген болсаң, таңдалған уақытта еске салу келеді.',
+'Сохранено — напоминания включены':'Сақталды — еске салу қосулы','Сохранено — напоминания выключены':'Сақталды — еске салу өшірулі','Приложение установлено — ищи его на главном экране':'Қосымша орнатылды — оны басты экраннан ізде','Сохранено':'Сақталды',
+'Ссылка скопирована — отправь её другу':'Сілтеме көшірілді — оны досыңа жібер',
 /* установка */
-'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
+'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Установить приложение':'Қосымшаны орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
 };
 const SUBJ_RE='(История Казахстана|Информатика|Математика|Физика|Мат\\. грамотность|Математическая грамотность|Грамотность чтения|История России|Английский · IELTS)';
@@ -3170,6 +3197,7 @@ const fmtPh=v=>{const d=phDigits(v).slice(1);let s='+7';if(d.length)s+=' '+d.sli
 let AUTHBY=localStorage.getItem('ent-authby')||'mail';
 const GICON='<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>';
 const eye=id=>`<button type="button" class="pweye" data-eye="${id}" aria-label="Показать пароль"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>`;
+function authReadyOrShow(){const w=document.getElementById('auth');if(w&&w.querySelector('#authf')&&!window.ACCJUST){w.querySelectorAll('#a_go,#a_google').forEach(b=>b.disabled=false);const m=document.getElementById('a_msg');if(m&&/Подключение|Серверге/.test(m.textContent))m.textContent='';return}authShow('in')}
 function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=document.createElement('div');w.id='auth';document.body.appendChild(w)}
  document.documentElement.style.overflow='hidden';mode=mode||'in';const ready=!!FB,up=mode==='up',ph=AUTHBY==='phone'&&mode!=='reset';
  w.innerHTML=`<div class="authbox">${LANGSW()}<div class="authlogo authlogo9">${LOGO9}</div><h2 style="margin:.2em 0">${up?'Регистрация':mode==='reset'?'Новый пароль':'Вход'}</h2><p class="small mut" style="margin:0 0 14px">${up?'Аккаунт нужен, чтобы сохранять результаты и следить за прогрессом.':mode==='reset'?'Пришлём на почту ссылку для нового пароля.':'С возвращением! Войди, чтобы продолжить.'}</p>
@@ -3191,7 +3219,7 @@ function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=docum
  w.querySelectorAll('[data-by]').forEach(b=>b.onclick=e=>{e.preventDefault();AUTHBY=b.dataset.by;localStorage.setItem('ent-authby',AUTHBY);authShow(mode)});
  w.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=document.getElementById(b.dataset.eye);i.type=i.type==='password'?'text':'password'});
  const pe=document.getElementById('a_phone');if(pe){pe.oninput=()=>{pe.value=fmtPh(pe.value)};pe.onfocus=()=>{if(!pe.value)pe.value='+7'}}
- const ni=document.getElementById('a_nick'),nmI=document.getElementById('a_name');if(ni&&nmI){nmI.addEventListener('blur',()=>{if(!ni.value&&nmI.value.trim()){ni.value=nickSuggest(nmI.value);ni.oninput&&ni.oninput();setTimeout(()=>{if(document.activeElement===ni)ni.select()},0)}});ni.addEventListener('focus',()=>setTimeout(()=>{if(ni.value&&ni.value===nickSuggest(nmI.value))ni.select()},0))}if(ni){let nt;ni.oninput=()=>{const v=ni.value.replace(/[^A-Za-z0-9_.]/g,'').toLowerCase();if(v!==ni.value)ni.value=v;const ns=document.getElementById('a_nst'),er=nickErr(v);clearTimeout(nt);if(!v){ns.textContent='';return}if(er){ns.textContent=er;ns.style.color='var(--mut)';return}ns.textContent='Проверяем…';ns.style.color='var(--mut)';nt=setTimeout(async()=>{if(!FB)return;const ok=await nickFreeCheck(v);if(ni.value!==v)return;ns.textContent=ok?'✓ Логин свободен':'✗ Этот логин уже занят';ns.style.color=ok?'var(--ok)':'var(--bad)'},450)}}
+ const ni=document.getElementById('a_nick'),nmI=document.getElementById('a_name');if(ni&&nmI){const sug=()=>{const ns=document.getElementById('a_nst'),v=nickSuggest(nmI.value);if(ni.value||!ns)return;if(v.length>=3){ns.innerHTML='Подсказка: <button type="button" class="linkb inl" id="a_sug">@'+v+'</button> — нажми, чтобы взять';ns.style.color='var(--mut)';document.getElementById('a_sug').onclick=()=>{ni.value=v;ni.oninput&&ni.oninput()}}else ns.textContent=''};nmI.addEventListener('input',sug)}if(ni){let nt;ni.oninput=()=>{const v=ni.value.replace(/[^A-Za-z0-9_.]/g,'').toLowerCase();if(v!==ni.value)ni.value=v;const ns=document.getElementById('a_nst'),er=nickErr(v);clearTimeout(nt);if(!v){ns.textContent='';return}if(er){ns.textContent=er;ns.style.color='var(--mut)';return}ns.textContent='Проверяем…';ns.style.color='var(--mut)';nt=setTimeout(async()=>{if(!FB)return;const ok=await nickFreeCheck(v);if(ni.value!==v)return;ns.textContent=ok?'✓ Логин свободен':'✗ Этот логин уже занят';ns.style.color=ok?'var(--ok)':'var(--bad)'},450)}}
  const g=document.getElementById('a_guest');if(g)g.onclick=()=>authHide();
  const msgEl=document.getElementById('a_msg'),say=(t,ok)=>{msgEl.textContent=t;msgEl.style.color=ok?'var(--ok)':'var(--bad)'};
  const gb=document.getElementById('a_google');if(gb)gb.onclick=async()=>{if(!FB)return;try{if(up){window.PENDINGPROF={name:'',pair:'',avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)],google:1}}say('Открываем Google…',true);await FB.google()}catch(e){window.PENDINGPROF=null;say(e&&e.code==='auth/operation-not-allowed'?'Вход через Google ещё не включён владельцем.':e&&e.code==='auth/popup-closed-by-user'?'Окно Google закрыто.':fbErr(e))}};
@@ -3219,7 +3247,14 @@ async function resetProg(){if(!confirm('Сбросить весь прогрес
 function page(title,html,noback){document.body.classList.add('pgmode');clearInterval(timerId);window.QACTIVE=false;window.PAGEMODE=title;window.ENTMODE=false;document.getElementById('nav').hidden=true;
  app.onclick=null;app.innerHTML=`<div class="fade pg">${noback?'':'<button class="btn alt sm" id="pg_back">← Назад</button>'}${html}</div>`;window.scrollTo({top:0});document.querySelectorAll('#subj button').forEach(x=>x.setAttribute('aria-current',false));
  if(!noback)document.getElementById('pg_back').onclick=()=>{window.PAGEMODE=null;if(localStorage.getItem('ent-subj')==='ent')eMode();else{setHeader();go('home')}}}
-const say2=(id,t,ok)=>{const m=document.getElementById(id);if(m){m.textContent=t;m.style.color=ok?'var(--ok)':'var(--bad)'}};
+const say2=(id,t,ok)=>{const m=document.getElementById(id);const clean=String(t).replace(/^[✓✗]\s*/,'');const busy=/…$/.test(clean),ty=busy?'info':ok?'ok':'bad';if(m){m.className='say '+ty;m.innerHTML=`<span class="sayi">${busy?'⋯':ok?'✓':'!'}</span><span>${esc(clean)}</span>`;m.style.color='';m.classList.remove('sayin');void m.offsetWidth;m.classList.add('sayin')}if(!busy)TOAST(clean,ty);if(m&&ok){const pb=m.previousElementSibling;if(pb&&pb.tagName==='BUTTON'){pb.classList.remove('okflash');void pb.offsetWidth;pb.classList.add('okflash');setTimeout(()=>pb.classList.remove('okflash'),1500)}}};
+/* всплывающие уведомления (тосты) */
+function TOAST(t,type,ms){let w=document.getElementById('toasts');if(!w){w=document.createElement('div');w.id='toasts';w.setAttribute('aria-live','polite');document.body.appendChild(w)}
+ const el=document.createElement('div');el.className='toast '+(type||'ok');const ic=type==='bad'?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg>':type==='info'?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 11v6M12 7h.01"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+ el.innerHTML=`<span class="ti">${ic}</span><span class="tt">${esc(t)}</span><span class="tbar"></span>`;w.appendChild(el);while(w.children.length>3)w.firstChild.remove();
+ requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('on')));const d=ms||3200;el.style.setProperty('--d',d+'ms');
+ const close=()=>{el.classList.remove('on');el.classList.add('out');setTimeout(()=>el.remove(),350)};let tm=setTimeout(close,d);el.onclick=()=>{clearTimeout(tm);close()}}
+window.TOAST=TOAST;
 
 function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  const badge=isStaff()?'<span class="pbadge own">'+ICO(ROLEI[myRole()],15)+' '+ROLEN[myRole()]+'</span>'+(t?` <span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)}</span>`:''):t?`<span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)} · до ${myUntil()>=FOREVER?'∞':fmtD(myUntil())}</span>`:'<span class="pbadge">Бесплатный доступ</span>';
@@ -3462,7 +3497,7 @@ function deleteAccount(){MODAL('Удалить аккаунт',`<p><b>Это д�
 const RMK='ent-remind',DAYS=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const remGet=()=>Object.assign({on:false,time:'19:00',days:[0,1,2,3,4,5,6],last:''},LSG(RMK)||{});
 async function remSave(r){LSS(RMK,r);try{const c=await caches.open('ent-settings');await c.put('/remind.json',new Response(JSON.stringify(r),{headers:{'content-type':'application/json'}}))}catch(e){}
- try{const reg=await navigator.serviceWorker?.ready;if(reg&&reg.periodicSync){if(r.on)await reg.periodicSync.register('ent-remind',{minInterval:6*36e5});else await reg.periodicSync.unregister('ent-remind')}}catch(e){}
+ try{const reg=navigator.serviceWorker?await Promise.race([navigator.serviceWorker.ready,new Promise(r=>setTimeout(()=>r(null),1500))]):null;if(reg&&reg.periodicSync){if(r.on)await reg.periodicSync.register('ent-remind',{minInterval:6*36e5});else await reg.periodicSync.unregister('ent-remind')}}catch(e){}
  nativeRemind(r);if(FB&&ACC)FB.setUser(ACC.uid,{remind:{on:r.on,time:r.time,days:r.days}}).catch(()=>{})}
 function nativeRemind(r){const LN=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;if(!LN)return;
  LN.cancel({notifications:DAYS.map((_,i)=>({id:100+i}))}).catch(()=>{}).then(()=>{if(!r.on)return;const [hh,mm]=r.time.split(':').map(Number);
@@ -3493,7 +3528,7 @@ function remSum(){const s=document.getElementById('rm_sum');if(!s)return;const o
 function remBind(){const b=document.getElementById('rm_save');if(!b)return;
  document.querySelectorAll('#remc .rmd').forEach(x=>x.onclick=()=>{x.classList.toggle('on');x.setAttribute('aria-pressed',x.classList.contains('on'));x.querySelector('.rmk').textContent=x.classList.contains('on')?'✓':'';remSum()});
  document.querySelectorAll('#remc [data-pre]').forEach(p=>p.onclick=()=>{const set=p.dataset.pre==='all'?[0,1,2,3,4,5,6]:p.dataset.pre==='wd'?[0,1,2,3,4]:[5,6];document.querySelectorAll('#remc .rmd').forEach(x=>{const on=set.includes(+x.dataset.d);x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);x.querySelector('.rmk').textContent=on?'✓':''});remSum()});
- document.getElementById('rm_on').onchange=remSum;document.getElementById('rm_t').oninput=remSum;remSum();document.getElementById('rm_save').classList.remove('pulse');b.onclick=async()=>{const r=remGet();r.on=document.getElementById('rm_on').checked;r.time=document.getElementById('rm_t').value||'19:00';r.days=[...document.querySelectorAll('#remc .rmd.on')].map(c=>+c.dataset.d);if(r.on&&!r.days.length){say2('rm_m','Выбери хотя бы один день');return}
+ document.getElementById('rm_on').onchange=e=>{remSum();if(e.target.checked){const ic=document.querySelector('#remc h3 svg');if(ic){ic.classList.remove('ring');void ic.getBoundingClientRect();ic.classList.add('ring')}}};document.getElementById('rm_t').oninput=remSum;remSum();document.getElementById('rm_save').classList.remove('pulse');b.onclick=async()=>{const r=remGet();r.on=document.getElementById('rm_on').checked;r.time=document.getElementById('rm_t').value||'19:00';r.days=[...document.querySelectorAll('#remc .rmd.on')].map(c=>+c.dataset.d);if(r.on&&!r.days.length){say2('rm_m','Выбери хотя бы один день');return}
  if(r.on&&typeof Notification!=='undefined'&&Notification.permission==='default'){const p=await Notification.requestPermission();if(p!=='granted'){say2('rm_m','Уведомления не разрешены');r.on=false}}
  r.last='';await remSave(r);say2('rm_m',r.on?'✓ Сохранено — напоминания включены':'✓ Сохранено — напоминания выключены',1);b.classList.remove('pulse')}}
 
@@ -3596,7 +3631,7 @@ function refCard(){if(CFG.refOn===false)return'';const link=location.origin+loca
  return`<div class="card refc"><div class="refh"><span class="dbi">${ICO('users',24)}</span><div><h3 style="margin:0">Пригласи друга — получи скидку</h3><p class="small mut" style="margin:2px 0 0">За каждого друга, который зарегистрируется по твоей ссылке, — <b>${per}%</b> скидки на тариф (до ${mx}%). Другу — ${CFG.refFriend??10}% на первый тариф.</p></div></div>
  <div class="reflink"><input id="rf_l" readonly value="${esc(link)}"><button class="btn sm" id="rf_c">Скопировать</button>${navigator.share?'<button class="btn alt sm" id="rf_s">Поделиться</button>':''}</div>
  <div class="refst"><div><b>${REFS?n:'…'}</b><span>${GW(n,'друг','друга','друзей')} пришли</span></div><div><b>${d}%</b><span>твоя скидка сейчас</span></div></div></div>`}
-function refBind(){const c=document.getElementById('rf_c');if(!c)return;c.onclick=async()=>{const i=document.getElementById('rf_l');try{await navigator.clipboard.writeText(i.value)}catch(e){i.select();document.execCommand('copy')}c.textContent='Скопировано ✓';setTimeout(()=>c.textContent='Скопировать',1500)};
+function refBind(){const c=document.getElementById('rf_c');if(!c)return;c.onclick=async()=>{const i=document.getElementById('rf_l');try{await navigator.clipboard.writeText(i.value)}catch(e){i.select();document.execCommand('copy')}c.textContent='Скопировано ✓';c.classList.add('okflash');TOAST('Ссылка скопирована — отправь её другу','ok');setTimeout(()=>{c.textContent='Скопировать';c.classList.remove('okflash')},1500)};
  const s=document.getElementById('rf_s');if(s)s.onclick=()=>navigator.share({title:'ЕНТ 2027: подготовка',text:'Готовлюсь к ЕНТ здесь — присоединяйся, по моей ссылке скидка на тариф:',url:document.getElementById('rf_l').value}).catch(()=>{})}
 
 /* ---- главная (дашборд) ---- */
@@ -3620,7 +3655,7 @@ window.showDash=showDash;
 /* ---- подключение Firebase ---- */
 function blockedScreen(){const w=document.createElement('div');w.id='auth';w.innerHTML=`<div class="authbox"><div class="authlogo">${ICO('lock',40)}</div><h3>Аккаунт заблокирован</h3><p class="small mut">Если это ошибка, напиши владельцу приложения.</p><button class="btn alt" id="bl_out">Выйти</button></div>`;document.body.appendChild(w);document.getElementById('bl_out').onclick=async()=>{localStorage.removeItem(ACK);try{await FB.out()}catch(e){}location.reload()}}
 async function onUser(u){
- if(!u){if(NEEDAUTH){if(ACC){localStorage.removeItem(ACK);ACC=null;applyAccess()}authShow('in')}return}
+ if(!u){if(NEEDAUTH){if(ACC){localStorage.removeItem(ACK);ACC=null;applyAccess()}authReadyOrShow()}return}
  try{const [p0,cfg]=await Promise.all([FB.getUser(u.uid),FB.getCfg().catch(()=>null)]);let p=p0;const pend=window.PENDINGPROF;window.PENDINGPROF=null;
   if(cfg){CFG=Object.assign({},DEFCFG,cfg);LSS(CFK,CFG)}
   if(!p&&pend){p={...pend,name:pend.name||u.displayName||'',email:u.email,created:Date.now()};delete p.google;if(p.nick){try{await FB.nickClaim(p.nick,u.uid)}catch(e){p.nick=''}}else delete p.nick;if(window.REFCODE&&window.REFCODE!==u.uid){p.refBy=window.REFCODE}await FB.setUser(u.uid,p);if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
@@ -3633,7 +3668,7 @@ async function onUser(u){
   helpBadge();
   if(first&&!p.pair)showProfile()}
  catch(e){console.warn(e);if(!ACC)authShow('in',fbErr(e))}}
-function fbBoot(api){FB=api;if(FB.redirectResult)FB.redirectResult().catch(e=>{if(document.getElementById('auth'))authShow('in',fbErr(e))});FB.onAuth(onUser);const w=document.getElementById('auth');if(w&&!ACC)authShow(document.querySelector('.authtabs .on')?.dataset.m||'in')}
+function fbBoot(api){FB=api;if(FB.redirectResult)FB.redirectResult().catch(e=>{if(document.getElementById('auth'))authShow('in',fbErr(e))});FB.onAuth(onUser);const w=document.getElementById('auth');if(w&&!ACC)authReadyOrShow()}
 if(window.FBAPI)fbBoot(window.FBAPI);else addEventListener('fbready',()=>fbBoot(window.FBAPI));
 (function(){const h=document.querySelector('.top .in');if(h&&!document.getElementById('acctbtn')){const tb=document.createElement('div');tb.className='topbar';tb.innerHTML='<button id="homebtn" class="brand" aria-label="ЕНТ 2027 — на главную"><span class="bmark9">'+LOGO9+'</span><b class="wm">ЕНТ<i>2027</i></b></button>';const b=document.createElement('button');b.id='acctbtn';b.className='acctb';b.hidden=true;b.onclick=showProfile;const hb=document.createElement('button');hb.id='helpbtn';hb.className='helpb';hb.hidden=true;hb.innerHTML=ICO('chat',18)+'<span>Помощь</span>';hb.onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showHelp()};const rt=document.createElement('div');rt.className='tbr';const ls=document.createElement('div');ls.innerHTML=LANGSW();rt.append(ls.firstChild,hb,b);tb.appendChild(rt);h.prepend(tb);document.getElementById('homebtn').onclick=()=>{if(window.QACTIVE&&!QLEAVE())return;showDash()}}
  lsnPrefill();applyAccess();
@@ -3672,10 +3707,13 @@ window.admLoad=admLoad;
   <div class="insttx"><b>Установи приложение</b><span>${ev?'Открывается с главного экрана, как обычное приложение':'Нажми <span class="iosh">'+ICO('upload',15)+'</span> «Поделиться» внизу Safari, затем «На экран „Домой“».'}</span></div>
   ${ev?'<button class="btn instgo">Установить</button>':''}<button class="instx" aria-label="Закрыть">✕</button>`;
   document.body.appendChild(b);requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('on')));
-  b.querySelector('.instx').onclick=()=>{snooze(7);hide()};
-  const g=b.querySelector('.instgo');if(g)g.onclick=async()=>{hide();try{ev.prompt();const r=await ev.userChoice;if(!r||r.outcome!=='accepted')snooze(3)}catch(e){}ev=null}}
- window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;window.CANINSTALL=true;setTimeout(()=>show(),12000)});
- window.addEventListener('appinstalled',()=>{hide();try{localStorage.removeItem(K)}catch(e){}});
+  b.querySelector('.instx').onclick=()=>{snooze(1);hide()};
+  const g=b.querySelector('.instgo');if(g)g.onclick=async()=>{hide();try{ev.prompt();const r=await ev.userChoice;}catch(e){}ev=null;instBtn()}}
+ let hadEv=false;function instBtn(){const h=document.querySelector('.tbr');if(!h)return;let x=document.getElementById('instbtn');if(!ev&&!IOSSAF&&!hadEv){if(x)x.remove();return}
+ if(!x){x=document.createElement('button');x.id='instbtn';x.className='helpb instb2';x.title='Установить приложение';x.setAttribute('aria-label','Установить приложение');x.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>Установить</span>';x.onclick=()=>ev||IOSSAF?show(true):window.showInstall();const hb=document.getElementById('helpbtn');h.insertBefore(x,hb||h.firstChild)}}
+ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;hadEv=true;window.CANINSTALL=true;instBtn();setTimeout(()=>show(),12000)});
+ setTimeout(instBtn,1500);
+ window.addEventListener('appinstalled',()=>{hide();ev=null;hadEv=false;instBtn();TOAST('Приложение установлено — ищи его на главном экране','ok',4500);try{localStorage.removeItem(K)}catch(e){}});
  if(IOSSAF)setTimeout(()=>show(),15000);
  window.showInstall=()=>{if(ev||IOSSAF)return show(true);const mob=/Android/i.test(ua);alert(mob?'Нажми ⋮ (три точки) в правом верхнем углу Chrome → «Установить приложение» или «Добавить на главный экран».\n\nЕсли такого пункта нет — приложение уже установлено.':IOS?'Открой сайт в Safari, нажми «Поделиться» → «На экран „Домой“».':'В Chrome или Edge: справа в адресной строке нажми значок «Установить» (монитор со стрелкой) или ⋮ → «Сохранить и поделиться» → «Установить страницу как приложение».\n\nЕсли такого пункта нет — приложение уже установлено: проверь chrome://apps.')};
 })();
@@ -3727,7 +3765,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 67 от 26.11 23:12</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 68 от 26.11 23:31</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
