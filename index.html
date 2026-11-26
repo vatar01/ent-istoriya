@@ -537,6 +537,11 @@ select.fshid{position:absolute!important;opacity:0!important;pointer-events:none
 }
 @media(max-width:560px){#app table{font-size:13px}#app th,#app td{padding:7px 5px!important}#app th{font-size:11.5px}#app .card>table,#app .card>div>table{display:block;max-width:100%;overflow-x:auto}}
 .reflist{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.reflist span{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:4px 10px}
+
+.promob{display:flex;gap:8px}.promob input{flex:1;min-width:0;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}.pgrid label{display:block}.pgrid input{width:100%;margin-top:4px}
+.prow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}.prow>div:first-child{flex:1;min-width:0}.pcode{font:800 15px Unbounded,sans-serif;letter-spacing:.04em}
+.entfree{border-color:#F0D66B!important;background:linear-gradient(135deg,#FFFBEA,#fff)!important}
 </style>
 </head>
 <body>
@@ -1565,6 +1570,7 @@ const D={
 'с тарифом':'тарифпен','Тесты по темам':'Тақырыптар бойынша тесттер','«Все задания», «Новые» и контекстные':'«Барлық тапсырма», «Жаңалары» және контекстік','«Все задания», «Новые» и контекстные задания доступны с тарифом. Без тарифа — пробное ЕНТ и тесты по темам.':'«Барлық тапсырма», «Жаңалары» және контекстік тапсырмалар тарифпен қолжетімді. Тарифсіз — сынақ ҰБТ және тақырыптық тесттер.',
 'Решать тесты':'Тест шешу','Пройти ещё раз':'Тағы өту','Продолжить':'Жалғастыру',
 'Логин друга, который пригласил':'Сені шақырған достың логині','(необязательно)':'(міндетті емес)','Логин друга не найден. Проверь или оставь поле пустым.':'Достың логині табылмады. Тексер немесе бос қалдыр.',
+'Промокод':'Промокод','Активировать':'Белсендіру','Мини-ЕНТ — бесплатно':'Мини-ҰБТ — тегін','Полное пробное ЕНТ — 120 заданий, 4 часа':'Толық сынақ ҰБТ — 120 тапсырма, 4 сағат','Доступно с тарифом Standart Plus или по промокоду. Есть промокод? Введи его:':'Standart Plus тарифімен немесе промокод арқылы қолжетімді. Промокод бар ма? Енгіз:','Такого промокода нет. Проверь, правильно ли написан.':'Мұндай промокод жоқ. Дұрыс жазылғанын тексер.','Ты уже активировал этот промокод.':'Сен бұл промокодты белсендіріп қойғансың.','Срок действия промокода закончился.':'Промокодтың мерзімі бітті.','Промокод уже использовали максимальное число раз.':'Промокод ең көп рет қолданылып қойған.','Проверяем…':'Тексеріп жатырмыз…','Мини-ЕНТ':'Мини-ҰБТ',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Установить приложение':'Қосымшаны орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -1599,6 +1605,9 @@ const P=[
  [/^(\d+) заданий — бесплатно, не тратят дневной лимит\. Новая подборка каждые (\d+) ч — следующая через (.+)\.$/,m=>`${m[1]} тапсырма — тегін, күндік лимитті жұмсамайды. Жаңа іріктеме әр ${m[2]} сағ сайын — келесісі ${m[3].replace('ч','сағ')} кейін.`],
  [/^(\d+) заданий\. Новая подборка каждые (\d+) ч — следующая через (.+)\.$/,m=>`${m[1]} тапсырма. Жаңа іріктеме әр ${m[2]} сағ сайын — келесісі ${m[3].replace('ч','сағ')} кейін.`],
  [/^Пробник по предмету без тарифа — (\d+) \S+ в день, на сегодня попытки закончились\. Приходи завтра или оформи тариф\.$/,m=>`Тарифсіз пән бойынша сынақ — күніне ${m[1]} рет, бүгінгі әрекеттер бітті. Ертең кел немесе тариф рәсімде.`],
+ [/^Промокод активирован! Бесплатных полных ЕНТ: (\d+)\.$/,m=>`Промокод белсендірілді! Тегін толық ҰБТ: ${m[1]}.`],
+ [/^Начать мини-ЕНТ · (\d+) минут$/,m=>`Мини-ҰБТ бастау · ${m[1]} минут`],
+ [/^Начать полное ЕНТ · (\d+) минут$/,m=>`Толық ҰБТ бастау · ${m[1]} минут`],
  [/^(\d+) минут$/,m=>`${m[1]} минут`],
  [/^Начать ЕНТ · (\d+) минут$/,m=>`ҰБТ бастау · ${m[1]} минут`],
  [/^(\d+) предметов · (\d+) заданий · (\d+) мин$/,m=>`${m[1]} пән · ${m[2]} тапсырма · ${m[3]} мин`],
@@ -3048,16 +3057,20 @@ const ESUB=[
 const EFMT=sid=>s=>(sid==='math'||sid==='ml'||sid==='phys')?TEX.fmt(s):esc(s);
 const EPTS=it=>it.t==='s'?1:2;
 function eCtxItems(sid,c){return c.qs.map(x=>({t:'s',topic:c.topic,q:x.q,opts:x.opts,expl:x.expl,sol:x.sol,r:x.r,ctx:sid+':'+c.id}))}
-function eBuild(sid){const ctx={};let items=[];
+function eBuild(sid,mini){const ctx={};let items=[];
  const take=(arr,n)=>shuf(arr).slice(0,n);
+ if(mini){if(sid==='hist')items=take(histItems.filter(x=>x.t==='s'),5);else if(sid==='ml')items=take(MLQ,5);
+  else if(sid==='rl'){const v=RLV[Math.floor(Math.random()*RLV.length)],c=v.find(c=>c.qs.length===5)||v[v.length-1];ctx['rl:'+c.id]=c;items=eCtxItems('rl',c).slice(0,5)}
+  else{const S2=SUBJ[sid];items=take(S2.items.filter(x=>x.t==='s'),5)}
+  return{sid,items:items.map(it=>{const p=prep(it);return{it,opts:p.opts,right:p.right}}),ctx}}
  if(sid==='hist'){items=take(histItems.filter(x=>x.t==='s'),10);take(histCtx,2).forEach(c=>{ctx['hist:'+c.id]=c;items.push(...eCtxItems('hist',c))})}
  else if(sid==='ml'){const lv={A:[],B:[],C:[]};MLT.forEach(([tid])=>{const pool=shuf(MLQ.filter(q=>q.topic===tid));items.push(pool[0])});items=items.sort((a,b)=>'ABC'.indexOf(a.lvl)-'ABC'.indexOf(b.lvl))}
  else if(sid==='rl'){const v=RLV[Math.floor(Math.random()*RLV.length)];v.forEach(c=>{ctx['rl:'+c.id]=c;items.push(...eCtxItems('rl',c))})}
  else{const S2=SUBJ[sid],it=S2.items;items=take(it.filter(x=>x.t==='s'),25);const c=shuf(S2.ctx)[0];ctx[sid+':'+c.id]=c;items.push(...eCtxItems(sid,c));items.push(...take(it.filter(x=>x.t==='m'),5),...take(it.filter(x=>x.t==='x'),5))}
  return{sid,items:items.map(it=>{const p=prep(it);return{it,opts:p.opts,right:p.right}}),ctx}}
 function eSave(R){LSS(ENTRUN,R)}
-function eStart(kind){if(window.ENTGATE&&!ENTGATE(kind))return;const subs=kind==='full'?ESUB.map(s=>s.id):[kind];
- const R={kind,started:Date.now(),end:Date.now()+(kind==='full'?ENTMIN():20)*60000,blocks:subs.map(eBuild),ans:{},cur:{b:0,i:0}};eSave(R);eExam(R)}
+function eStart(kind){if(window.ENTGATE&&!ENTGATE(kind))return;const mini=kind==='mini',subs=kind==='full'||mini?ESUB.map(s=>s.id):[kind];
+ const R={kind,started:Date.now(),end:Date.now()+(kind==='full'?ENTMIN():mini?ESUB.length*5*2:20)*60000,blocks:subs.map(s=>eBuild(s,mini)),ans:{},cur:{b:0,i:0},credit:kind==='full'&&window.ENTFULLOK&&!ENTFULLOK()};eSave(R);eExam(R)}
 function eMode(){window.PAGEMODE=null;document.body.classList.remove('pgmode');clearInterval(timerId);try{speechSynthesis.cancel()}catch(_){}
  window.ENTMODE=true;document.getElementById('nav').hidden=true;document.getElementById('ttl').textContent='Пробное ЕНТ · '+ENTMAX()+' баллов';
  const sb=document.getElementById('sub');if(sb)sb.textContent=`Как на настоящем ЕНТ: ${ESUB.length} предмет${ESUB.length===5?'ов':'а'}, ${ENTQ()} заданий, ${ENTMIN()} минут. ${ESUB.map(s=>s.name.replace(' (профильный)','')).join(', ')}.`;
@@ -3067,7 +3080,10 @@ function eHome(run){clearInterval(timerId);const H=LSG(ENTK)||[];
  app.onclick=null;
  app.innerHTML=`<div class="fade">
  ${run?`<div class="card" style="border-color:var(--sky)"><b>У тебя есть незаконченная попытка</b><p class="small mut" style="margin:.3em 0">Осталось времени: ${Math.max(0,Math.round((run.end-Date.now())/60000))} мин. Ответы сохранены.</p><div class="row"><button class="btn gold" id="cont">Продолжить</button><button class="btn alt" id="drop">Удалить попытку</button></div></div>`:''}
- <div class="card"><h3 style="margin-top:0">Полное пробное ЕНТ</h3>${window.ENTPAIRUI?ENTPAIRUI():''}
+ ${window.ENTFULLOK&&!ENTFULLOK()?`<div class="card"><h3 style="margin-top:0">Мини-ЕНТ — бесплатно</h3>${window.ENTPAIRUI?ENTPAIRUI():''}<p class="small">Все 5 предметов, как на ЕНТ, но по <b>5 заданий</b> из каждого: <b>${ESUB.length*5} заданий · ${ESUB.length*10} минут</b>. Хорошо, чтобы попробовать формат.</p>
+ <div class="scroll"><table><thead><tr><th>Предмет</th><th>Заданий</th></tr></thead><tbody>${ESUB.map(s=>`<tr><td>${s.name}</td><td>5</td></tr>`).join('')}</tbody></table></div>
+ <button class="btn gold" id="mini" ${run?'disabled':''} style="margin-top:10px">Начать мини-ЕНТ · ${ESUB.length*10} минут</button></div>
+ <div class="card entfree" style="margin-top:12px"><h3 style="margin-top:0">${ICO('gem',18)} Полное пробное ЕНТ — 120 заданий, 4 часа</h3>${ENTCRED()>0?`<p class="small">У тебя <b>${ENTCRED()}</b> ${GW(ENTCRED(),'бесплатное полное ЕНТ','бесплатных полных ЕНТ','бесплатных полных ЕНТ')} по промокоду. Попытка тратится, когда ответишь хотя бы на 3 задания или пройдёт 2 минуты.</p><button class="btn gold" id="full" ${run?'disabled':''}>Начать полное ЕНТ · ${ENTMIN()} минут</button>`:`<p class="small mut" style="margin-top:0">Доступно с тарифом Standart Plus или по промокоду. Есть промокод? Введи его:</p>${PROMOBOX('ent_promo')}<button class="btn alt sm" id="ent_tar" style="margin-top:10px">${ICO('gem',15)} Тарифы</button>`}</div>`:`<div class="card"><h3 style="margin-top:0">Полное пробное ЕНТ</h3>${window.ENTPAIRUI?ENTPAIRUI():''}
  <div class="scroll"><table><thead><tr><th>Предмет</th><th>Заданий</th><th>Баллов</th><th>Порог</th></tr></thead><tbody>
  ${ESUB.map(s=>`<tr><td>${s.name}</td><td>${ENTQN(s.id)}</td><td>${s.max}</td><td>${s.min}</td></tr>`).join('')}
  <tr><td><b>Всего</b></td><td><b>${ENTQ()}</b></td><td><b>${ENTMAX()}</b></td><td></td></tr></tbody></table></div>
@@ -3075,14 +3091,14 @@ function eHome(run){clearInterval(timerId);const H=LSG(ENTK)||[];
  <li>Профильные предметы: 25 заданий с одним ответом, 1 контекст (5 заданий), 5 заданий с несколькими ответами и 5 на соответствие (по 2 балла; одна ошибка — 1 балл).</li>
  <li>Мат. грамотность: 10 задач из жизни, по одной на каждую тему спецификации НЦТ. Грамотность чтения: 3 текста (60–100, 100–150, 150–350 слов) — 2, 3 и 5 вопросов.</li>
  <li>Ответы и время сохраняются, даже если закрыть приложение. Результаты и разбор — после завершения.</li></ul>
- <button class="btn gold" id="full" ${run?'disabled':''}>Начать ЕНТ · ${ENTMIN()} минут</button></div>
+ <button class="btn gold" id="full" ${run?'disabled':''}>Начать ЕНТ · ${ENTMIN()} минут</button></div>`}
  <div class="grid" style="margin-top:12px">
  <button class="card topic" data-k="ml" ${run?'disabled':''}><div class="per">10 заданий · 20 минут</div><h3 style="margin:.3em 0">Математическая грамотность</h3><div class="small mut">${MLQ.length} задач по 10 темам НЦТ, с подробными решениями</div></button>
  <button class="card topic" data-k="rl" ${run?'disabled':''}><div class="per">10 заданий · 20 минут</div><h3 style="margin:.3em 0">Грамотность чтения</h3><div class="small mut">${RLV.length} варианта по 3 текста</div></button></div>
  <div class="card" style="margin-top:12px"><h3 style="margin-top:0">Пороговые баллы (2026)</h3><ul class="small"><li>Для поступления: не меньше <b>50</b> баллов (национальные вузы — <b>65</b>).</li><li>Здравоохранение — <b>70</b>, педагогика и право — <b>75</b>.</li><li>По предметам: история и профильные — не меньше 5, грамотность чтения и мат. грамотность — не меньше 3.</li><li>С 1 сентября 2026 года вуз может установить свой проходной балл.</li></ul></div>
- ${H.length?`<h3 style="margin-top:20px">Мои попытки</h3><div class="card scroll" style="padding:6px"><table><thead><tr><th>Дата</th><th>Тест</th><th>Баллы</th><th>Время</th></tr></thead><tbody>${H.slice().reverse().slice(0,15).map(h=>`<tr><td>${new Date(h.t).toLocaleDateString('ru-RU')}</td><td>${h.kind==='full'?'ЕНТ':h.kind==='ml'?'Мат. грам.':'Чтение'}</td><td><b>${h.score}</b> / ${h.max}${h.kind==='full'?' · '+h.parts.join('-'):''}</td><td>${h.min} мин</td></tr>`).join('')}</tbody></table></div>`:''}
+ ${H.length?`<h3 style="margin-top:20px">Мои попытки</h3><div class="card scroll" style="padding:6px"><table><thead><tr><th>Дата</th><th>Тест</th><th>Баллы</th><th>Время</th></tr></thead><tbody>${H.slice().reverse().slice(0,15).map(h=>`<tr><td>${new Date(h.t).toLocaleDateString('ru-RU')}</td><td>${h.kind==='full'?'ЕНТ':h.kind==='mini'?'Мини-ЕНТ':h.kind==='ml'?'Мат. грам.':'Чтение'}</td><td><b>${h.score}</b> / ${h.max}${h.kind==='full'||h.kind==='mini'?' · '+h.parts.join('-'):''}</td><td>${h.min} мин</td></tr>`).join('')}</tbody></table></div>`:''}
  <p class="small mut" style="margin-top:14px">Формат взят с сайтов НЦТ (testcenter.kz), egov.kz и Министерства науки и высшего образования. Задания по истории, математике и информатике — из разделов этого приложения. Тексты для грамотности чтения и задачи по мат. грамотности составлены по официальным спецификациям НЦТ 2026 года; ответы задач проверены вычислениями. Официальные пробные тесты есть в личном кабинете app.testcenter.kz.</p></div>`;
- const f=document.getElementById('full');if(f)f.onclick=()=>eStart('full');const ep=document.getElementById('entpair');if(ep)ep.onchange=()=>{ENTPAIRSET(ep.value);eMode()};
+ const f=document.getElementById('full');if(f)f.onclick=()=>eStart('full');const mn=document.getElementById('mini');if(mn)mn.onclick=()=>eStart('mini');const et=document.getElementById('ent_tar');if(et)et.onclick=()=>showTariffs();if(window.PROMOBIND)PROMOBIND(()=>eHome(LSG(ENTRUN)));const ep=document.getElementById('entpair');if(ep)ep.onchange=()=>{ENTPAIRSET(ep.value);eMode()};
  app.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{if(!b.disabled)eStart(b.dataset.k)});
  const c=document.getElementById('cont');if(c)c.onclick=()=>eExam(run);
  const d=document.getElementById('drop');if(d)d.onclick=()=>{if(confirm('Удалить незаконченную попытку? Ответы пропадут.')){localStorage.removeItem(ENTRUN);eHome()}};
@@ -3130,11 +3146,11 @@ function eFinish(R){clearInterval(timerId);
  S=loadS();
  const score=parts.reduce((s,p)=>s+p.sc,0),max=parts.reduce((s,p)=>s+p.mx,0),min=Math.round((Math.min(Date.now(),R.end)-R.started)/60000);
  let nAns=0,nAll=0;R.blocks.forEach((B,b)=>B.items.forEach((P,i)=>{nAll++;if(answered(P,R.ans[key(b,i)]))nAns++}));const counted=nAns>=3||Date.now()-R.started>=120000;
- const H=LSG(ENTK)||[];if(counted){H.push({t:Date.now(),kind:R.kind,score,max,min,parts:parts.map(p=>p.sc)});LSS(ENTK,H);if(window.ENTUSE)ENTUSE()}localStorage.removeItem(ENTRUN);if(window.SYNCNOW)SYNCNOW();
+ const H=LSG(ENTK)||[];if(counted){H.push({t:Date.now(),kind:R.kind,score,max,min,parts:parts.map(p=>p.sc)});LSS(ENTK,H);if(R.credit){if(window.CREDITUSE)CREDITUSE()}else if(window.ENTUSE)ENTUSE()}localStorage.removeItem(ENTRUN);if(window.SYNCNOW)SYNCNOW();
  const passSub=parts.every(p=>p.sc>=ESUB.find(s=>s.id===p.sid).min);
  const full=R.kind==='full';
  app.innerHTML=`<div class="fade"><h2 data-cel="${max?score/max:0}">Результат: <span class="cnum">${score}</span> из ${max}</h2><p class="mut small">Время: ${min} мин.</p>${counted?'':`<div class="card nocount">${ICO('alert',18)}<span>Попытка <b>не засчитана</b>: ты вышел почти сразу (отвечено ${nAns} из ${nAll}). Пробное засчитывается, если ответить хотя бы на 3 задания или решать дольше 2 минут — тогда оно попадает в историю и в дневной лимит.</span></div>`}
- <div class="card scroll" style="padding:6px"><table><thead><tr><th>Предмет</th><th>Баллы</th><th>Порог</th></tr></thead><tbody>${parts.map(p=>{const s=ESUB.find(z=>z.id===p.sid);const ok=p.sc>=s.min;return`<tr><td>${s.name}</td><td><b>${p.sc}</b> / ${p.mx}</td><td style="color:${ok?'var(--ok)':'var(--bad)'}">${ok?'✓':'✗'} ${s.min}</td></tr>`}).join('')}</tbody></table></div>
+ <div class="card scroll" style="padding:6px"><table><thead><tr><th>Предмет</th><th>Баллы</th><th>Порог</th></tr></thead><tbody>${parts.map(p=>{const s=ESUB.find(z=>z.id===p.sid);const ok=R.kind==='mini'||p.sc>=s.min;return`<tr><td>${s.name}</td><td><b>${p.sc}</b> / ${p.mx}</td><td style="color:${ok?'var(--ok)':'var(--bad)'}">${R.kind==='mini'?'—':(ok?'✓':'✗')+' '+s.min}</td></tr>`}).join('')}</tbody></table></div>
  ${full?`<div class="card" style="margin-top:12px"><b>Куда хватает баллов</b><ul class="small">${[[50,'порог для поступления в вузы'],[65,'национальные вузы'],[70,'здравоохранение'],[75,'педагогика и право']].map(([v,t])=>`<li style="color:${score>=v&&passSub?'var(--ok)':'inherit'}">${score>=v&&passSub?'✓':'✗'} ${v}+ — ${t}</li>`).join('')}</ul>${passSub?'':'<p class="small" style="color:var(--bad)">Не пройден порог хотя бы по одному предмету — на настоящем ЕНТ это значит, что поступить нельзя, даже если общий балл высокий.</p>'}<p class="small mut">Для гранта нужно больше: проходной балл на грант зависит от специальности и конкурса.</p></div>`:''}
  <div class="row" style="margin-top:12px"><button class="btn gold" id="again">Ещё попытка</button><button class="btn alt" id="hm">К пробному ЕНТ</button></div>
  <h3 style="margin-top:20px">Разбор: твои ответы и правильные</h3><p class="small mut">Открой предмет, чтобы посмотреть каждое задание.</p><div id="rev"></div></div>`;
@@ -3208,10 +3224,10 @@ const PHAVE={math:1,inf:1,phys:1}; // какие профильные предм
 const SECS=[['hist','История Казахстана'],['ml','Мат. грамотность'],['rl','Грамотность чтения'],['math','Математика'],['inf','Информатика'],['phys','Физика'],['rus','История России'],['eng','Английский · IELTS'],['ent','Пробное ЕНТ']];
 const SECN=Object.fromEntries(SECS);
 const CORE=['hist','ml','rl'],EXTRA=['rus','eng'];
-const PERKS=[['learn','Учить: уроки и параграфы'],['ref','Справочник и карточки'],['mist','Работа над ошибками'],['hints','Подсказки в тестах'],['similar','«Решить похожее» — новые задания'],['extra','«Все задания», «Новые» и контекстные'],['tasks','Заданий в день'],['tests','Тестов в день'],['ent','Пробных ЕНТ в день']];
+const PERKS=[['learn','Учить: уроки и параграфы'],['ref','Справочник и карточки'],['mist','Работа над ошибками'],['hints','Подсказки в тестах'],['similar','«Решить похожее» — новые задания'],['extra','«Все задания», «Новые» и контекстные'],['fullent','Полное пробное ЕНТ (120 заданий)'],['tasks','Заданий в день'],['tests','Тестов в день'],['ent','Пробных ЕНТ в день']];
 const BASESEC=['hist','ml','rl','math','inf','phys','ent'];
 const DEFCFG={access:{rus:'paid',eng:'paid'},topics:{},
- free:{learn:false,ref:false,mist:false,hints:false,similar:false,extra:false,tasks:20,tests:-1,ent:1},
+ free:{learn:false,ref:false,mist:false,hints:false,similar:false,extra:false,fullent:false,tasks:20,tests:-1,ent:1},
  tariffs:[
   {id:'standart',name:'Standart',price:1990,days:30,desc:'Уроки, справочник и тесты без ограничений по обязательным и твоим профильным предметам.',features:BASESEC,perks:{learn:true,ref:true,mist:true,hints:true,similar:false,tests:-1,ent:1}},
   {id:'plus',name:'Standart Plus',price:2990,days:30,desc:'Всё из Standart + «Решить похожее» и пробные ЕНТ без ограничений.',features:BASESEC,perks:{learn:true,ref:true,mist:true,hints:true,similar:true,tests:-1,ent:-1}},
@@ -3242,7 +3258,7 @@ const myRole=()=>!ACC?'':viewAs()?(viewAs().role||''):OWNERS.includes(ACC.uid)?'
 const isAdminR=()=>['owner','admin'].includes(myRole());
 const isStaff=()=>['owner','admin','manager'].includes(myRole());
 const ROLEN={owner:'Владелец',admin:'Администратор',manager:'Менеджер'};
-const RPERMS=[['chats','Чаты поддержки','отвечать ученикам в «Помощи»'],['stats','Обзор','статистика и выручка'],['users','Ученики','видеть список и карточки'],['edit','Править учеников','имя, предметы, заметка'],['reqs','Заявки','видеть заявки на оплату'],['approve','Одобрять оплату','одобрять и отклонять заявки'],['subs','Выдавать подписку','выдать или забрать тариф вручную'],['block','Блокировать','блокировать и разблокировать'],['progress','Сбрасывать прогресс','сбрасывать прогресс ученика'],['tar','Тарифы','цены и состав тарифов'],['acc','Доступ','платные и скрытые разделы'],['cont','Уроки','загружать тексты уроков'],['cal','Календарь','даты ЕНТ'],['set','Настройки','объявление, оплата, контакт, рефералы']];
+const RPERMS=[['chats','Чаты поддержки','отвечать ученикам в «Помощи»'],['stats','Обзор','статистика и выручка'],['users','Ученики','видеть список и карточки'],['edit','Править учеников','имя, предметы, заметка'],['reqs','Заявки','видеть заявки на оплату'],['approve','Одобрять оплату','одобрять и отклонять заявки'],['subs','Выдавать подписку','выдать или забрать тариф вручную'],['block','Блокировать','блокировать и разблокировать'],['progress','Сбрасывать прогресс','сбрасывать прогресс ученика'],['tar','Тарифы','цены и состав тарифов'],['acc','Доступ','платные и скрытые разделы'],['cont','Уроки','загружать тексты уроков'],['cal','Календарь','даты ЕНТ'],['set','Настройки','объявление, оплата, контакт, рефералы'],['promo','Промокоды','создавать и удалять промокоды']];
 const RPDEF={admin:Object.fromEntries(RPERMS.map(p=>[p[0],true])),manager:{chats:true,users:true,reqs:true}};
 function can(p){const r=myRole();if(r==='owner')return true;if(r!=='admin'&&r!=='manager')return false;const m=((CFG.rolePerms||{})[r])||{};return m[p]!=null?!!m[p]:!!RPDEF[r][p]}
 const ROLEI={owner:'crown',admin:'shield',manager:'headset'};
@@ -3277,8 +3293,22 @@ window.MOCKUSE=(n,counted)=>{if(counted&&perk('ent')>=0)useAdd('mock_'+cur.id)};
 window.TASKSTEP=it=>{if(window.FREESET&&window.QACTIVE){if(it&&window.FSMARK)FSMARK(it);return true}const LT=perk('tasks');if(LT<0)return true;const u=useGet();if((u.tasks||0)>=LT){const box=document.getElementById('cf');if(box)box.innerHTML=`<div class="card tlim"><div class="tlh">${ICO('lock',22)}<div><b>На сегодня всё — ${LT} ${GW(LT,'задание','задания','заданий')} без тарифа</b><p class="small mut" style="margin:2px 0 0">Ответы сохранены. Завтра лимит обновится, или оформи тариф — тогда без ограничений.</p></div></div><div class="row" style="margin-top:10px;gap:8px"><button class="btn" id="tl_tar">${ICO('gem',16)} Тарифы</button><button class="btn alt" id="tl_end">Завершить тест</button></div></div>`;
   const tt=document.getElementById('tl_tar');if(tt)tt.onclick=()=>{window.QACTIVE=false;showTariffs()};const te=document.getElementById('tl_end');if(te)te.onclick=()=>{const q=document.getElementById('qq');q&&q.click()};box&&box.scrollIntoView({behavior:'smooth',block:'center'});TOAST('Лимит заданий на сегодня закончился','info',4000);return false}
  useAdd('tasks');const left=LT-(u.tasks||0)-1;if(left===5||left===1)TOAST(`Без тарифа на сегодня осталось ${left} ${GW(left,'задание','задания','заданий')}`,'info',3500);return true};
-window.ENTGATE=()=>{const L=perk('ent');if(L<0)return true;const u=useGet();if((u.ent||0)>=L){showTariffs(`Пробное ЕНТ без ограничений — с тарифом Standart Plus. Сейчас доступно ${L} в день, на сегодня попытки закончились.`);return false}return true};
+window.ENTGATE=kind=>{if(kind==='full'&&!perk('fullent')){if((ACC&&ACC.entCredits||0)>0)return true;showTariffs('Полное пробное ЕНТ (120 заданий) — с тарифом Standart Plus или по промокоду. Бесплатно доступно мини-ЕНТ.');return false}const L=perk('ent');if(L<0)return true;const u=useGet();if((u.ent||0)>=L){showTariffs(`Пробное ЕНТ без тарифа — ${L} ${GW(L,'раз','раза','раз')} в день, на сегодня попытки закончились. Приходи завтра или оформи тариф.`);return false}return true};
 window.ENTUSE=()=>{if(perk('ent')>=0)useAdd('ent')};
+window.ENTFULLOK=()=>!!perk('fullent');
+window.ENTCRED=()=>ACC?(ACC.entCredits||0):0;
+window.CREDITUSE=async()=>{if(!ACC||!(ACC.entCredits>0))return;ACC.entCredits--;LSS(ACK,ACC);try{await FB.setUser(ACC.uid,{entCredits:ACC.entCredits})}catch(e){}};
+/* промокоды */
+const normCode=v=>(v||'').trim().toUpperCase().replace(/[^A-Z0-9_-]/g,'');
+async function redeemPromo(raw){const c=normCode(raw);if(!ACC||!FB)return{ok:false,msg:'Сначала войди в аккаунт.'};if(c.length<3)return{ok:false,msg:'Введи промокод.'};
+ try{const p=await FB.promoGet(c);if(!p)return{ok:false,msg:'Такого промокода нет. Проверь, правильно ли написан.'};
+  if(p.until&&Date.now()>p.until)return{ok:false,msg:'Срок действия промокода закончился.'};if((p.used||0)>=(p.max||0))return{ok:false,msg:'Промокод уже использовали максимальное число раз.'};
+  if(await FB.promoUsed(c,ACC.uid))return{ok:false,msg:'Ты уже активировал этот промокод.'};
+  const nc=(ACC.entCredits||0)+(+p.n||1);await FB.promoRedeem(c,ACC.uid,p.used||0,nc);ACC.entCredits=nc;LSS(ACK,ACC);
+  return{ok:true,msg:`Промокод активирован! Бесплатных полных ЕНТ: ${nc}.`}}catch(e){return{ok:false,msg:fbErr(e)}}}
+window.redeemPromo=redeemPromo;
+window.PROMOBOX=(id)=>`<div class="promob"><input id="${id}" placeholder="Промокод" autocapitalize="characters" spellcheck="false" maxlength="20"><button class="btn sm" data-promo="${id}">Активировать</button></div><div class="small" id="${id}_m"></div>`;
+window.PROMOBIND=(after)=>{document.querySelectorAll('[data-promo]').forEach(b=>b.onclick=async()=>{const id=b.dataset.promo,inp=document.getElementById(id);b.disabled=true;say2(id+'_m','Проверяем…');const r=await redeemPromo(inp.value);b.disabled=false;say2(id+'_m',r.msg,r.ok);if(r.ok){inp.value='';if(window.CONFETTI)CONFETTI();after&&setTimeout(after,900)}})};
 const secMode=s=>(CFG.access||{})[s]||'free';
 function canSec(s){if(isAdminR()||!NEEDAUTH&&!ACC)return true;const m=secMode(s);return m==='free'||(m==='paid'&&hasFeat(s))}
 function topicSec(tid){for(const k in SUBJ_ALL)if((SUBJ_ALL[k].T||[]).some(t=>t.id===tid))return k;return cur.id}
@@ -3446,12 +3476,13 @@ function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  ${isStaff()?'<button class="card ptile" id="pf_adm"><span class="dbi">'+ICO('wrench',24)+'</span><b>Админ-панель</b><small>'+(myRole()==='manager'?'Чаты поддержки и ученики':'Ученики, доступ, заявки, чаты')+'</small></button>':''}
  <button class="card ptile" id="pf_lead" disabled><span class="dbi">${ICO('trophy',24)}</span><b>Таблица лидеров</b><small>Скоро</small></button></div>
  ${vaCard()}
+ <div class="card"><h3 style="margin-top:0">${ICO('gem',18)} Промокод</h3><p class="small mut" style="margin-top:0">Есть промокод? Введи его — например, на бесплатное полное пробное ЕНТ.${ACC.entCredits?` Сейчас у тебя бесплатных полных ЕНТ: <b>${ACC.entCredits}</b>.`:''}</p>${PROMOBOX('pf_promo')}</div>
  ${refCard()}
  ${remCard()}
  <p class="small mut" style="text-align:center">${syncState==='err'?'Не удалось сохранить прогресс — повторим, когда будет интернет.':'Прогресс сохраняется в аккаунте автоматически.'}</p>
  <div class="row" style="justify-content:center;gap:10px"><button class="btn alt" id="pf_out">Выйти</button><button class="btn alt" id="pf_reset" style="color:var(--bad)">Сбросить прогресс</button></div>
  <div style="text-align:center;margin-top:10px">${matchMedia('(display-mode: standalone)').matches||navigator.standalone?'':'<button class="linkb" id="pf_inst">Установить приложение</button>'}<button class="linkb" id="pf_priv">Политика конфиденциальности</button><button class="linkb" id="pf_del" style="color:var(--bad)">Удалить аккаунт</button></div>`);
- remBind();refBind();vaBind();{const ib=document.getElementById('pf_inst');if(ib)ib.onclick=()=>window.showInstall()}if(!window.__refT||Date.now()-window.__refT>4000){window.__refT=Date.now();const n0=REFS?REFS.length:-1;loadRefs().then(()=>{if(window.PAGEMODE==='profile'&&(REFS?REFS.length:-1)!==n0)showProfile()})}document.getElementById('pf_priv').onclick=showPrivacy;document.getElementById('pf_del').onclick=deleteAccount;
+ remBind();refBind();vaBind();PROMOBIND(()=>showProfile());{const ib=document.getElementById('pf_inst');if(ib)ib.onclick=()=>window.showInstall()}if(!window.__refT||Date.now()-window.__refT>4000){window.__refT=Date.now();const n0=REFS?REFS.length:-1;loadRefs().then(()=>{if(window.PAGEMODE==='profile'&&(REFS?REFS.length:-1)!==n0)showProfile()})}document.getElementById('pf_priv').onclick=showPrivacy;document.getElementById('pf_del').onclick=deleteAccount;
  document.getElementById('pf_av').onclick=avatarPicker;
  document.getElementById('pf_nick').onclick=()=>nickEdit();
  document.getElementById('pf_name').onclick=async()=>{const n=prompt('Как тебя зовут?',ACC.name||'');if(n==null)return;const v=n.trim().slice(0,30);if(!v)return;ACC.name=v;LSS(ACK,ACC);headerAcct();try{await FB.setUser(ACC.uid,{name:v})}catch(e){}showProfile()};
@@ -3501,14 +3532,16 @@ let ADM={users:null,reqs:null};
 async function admLoad(force){if(force||!ADM.users){const [u,r]=await Promise.all([FB.listUsers(),FB.allReqs()]);ADM.users=u;ADM.reqs=r}}
 async function showAdmin(tab){if(!isStaff()||!FB)return;const R0=myRole();tab=tab||'dash';
  let tabs=[['chats','chat','Чаты'],['dash','chart','Обзор'],['users','users','Ученики'],['reqs','receipt','Заявки'],['tar','gem','Тарифы'],['acc','lock','Доступ'],['cont','cloud','Уроки'],['cal','cal','Календарь'],['set','sliders','Настройки']];
+ tabs.splice(tabs.findIndex(t=>t[0]==='set'),0,['promo','gem','Промокоды']);
  if(R0==='owner')tabs.splice(tabs.length-1,0,['team','crown','Команда']),tabs.push(['notes','pencil','Заметки']);
- const TP={chats:'chats',dash:'stats',users:'users',reqs:'reqs',tar:'tar',acc:'acc',cont:'cont',cal:'cal',set:'set'};tabs=tabs.filter(t=>!TP[t[0]]||can(TP[t[0]]));if(!tabs.length){page('admin','<div class="card"><p>У твоей роли пока нет доступных разделов. Обратись к владельцу.</p></div>');return}if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
+ const TP={promo:'promo',chats:'chats',dash:'stats',users:'users',reqs:'reqs',tar:'tar',acc:'acc',cont:'cont',cal:'cal',set:'set'};tabs=tabs.filter(t=>!TP[t[0]]||can(TP[t[0]]));if(!tabs.length){page('admin','<div class="card"><p>У твоей роли пока нет доступных разделов. Обратись к владельцу.</p></div>');return}if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
  page('admin',`<h2 style="margin:.6em 0 .3em">Админ-панель <span class="pbadge own sm">${ICO(ROLEI[R0],13)} ${ROLEN[R0]}</span></h2><div class="atabs">${tabs.map(([k,ic,n])=>`<button data-t="${k}" class="${k===tab?'on':''}">${ICO(ic,16)}<span>${n}</span></button>`).join('')}</div><div id="adm"><p class="mut">Загрузка…</p></div>`);
  app.querySelectorAll('.atabs [data-t]').forEach(b=>b.onclick=()=>showAdmin(b.dataset.t));
  const box=document.getElementById('adm');
  if(tab==='chats'){admChats(box);return}
  if(tab==='notes'){admNotes(box);return}
  if(tab==='team'){admTeam(box);return}
+ if(tab==='promo'){admPromo(box);return}
  try{await admLoad(tab==='dash')}catch(e){box.innerHTML=`<p style="color:var(--bad)">${esc(fbErr(e))}</p><p class="small">Проверь, что в правилах Firestore указан твой UID как владелец.</p>`;return}
  ({dash:admDash,users:admUsers,reqs:admReqs,tar:admTar,acc:admAcc,cont:admCont,cal:admCal,set:admSet})[tab](box)}
 function admDash(box){const U=ADM.users,now=Date.now(),wk=now-7*864e5;const pro=U.filter(u=>u.plan&&(u.paidUntil||0)>now);
@@ -3533,17 +3566,18 @@ async function admUser(uid){const u=ADM.users.find(x=>x.id===uid);if(!u)return;c
  <div class="card"><h3 style="margin-top:0">${ICO('user',18)} Данные</h3><label class="small">Имя<input id="au_n" value="${esc(u.name||'')}"></label><label class="small">Профильные предметы<select id="au_p">${pairOpts(u.pair)}</select></label><label class="small">Заметка (видишь только ты)<textarea id="au_note" rows="2" style="width:100%">${esc(u.note||'')}</textarea></label><button class="btn sm" id="au_save" style="margin-top:8px">Сохранить</button></div>
  <div class="card"><h3 style="margin-top:0">${ICO('chart',18)} Прогресс</h3><div id="au_prog" class="small mut">Загрузка…</div></div>
  ${isOwner()&&!OWNERS.includes(u.id)?`<div class="card"><h3 style="margin-top:0">${ICO('shield',18)} Роль</h3><div class="row"><select id="au_role"><option value="" ${!u.role?'selected':''}>Ученик</option><option value="manager" ${u.role==='manager'?'selected':''}>Менеджер — отвечает в чатах, видит учеников и заявки</option><option value="admin" ${u.role==='admin'?'selected':''}>Администратор — всё, кроме ролей</option></select><button class="btn sm" id="au_rsave">Сохранить роль</button></div></div>`:''}
- <div class="card"><h3 style="margin-top:0">${ICO('alert',18)} Опасная зона</h3><div class="row"><button class="btn alt" id="au_blk">${u.blocked?'Разблокировать':'Заблокировать'}</button><button class="btn alt" id="au_use" title="Ученик снова сможет решать сегодня">Обнулить дневной лимит</button><button class="btn alt" id="au_rst" style="color:var(--bad)">Сбросить прогресс</button></div><p class="small mut">Удалить сам аккаунт (почту и пароль) можно в Firebase → Authentication → Users.</p></div>
+ <div class="card"><h3 style="margin-top:0">${ICO('alert',18)} Опасная зона</h3><div class="row"><button class="btn alt" id="au_blk">${u.blocked?'Разблокировать':'Заблокировать'}</button><button class="btn alt" id="au_use" title="Ученик снова сможет решать сегодня">Обнулить дневной лимит</button><button class="btn alt" id="au_cred" title="Подарить бесплатное полное пробное ЕНТ">+1 полное ЕНТ${u.entCredits?` (есть ${u.entCredits})`:''}</button><button class="btn alt" id="au_rst" style="color:var(--bad)">Сбросить прогресс</button></div><p class="small mut">Удалить сам аккаунт (почту и пароль) можно в Firebase → Authentication → Users.</p></div>
  <p class="small" id="au_m"></p>`);
  document.getElementById('pg_back').onclick=()=>showAdmin('users');
  const rs=document.getElementById('au_rsave');if(rs)rs.onclick=()=>{const r=document.getElementById('au_role').value;upd({role:r},r?'Роль: '+ROLEN[r]:'Роль снята')};
- [['#au_give,#au_take','subs'],['#au_save','edit'],['#au_blk','block'],['#au_rst,#au_use','progress']].forEach(([s,p])=>{if(!can(p))document.querySelectorAll(s).forEach(b=>{b.disabled=true;b.title='Нет права у твоей роли'})});
+ [['#au_cred','subs'],['#au_give,#au_take','subs'],['#au_save','edit'],['#au_blk','block'],['#au_rst,#au_use','progress']].forEach(([s,p])=>{if(!can(p))document.querySelectorAll(s).forEach(b=>{b.disabled=true;b.title='Нет права у твоей роли'})});
  const cw=document.getElementById('au_chat');if(cw)cw.onclick=()=>admChat(u.id,u.name);
  const upd=async(d,msg)=>{try{await FB.setUser(uid,d);Object.assign(u,d);say2('au_m','✓ '+msg,1);setTimeout(()=>admUser(uid),600)}catch(e){say2('au_m',fbErr(e))}};
  document.getElementById('au_give').onclick=()=>{const t=document.getElementById('au_t').value,d=+document.getElementById('au_d').value;const base=on&&u.plan===t?u.paidUntil:now;const T0=CFG.tariffs.find(x=>x.id===t)||{};upd({plan:t,paidUntil:d?base+d*864e5:FOREVER,feat:T0.features||['all'],learn:!T0.perks||T0.perks.learn!==false},'Подписка выдана')};
  const tk=document.getElementById('au_take');if(tk)tk.onclick=()=>{if(confirm('Забрать подписку?'))upd({plan:null,paidUntil:0,feat:[],learn:false},'Подписка снята')};
  document.getElementById('au_save').onclick=()=>upd({name:document.getElementById('au_n').value.trim().slice(0,30),pair:document.getElementById('au_p').value||'none',note:document.getElementById('au_note').value.slice(0,1000)},'Сохранено');
  document.getElementById('au_blk').onclick=()=>{if(confirm(u.blocked?'Разблокировать пользователя?':'Заблокировать? Он не сможет пользоваться приложением.'))upd({blocked:!u.blocked},u.blocked?'Разблокирован':'Заблокирован')};
+ document.getElementById('au_cred').onclick=async()=>{const n=(u.entCredits||0)+1;try{await FB.setUser(uid,{entCredits:n});u.entCredits=n;say2('au_m','✓ Подарено полное пробное ЕНТ (всего: '+n+')',1);document.getElementById('au_cred').textContent='+1 полное ЕНТ (есть '+n+')'}catch(e){say2('au_m',fbErr(e))}};
  document.getElementById('au_use').onclick=async()=>{try{await FB.setUser(uid,{use:{d:dayIdx(),tasks:0,tests:0,ent:0}});say2('au_m','✓ Дневной лимит обнулён — ученик может решать дальше',1)}catch(e){say2('au_m',fbErr(e))}};
  document.getElementById('au_rst').onclick=async()=>{if(!confirm('Сбросить весь прогресс этого пользователя?'))return;const m={},t=Date.now();SYNCKEYS().forEach(k=>m[k]={v:'',t});try{await FB.putProg(uid,m);await FB.setUser(uid,{stats:{n:0,ok:0,acc:0,ent:0,best:null}});say2('au_m','✓ Прогресс сброшен',1)}catch(e){say2('au_m',fbErr(e))}};
  try{const P=await FB.getProg(uid);document.getElementById('au_prog').innerHTML=progHTML(P);progBind()}catch(e){document.getElementById('au_prog').textContent=fbErr(e)}}
@@ -3626,6 +3660,18 @@ function admSet(box){box.innerHTML=`<div class="card"><h3 style="margin-top:0">$
 
 
 
+/* ---- промокоды ---- */
+async function admPromo(box){let L=[];try{L=await FB.promoList()}catch(e){box.innerHTML=`<div class="card"><p>${esc(fbErr(e))}</p><p class="small mut">Проверь, что вставлены новые правила Firestore.</p></div>`;return}
+ L.sort((a,b)=>(b.t||0)-(a.t||0));const now=Date.now();
+ box.innerHTML=`<div class="card"><h3 style="margin-top:0">${ICO('gem',18)} Новый промокод</h3><p class="small mut" style="margin-top:0">Даёт ученику бесплатные полные пробные ЕНТ (120 заданий, 4 часа). Каждый ученик может активировать один промокод только один раз.</p>
+ <div class="pgrid"><label class="small">Промокод<input id="pr_c" placeholder="например, START2027" maxlength="20" style="text-transform:uppercase"></label><label class="small">Полных ЕНТ<input id="pr_n" type="number" min="1" max="10" value="1"></label><label class="small">Сколько человек может активировать<input id="pr_m" type="number" min="1" max="100000" value="100"></label><label class="small">Действует до (необязательно)<input id="pr_u" type="date"></label></div>
+ <div class="row" style="margin-top:10px"><button class="btn" id="pr_add">Создать промокод</button><button class="btn alt sm" id="pr_gen">Придумать код</button></div><div class="small" id="pr_msg"></div></div>
+ <div class="card"><h3 style="margin-top:0">Промокоды (${L.length})</h3>${L.length?L.map(p=>{const exp=p.until&&now>p.until,full=(p.used||0)>=(p.max||0);return`<div class="prow"><div><b class="pcode">${esc(p.id)}</b> <span class="pbadge sm">${p.n||1} полн. ЕНТ</span>${exp?' <span class="small" style="color:var(--bad)">истёк</span>':full?' <span class="small" style="color:var(--bad)">закончился</span>':' <span class="small" style="color:var(--ok)">активен</span>'}<div class="small mut">использован ${p.used||0} из ${p.max||0}${p.until?' · до '+new Date(p.until).toLocaleDateString('ru-RU'):''}</div><div class="pgb"><i class="ok" style="width:${Math.min(100,(p.used||0)/(p.max||1)*100)}%"></i></div></div><div class="row" style="gap:6px"><button class="btn alt sm" data-pcp="${esc(p.id)}">Скопировать</button><button class="rqdel" data-pdel="${esc(p.id)}" title="Удалить">${ICO('trash',16)}</button></div></div>`}).join(''):'<p class="mut small">Промокодов пока нет.</p>'}</div>`;
+ document.getElementById('pr_gen').onclick=()=>{const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';document.getElementById('pr_c').value='ENT'+Array.from({length:5},()=>A[Math.floor(Math.random()*A.length)]).join('')};
+ document.getElementById('pr_add').onclick=async()=>{const c=normCode(document.getElementById('pr_c').value);if(c.length<3)return say2('pr_msg','Код — от 3 символов: латинские буквы, цифры, - и _');if(L.some(p=>p.id===c))return say2('pr_msg','Такой промокод уже есть');
+  const u=document.getElementById('pr_u').value;try{await FB.promoSet(c,{n:Math.max(1,Math.min(10,+document.getElementById('pr_n').value||1)),max:Math.max(1,+document.getElementById('pr_m').value||1),used:0,until:u?new Date(u+'T23:59:59').getTime():0,t:Date.now(),by:ACC.uid});TOAST('Промокод '+c+' создан','ok');admPromo(box)}catch(e){say2('pr_msg',fbErr(e))}};
+ box.querySelectorAll('[data-pcp]').forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.pcp)}catch(e){}TOAST('Промокод скопирован','ok')});
+ box.querySelectorAll('[data-pdel]').forEach(b=>b.onclick=async()=>{if(!confirm('Удалить промокод '+b.dataset.pdel+'? Уже выданные ЕНТ у учеников останутся.'))return;try{await FB.promoDel(b.dataset.pdel);TOAST('Промокод удалён','ok');admPromo(box)}catch(e){TOAST(fbErr(e),'bad')}})}
 /* ---- команда: назначение ролей (только владелец) ---- */
 function rpVal(r,p){const m=((CFG.rolePerms||{})[r])||{};return m[p]!=null?!!m[p]:!!RPDEF[r][p]}
 function rpEditor(){return`<div class="card"><h3 style="margin-top:0">${ICO('sliders',18)} Что может каждая роль</h3><p class="small mut" style="margin-top:0">Включай и выключай права. Изменения сохраняются сразу и действуют для всех менеджеров или админов. Роли и заметки — всегда только у тебя.</p>
@@ -3882,7 +3928,7 @@ async function onUser(u){
   if(cfg){CFG=Object.assign({},DEFCFG,cfg);LSS(CFK,CFG)}
   if(!p&&pend){p={...pend,name:pend.name||u.displayName||'',email:u.email,created:Date.now()};delete p.google;if(p.nick){try{await FB.nickClaim(p.nick,u.uid)}catch(e){p.nick=''}}else delete p.nick;if(window.REFCODE&&window.REFCODE!==u.uid){p.refBy=window.REFCODE}await FB.setUser(u.uid,p);if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
   if(!p){p={name:u.displayName||(isPhoneMail(u.email)?'':(u.email||'').split('@')[0]),email:u.email,pair:'',created:Date.now(),avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)]};if(window.REFCODE&&window.REFCODE!==u.uid)p.refBy=window.REFCODE;await FB.setUser(u.uid,p).catch(()=>{});if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
-  const first=!ACC||ACC.uid!==u.uid;if(p.remind&&!LSG(RMK))LSS(RMK,Object.assign(remGet(),p.remind));ACC={uid:u.uid,email:u.email,name:p.name,pair:p.pair,avatar:p.avatar||'',plan:p.plan||null,paidUntil:p.paidUntil||0,blocked:!!p.blocked,role:p.role||'',nick:p.nick||'',use:p.use||null,refBy:p.refBy||'',refUsed:p.refUsed||0,phone:p.phone||''};useMerge(p.use);LSS(ACK,ACC);
+  const first=!ACC||ACC.uid!==u.uid;if(p.remind&&!LSG(RMK))LSS(RMK,Object.assign(remGet(),p.remind));ACC={uid:u.uid,email:u.email,name:p.name,pair:p.pair,avatar:p.avatar||'',plan:p.plan||null,paidUntil:p.paidUntil||0,blocked:!!p.blocked,role:p.role||'',nick:p.nick||'',entCredits:p.entCredits||0,use:p.use||null,refBy:p.refBy||'',refUsed:p.refUsed||0,phone:p.phone||''};useMerge(p.use);LSS(ACK,ACC);
   authHide();if(ACC.blocked&&!isOwner()){blockedScreen();return}lsnPrefill();applyAccess();
   if(!SYNC.uid&&SYNCKEYS().some(k=>localStorage.getItem(k)!=null)){const keep=await askMigrate(!!pend);if(!keep){SYNCKEYS().forEach(k=>localStorage.removeItem(k));localStorage.removeItem('ent-mock-run')}SYNC={uid:u.uid,h:{},t:{}};saveSync();S=loadS()}
   const changed=await pullProg();if(changed&&!window.PAGEMODE){S=loadS();if(window.ENTMODE)eMode();else go(location.hash.slice(1)||'home')}
@@ -3960,6 +4006,12 @@ const auth=U.getAuth(app);auth.languageCode=window.LANG==='kk'?'kk':'ru';const d
 window.FBAPI={onAuth:cb=>U.onAuthStateChanged(auth,cb),signUp:(e,p)=>U.createUserWithEmailAndPassword(auth,e,p),signIn:(e,p)=>U.signInWithEmailAndPassword(auth,e,p),reset:e=>U.sendPasswordResetEmail(auth,e),out:()=>U.signOut(auth),
 google:()=>{const pr=new U.GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;return sa?U.signInWithRedirect(auth,pr):U.signInWithPopup(auth,pr).catch(e=>{if(e&&(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'))return U.signInWithRedirect(auth,pr);throw e})},
 redirectResult:()=>U.getRedirectResult(auth),
+promoGet:c=>D.getDoc(D.doc(db,'promos',c)).then(d=>d.exists()?{id:d.id,...d.data()}:null),
+promoList:()=>D.getDocs(D.collection(db,'promos')).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o}),
+promoSet:(c,d)=>D.setDoc(D.doc(db,'promos',c),d,{merge:true}),
+promoDel:c=>D.deleteDoc(D.doc(db,'promos',c)),
+promoUsed:(c,uid)=>D.getDoc(D.doc(db,'promos',c,'uses',uid)).then(d=>d.exists()),
+promoRedeem:(c,uid,used,credits)=>{const b=D.writeBatch(db);b.set(D.doc(db,'promos',c,'uses',uid),{t:Date.now()});b.set(D.doc(db,'promos',c),{used:used+1},{merge:true});b.set(D.doc(db,'users',uid),{entCredits:credits,lastPromo:c},{merge:true});return b.commit()},
 delReq:id=>D.deleteDoc(D.doc(db,'requests',id)),
 nickGet:n=>D.getDoc(D.doc(db,'usernames',n)).then(d=>d.exists()?d.data():null),
 nickClaim:(n,uid)=>D.setDoc(D.doc(db,'usernames',n),{uid,t:Date.now()}),
@@ -3988,7 +4040,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 80 от 27.11 00:24</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 81 от 27.11 00:30</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,pend=false;const busy=()=>!!(window.QACTIVE||window.ENTMODE);function updBar(){let u=document.getElementById("updbar");const t=busy()?"Вышло обновление сайта. Применится после теста — ответы не пропадут.":"Вышло обновление сайта";if(!u){u=document.createElement("div");u.id="updbar";u.innerHTML='<span class="ut"></span><button type="button">Обновить</button><button type="button" class="ux" aria-label="Позже">✕</button>';document.body.appendChild(u);u.querySelector("button").onclick=()=>{if(busy()&&!confirm("Тест ещё идёт. Обновить сейчас? Ответы текущего теста пропадут."))return;location.reload()};u.querySelector(".ux").onclick=()=>u.remove();requestAnimationFrame(()=>u.classList.add("on"))}u.querySelector(".ut").textContent=t}navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had){had=true;return}pend=true;if(!busy()&&document.visibilityState==="hidden"){location.reload();return}updBar()});document.addEventListener("visibilitychange",()=>{if(pend&&document.visibilityState==="hidden"&&!busy())location.reload()});setInterval(()=>{if(pend&&document.getElementById("updbar"))updBar()},4000);navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
