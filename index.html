@@ -456,6 +456,13 @@ svg.ring{transform-origin:50% 10%;animation:ring 1s ease-in-out}@keyframes ring{
 .okflash{background:#22A355!important;border-color:#1B8A46!important;box-shadow:0 2px 0 #1B8A46!important;color:#fff!important;animation:okpop .45s}
 .toast .ti svg{animation:ticon .5s .15s cubic-bezier(.3,1.6,.5,1) both}@keyframes ticon{from{transform:scale(0) rotate(-30deg)}}
 @media(prefers-reduced-motion:reduce){.bar i,svg.ring,.okflash,.toast .ti svg{animation:none}}
+
+.rptab{border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+.rph,.rpr{display:grid;grid-template-columns:1fr 96px 96px;align-items:center;gap:6px;padding:9px 12px}
+.rph{background:#F1F4FA;font-size:13px}.rph b{display:inline-flex;align-items:center;gap:4px;justify-content:center}
+.rpr{border-top:1px solid var(--line)}.rpr span b{display:block;font-size:14px}.rpr span small{color:var(--mut);font-size:12px}
+.rpc{justify-content:center;margin:0!important}
+@media(max-width:480px){.rph,.rpr{grid-template-columns:1fr 66px 66px;padding:8px}.rph b{font-size:11px}}
 </style>
 </head>
 <body>
@@ -3087,6 +3094,9 @@ const myRole=()=>!ACC?'':viewAs()?(viewAs().role||''):OWNERS.includes(ACC.uid)?'
 const isAdminR=()=>['owner','admin'].includes(myRole());
 const isStaff=()=>['owner','admin','manager'].includes(myRole());
 const ROLEN={owner:'Владелец',admin:'Администратор',manager:'Менеджер'};
+const RPERMS=[['chats','Чаты поддержки','отвечать ученикам в «Помощи»'],['stats','Обзор','статистика и выручка'],['users','Ученики','видеть список и карточки'],['edit','Править учеников','имя, предметы, заметка'],['reqs','Заявки','видеть заявки на оплату'],['approve','Одобрять оплату','одобрять и отклонять заявки'],['subs','Выдавать подписку','выдать или забрать тариф вручную'],['block','Блокировать','блокировать и разблокировать'],['progress','Сбрасывать прогресс','сбрасывать прогресс ученика'],['tar','Тарифы','цены и состав тарифов'],['acc','Доступ','платные и скрытые разделы'],['cont','Уроки','загружать тексты уроков'],['cal','Календарь','даты ЕНТ'],['set','Настройки','объявление, оплата, контакт, рефералы']];
+const RPDEF={admin:Object.fromEntries(RPERMS.map(p=>[p[0],true])),manager:{chats:true,users:true,reqs:true}};
+function can(p){const r=myRole();if(r==='owner')return true;if(r!=='admin'&&r!=='manager')return false;const m=((CFG.rolePerms||{})[r])||{};return m[p]!=null?!!m[p]:!!RPDEF[r][p]}
 const ROLEI={owner:'crown',admin:'shield',manager:'headset'};
 const roleOf=u=>OWNERS.includes(u.id||u.uid)?'owner':(u.role||'');
 const planOn=()=>viewAs()?!!viewAs().plan:!!ACC&&!!ACC.plan&&(ACC.paidUntil||0)>Date.now();
@@ -3318,10 +3328,10 @@ function buyTariff(id){if(viewAs()){alert('Это режим просмотра:
 /* ---- админ-панель ---- */
 let ADM={users:null,reqs:null};
 async function admLoad(force){if(force||!ADM.users){const [u,r]=await Promise.all([FB.listUsers(),FB.allReqs()]);ADM.users=u;ADM.reqs=r}}
-async function showAdmin(tab){if(!isStaff()||!FB)return;const R0=myRole();tab=tab||(R0==='manager'?'chats':'dash');
+async function showAdmin(tab){if(!isStaff()||!FB)return;const R0=myRole();tab=tab||'dash';
  let tabs=[['chats','chat','Чаты'],['dash','chart','Обзор'],['users','users','Ученики'],['reqs','receipt','Заявки'],['tar','gem','Тарифы'],['acc','lock','Доступ'],['cont','cloud','Уроки'],['cal','cal','Календарь'],['set','sliders','Настройки']];
  if(R0==='owner')tabs.splice(tabs.length-1,0,['team','crown','Команда']),tabs.push(['notes','pencil','Заметки']);
- if(R0==='manager')tabs=tabs.filter(t=>['chats','users','reqs'].includes(t[0]));if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
+ const TP={chats:'chats',dash:'stats',users:'users',reqs:'reqs',tar:'tar',acc:'acc',cont:'cont',cal:'cal',set:'set'};tabs=tabs.filter(t=>!TP[t[0]]||can(TP[t[0]]));if(!tabs.length){page('admin','<div class="card"><p>У твоей роли пока нет доступных разделов. Обратись к владельцу.</p></div>');return}if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
  page('admin',`<h2 style="margin:.6em 0 .3em">Админ-панель <span class="pbadge own sm">${ICO(ROLEI[R0],13)} ${ROLEN[R0]}</span></h2><div class="atabs">${tabs.map(([k,ic,n])=>`<button data-t="${k}" class="${k===tab?'on':''}">${ICO(ic,16)}<span>${n}</span></button>`).join('')}</div><div id="adm"><p class="mut">Загрузка…</p></div>`);
  app.querySelectorAll('.atabs [data-t]').forEach(b=>b.onclick=()=>showAdmin(b.dataset.t));
  const box=document.getElementById('adm');
@@ -3356,7 +3366,7 @@ async function admUser(uid){const u=ADM.users.find(x=>x.id===uid);if(!u)return;c
  <p class="small" id="au_m"></p>`);
  document.getElementById('pg_back').onclick=()=>showAdmin('users');
  const rs=document.getElementById('au_rsave');if(rs)rs.onclick=()=>{const r=document.getElementById('au_role').value;upd({role:r},r?'Роль: '+ROLEN[r]:'Роль снята')};
- if(!isAdminR()){document.querySelectorAll('#au_give,#au_take,#au_save,#au_blk,#au_rst').forEach(b=>{b.disabled=true;b.title='Доступно администратору'})}
+ [['#au_give,#au_take','subs'],['#au_save','edit'],['#au_blk','block'],['#au_rst','progress']].forEach(([s,p])=>{if(!can(p))document.querySelectorAll(s).forEach(b=>{b.disabled=true;b.title='Нет права у твоей роли'})});
  const cw=document.getElementById('au_chat');if(cw)cw.onclick=()=>admChat(u.id,u.name);
  const upd=async(d,msg)=>{try{await FB.setUser(uid,d);Object.assign(u,d);say2('au_m','✓ '+msg,1);setTimeout(()=>admUser(uid),600)}catch(e){say2('au_m',fbErr(e))}};
  document.getElementById('au_give').onclick=()=>{const t=document.getElementById('au_t').value,d=+document.getElementById('au_d').value;const base=on&&u.plan===t?u.paidUntil:now;const T0=CFG.tariffs.find(x=>x.id===t)||{};upd({plan:t,paidUntil:d?base+d*864e5:FOREVER,feat:T0.features||['all'],learn:!T0.perks||T0.perks.learn!==false},'Подписка выдана')};
@@ -3370,7 +3380,7 @@ async function admUser(uid){const u=ADM.users.find(x=>x.id===uid);if(!u)return;c
 function admReqs(box){const now=Date.now();const R=ADM.reqs.slice().sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1)||b.t-a.t);
  box.innerHTML=R.length?R.map(r=>`<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(r.name||'—')}</b><span class="small mut">${new Date(r.t).toLocaleString('ru-RU')}</span></div>
  <div class="small">${esc(r.email||'')}<br>Тариф: <b>${esc(r.tname||r.tariff)}</b> · ${(r.price||0).toLocaleString('ru-RU')} ₸${r.disc?` <span style="color:var(--ok)">(скидка ${r.disc}%)</span>`:''} · ${r.days>=36500?'навсегда':r.days+' дн.'}${r.comment?`<br>Комментарий: «${esc(r.comment)}»`:''}</div>
- ${r.status==='pending'&&isAdminR()?`<div class="row" style="margin-top:8px"><button class="btn sm" data-ok="${r.id}">✓ Одобрить и выдать</button><button class="btn alt sm" data-no="${r.id}">✗ Отклонить</button></div>`:r.status==='pending'?'<div class="small mut" style="margin-top:6px">Ждёт решения администратора</div>':`<div class="small" style="margin-top:6px;color:${r.status==='ok'?'var(--ok)':'var(--bad)'}">${r.status==='ok'?'Одобрена':'Отклонена'}${r.reply?' · '+esc(r.reply):''}</div>`}</div>`).join(''):'<p class="mut">Заявок пока нет.</p>';
+ ${r.status==='pending'&&can('approve')?`<div class="row" style="margin-top:8px"><button class="btn sm" data-ok="${r.id}">✓ Одобрить и выдать</button><button class="btn alt sm" data-no="${r.id}">✗ Отклонить</button></div>`:r.status==='pending'?'<div class="small mut" style="margin-top:6px">Ждёт решения администратора</div>':`<div class="small" style="margin-top:6px;color:${r.status==='ok'?'var(--ok)':'var(--bad)'}">${r.status==='ok'?'Одобрена':'Отклонена'}${r.reply?' · '+esc(r.reply):''}</div>`}</div>`).join(''):'<p class="mut">Заявок пока нет.</p>';
  box.querySelectorAll('[data-ok]').forEach(b=>b.onclick=async()=>{const r=ADM.reqs.find(x=>x.id===b.dataset.ok);const u=ADM.users.find(x=>x.id===r.uid)||{};const base=u.plan===r.tariff&&(u.paidUntil||0)>now?u.paidUntil:now;
   const T0=CFG.tariffs.find(x=>x.id===r.tariff)||{};try{await FB.setUser(r.uid,{plan:r.tariff,paidUntil:r.days>=36500?FOREVER:base+r.days*864e5,feat:T0.features||['all'],learn:!T0.perks||T0.perks.learn!==false,...(r.disc?{refUsed:r.refN||0,refFriendUsed:true}:{})});await FB.setReq(r.id,{status:'ok',done:Date.now()});await admLoad(true);admReqs(box)}catch(e){alert(fbErr(e))}});
  box.querySelectorAll('[data-no]').forEach(b=>b.onclick=async()=>{const why=prompt('Причина (увидит ученик):','Оплата не найдена');if(why==null)return;try{await FB.setReq(b.dataset.no,{status:'no',reply:why,done:Date.now()});await admLoad(true);admReqs(box)}catch(e){alert(fbErr(e))}})}
@@ -3426,6 +3436,13 @@ function admSet(box){box.innerHTML=`<div class="card"><h3 style="margin-top:0">$
 
 
 /* ---- команда: назначение ролей (только владелец) ---- */
+function rpVal(r,p){const m=((CFG.rolePerms||{})[r])||{};return m[p]!=null?!!m[p]:!!RPDEF[r][p]}
+function rpEditor(){return`<div class="card"><h3 style="margin-top:0">${ICO('sliders',18)} Что может каждая роль</h3><p class="small mut" style="margin-top:0">Включай и выключай права. Изменения сохраняются сразу и действуют для всех менеджеров или админов. Роли и заметки — всегда только у тебя.</p>
+ <div class="rptab"><div class="rph"><span></span><b>${ICO('headset',14)} Менеджер</b><b>${ICO('shield',14)} Админ</b></div>${RPERMS.map(([k,n,d])=>`<div class="rpr"><span><b>${n}</b><small>${d}</small></span>${['manager','admin'].map(r=>`<label class="chk rpc"><input type="checkbox" data-rp="${r}:${k}" ${rpVal(r,k)?'checked':''}><i></i></label>`).join('')}</div>`).join('')}</div>
+ <button class="linkb" id="rp_def" style="margin-top:8px">Вернуть как было по умолчанию</button></div>`}
+function rpBind(box){box.querySelectorAll('[data-rp]').forEach(c=>c.onchange=async()=>{const [r,k]=c.dataset.rp.split(':');const rp=JSON.parse(JSON.stringify(CFG.rolePerms||{}));rp[r]=rp[r]||{};rp[r][k]=c.checked;
+  await saveCfg({rolePerms:rp})});
+ const d=document.getElementById('rp_def');if(d)d.onclick=async()=>{if(!confirm('Вернуть права ролей по умолчанию?'))return;await saveCfg({rolePerms:{}});admTeam(box)}}
 async function admTeam(box,msg){if(!isOwner())return;try{await admLoad(true)}catch(e){box.innerHTML=`<p>${esc(fbErr(e))}</p>`;return}
  const U=ADM.users||[],staff=U.filter(u=>OWNERS.includes(u.id)||u.role==='admin'||u.role==='manager').sort((a,b)=>(OWNERS.includes(b.id)?2:b.role==='admin'?1:0)-(OWNERS.includes(a.id)?2:a.role==='admin'?1:0));
  const roleOf=u=>OWNERS.includes(u.id)?'owner':u.role;
@@ -3434,7 +3451,9 @@ async function admTeam(box,msg){if(!isOwner())return;try{await admLoad(true)}cat
  <input id="tm_q" placeholder="@логин, почта, +7… или имя" autocomplete="off" style="width:100%"><div id="tm_res" style="margin-top:8px"></div>
  <div class="small mut" style="margin-top:10px;line-height:1.5"><b>Менеджер</b> — отвечает в чатах «Помощь», видит учеников и заявки, но не одобряет оплату.<br><b>Администратор</b> — всё, кроме ролей: выдаёт тарифы, одобряет заявки, меняет доступ, календарь и настройки.</div></div>
  ${msg?`<div class="card" style="color:var(--ok)">${esc(msg)}</div>`:''}
+ ${rpEditor()}
  <div class="card"><h3 style="margin-top:0">${ICO('crown',18)} Сейчас в команде (${staff.length})</h3>${staff.map(u=>`<div class="row" style="justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);gap:8px;flex-wrap:wrap"><div style="min-width:0"><b>${esc(u.name||'Без имени')}</b> <span class="pbadge sm ${roleOf(u)==='owner'?'own':''}">${ICO(ROLEI[roleOf(u)],12)} ${ROLEN[roleOf(u)]}</span><div class="small mut ell">${u.nick?'@'+esc(u.nick)+' · ':''}${esc(showId(u.email))}</div></div>${roleOf(u)==='owner'?'':`<div class="row" style="gap:6px"><select data-tr="${u.id}" style="min-width:170px"><option value="manager" ${u.role==='manager'?'selected':''}>Менеджер</option><option value="admin" ${u.role==='admin'?'selected':''}>Администратор</option></select><button class="btn alt sm" data-trm="${u.id}" style="color:var(--bad)">Снять</button></div>`}</div>`).join('')}</div>`;
+ rpBind(box);
  const setRole=async(id,r)=>{const u=U.find(x=>x.id===id);try{await FB.setUser(id,{role:r});u.role=r;admTeam(box,(u.name||'Пользователь')+': '+(r?ROLEN[r]:'роль снята, теперь ученик'))}catch(e){alert(fbErr(e))}};
  box.querySelectorAll('[data-tr]').forEach(s=>s.onchange=()=>setRole(s.dataset.tr,s.value));
  box.querySelectorAll('[data-trm]').forEach(b=>b.onclick=()=>{if(confirm('Снять роль? Человек станет обычным учеником.'))setRole(b.dataset.trm,'')});
@@ -3765,7 +3784,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 68 от 26.11 23:31</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 69 от 26.11 23:33</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
