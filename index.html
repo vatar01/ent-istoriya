@@ -1443,7 +1443,7 @@ const D={
 '(профильный предмет).':'(бейіндік пән).','максимум 10 баллов':'ең көбі 10 ұпай','порог — 5 баллов':'шегі — 5 ұпай','порог — 3 балла':'шегі — 3 ұпай',
 'Защищено reCAPTCHA ·':'reCAPTCHA қорғайды ·','Конфиденциальность':'Құпиялылық','Условия':'Шарттар',
 'Логин (ник)':'Логин (лақап ат)','например, aruzhan_07':'мысалы, aruzhan_07','Придумай логин.':'Логин ойлап тап.','Проверяем…':'Тексеріп жатырмыз…','✓ Логин свободен':'✓ Логин бос','✗ Этот логин уже занят':'✗ Бұл логин бос емес',
-'Этот логин уже занят — придумай другой.':'Бұл логин бос емес — басқасын ойлап тап.','Этот логин занят.':'Бұл логин бос емес.','+ придумать логин':'+ логин ойлап табу',
+'Этот логин уже занят — придумай другой.':'Бұл логин бос емес — басқасын ойлап тап.','Этот логин занят.':'Бұл логин бос емес.','+ придумать логин':'+ логин ойлап табу','+ добавить логин (@ник)':'+ логин қосу (@лақап ат)',
 'Логин: 3–20 символов — латинские буквы, цифры, _ и точка.':'Логин: 3–20 таңба — латын әріптері, сандар, _ және нүкте.','Логин не может начинаться или заканчиваться на точку или _.':'Логин нүктемен немесе _ белгісімен басталмауы және аяқталмауы керек.',
 'Логин (ник): 3–20 символов — латинские буквы, цифры, _ и точка':'Логин (лақап ат): 3–20 таңба — латын әріптері, сандар, _ және нүкте',
 'Посмотреть сайт как…':'Сайтты басқа рөлмен көру…','Ты смотришь как:':'Сен былай көріп тұрсың:','Сменить':'Ауыстыру','Ученик без тарифа':'Тарифсіз оқушы','Вернуться к виду владельца':'Иесінің көрінісіне қайту',
@@ -3191,7 +3191,7 @@ function authShow(mode,msg){let w=document.getElementById('auth');if(!w){w=docum
  w.querySelectorAll('[data-by]').forEach(b=>b.onclick=e=>{e.preventDefault();AUTHBY=b.dataset.by;localStorage.setItem('ent-authby',AUTHBY);authShow(mode)});
  w.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=document.getElementById(b.dataset.eye);i.type=i.type==='password'?'text':'password'});
  const pe=document.getElementById('a_phone');if(pe){pe.oninput=()=>{pe.value=fmtPh(pe.value)};pe.onfocus=()=>{if(!pe.value)pe.value='+7'}}
- const ni=document.getElementById('a_nick');if(ni){let nt;ni.oninput=()=>{const v=ni.value.replace(/[^A-Za-z0-9_.]/g,'').toLowerCase();if(v!==ni.value)ni.value=v;const ns=document.getElementById('a_nst'),er=nickErr(v);clearTimeout(nt);if(!v){ns.textContent='';return}if(er){ns.textContent=er;ns.style.color='var(--mut)';return}ns.textContent='Проверяем…';ns.style.color='var(--mut)';nt=setTimeout(async()=>{if(!FB)return;const ok=await nickFreeCheck(v);if(ni.value!==v)return;ns.textContent=ok?'✓ Логин свободен':'✗ Этот логин уже занят';ns.style.color=ok?'var(--ok)':'var(--bad)'},450)}}
+ const ni=document.getElementById('a_nick'),nmI=document.getElementById('a_name');if(ni&&nmI){nmI.addEventListener('blur',()=>{if(!ni.value&&nmI.value.trim()){ni.value=nickSuggest(nmI.value);ni.oninput&&ni.oninput()}})}if(ni){let nt;ni.oninput=()=>{const v=ni.value.replace(/[^A-Za-z0-9_.]/g,'').toLowerCase();if(v!==ni.value)ni.value=v;const ns=document.getElementById('a_nst'),er=nickErr(v);clearTimeout(nt);if(!v){ns.textContent='';return}if(er){ns.textContent=er;ns.style.color='var(--mut)';return}ns.textContent='Проверяем…';ns.style.color='var(--mut)';nt=setTimeout(async()=>{if(!FB)return;const ok=await nickFreeCheck(v);if(ni.value!==v)return;ns.textContent=ok?'✓ Логин свободен':'✗ Этот логин уже занят';ns.style.color=ok?'var(--ok)':'var(--bad)'},450)}}
  const g=document.getElementById('a_guest');if(g)g.onclick=()=>authHide();
  const msgEl=document.getElementById('a_msg'),say=(t,ok)=>{msgEl.textContent=t;msgEl.style.color=ok?'var(--ok)':'var(--bad)'};
  const gb=document.getElementById('a_google');if(gb)gb.onclick=async()=>{if(!FB)return;try{if(up){window.PENDINGPROF={name:'',pair:'',avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)],google:1}}say('Открываем Google…',true);await FB.google()}catch(e){window.PENDINGPROF=null;say(e&&e.code==='auth/operation-not-allowed'?'Вход через Google ещё не включён владельцем.':e&&e.code==='auth/popup-closed-by-user'?'Окно Google закрыто.':fbErr(e))}};
@@ -3224,7 +3224,7 @@ const say2=(id,t,ok)=>{const m=document.getElementById(id);if(m){m.textContent=t
 function showProfile(){if(!ACC)return;const st=myStats(),t=myTariff();
  const badge=isStaff()?'<span class="pbadge own">'+ICO(ROLEI[myRole()],15)+' '+ROLEN[myRole()]+'</span>'+(t?` <span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)}</span>`:''):t?`<span class="pbadge pro">${ICO('gem',15)} ${esc(t.name)} · до ${myUntil()>=FOREVER?'∞':fmtD(myUntil())}</span>`:'<span class="pbadge">Бесплатный доступ</span>';
  page('profile',`<div class="phero"><div class="pava" id="pf_av">${AVH(ACC.avatar,96,ACC.name)}<span class="pedit">${ICO('pencil',14)}</span></div>
- <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pnick" id="pf_nick">${ACC.nick?'@'+esc(ACC.nick):'+ придумать логин'}</div><div class="pmail">${esc(showId(ACC.email))}</div>${badge}</div>
+ <div class="pname" id="pf_name">${esc(ACC.name||'')}</div><div class="pnick" id="pf_nick">${ACC.nick?'@'+esc(ACC.nick):'+ добавить логин (@ник)'}</div><div class="pmail">${esc(showId(ACC.email))}</div>${badge}</div>
  <div class="pstats"><div><b>${st.n}</b><span>решено заданий</span></div><div><b>${st.acc}%</b><span>точность</span></div><div><b>${st.ent}</b><span>пробных ЕНТ</span></div><div><b>${st.best!=null?st.best:'—'}</b><span>лучший ЕНТ${st.bestMax?' из '+st.bestMax:''}</span></div></div>
  <div class="card"><h3 style="margin-top:0">Профильные предметы</h3><select id="pf_pair">${pairOpts(ACC.pair)}</select>${profSubs().some(s=>!PHAVE[s])?PNOTE:''}<button class="btn sm" id="pf_psave" style="margin-top:10px">Сохранить</button> <span class="small" id="pf_pmsg"></span></div>
  <div class="pgrid"><button class="card ptile" id="pf_tar"><span class="dbi">${ICO('gem',24)}</span><b>Тарифы</b><small>${t?'Подписка активна':'Открой все разделы'}</small></button>
@@ -3564,7 +3564,9 @@ function helpBadge(){if(!FB||!ACC)return;if(CHMETA){CHMETA();CHMETA=null}
  if(isStaff()){FB.chatsListen((L,err)=>{const b=document.getElementById('acctbtn');if(b&&L)b.classList.toggle('dot',L.some(c=>c.unreadStaff))})}}
 
 
-async function nickEdit(){const v0=prompt('Логин (ник): 3–20 символов — латинские буквы, цифры, _ и точка',ACC.nick||'');if(v0==null)return;const n=normNick(v0);if(n===ACC.nick)return;const er=nickErr(n);if(er)return alert(er);
+const TRL={а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'h',ц:'ts',ч:'ch',ш:'sh',щ:'sch',ы:'y',э:'e',ю:'yu',я:'ya',ә:'a',ғ:'g',қ:'k',ң:'n',ө:'o',ұ:'u',ү:'u',һ:'h',і:'i'};
+const nickSuggest=n=>(n||'').toLowerCase().split('').map(c=>TRL[c]!=null?TRL[c]:/[a-z0-9]/.test(c)?c:c===' '?'_':'').join('').replace(/_+/g,'_').replace(/^_|_$/g,'').slice(0,20);
+async function nickEdit(){const v0=prompt('Логин (ник) — его видят другие, например в таблице лидеров. Имя «'+(ACC.name||'')+'» остаётся как есть.\n\n3–20 символов: латинские буквы, цифры, _ и точка.',ACC.nick||nickSuggest(ACC.name));if(v0==null)return;const n=normNick(v0);if(n===ACC.nick)return;const er=nickErr(n);if(er)return alert(er);
  if(!(await nickFreeCheck(n)))return alert('Этот логин уже занят — придумай другой.');
  try{await FB.nickClaim(n,ACC.uid)}catch(e){return alert('Этот логин уже занят — придумай другой.')}
  const old=ACC.nick;try{await FB.setUser(ACC.uid,{nick:n})}catch(e){FB.nickFree(n).catch(()=>{});return alert(fbErr(e))}
@@ -3725,7 +3727,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 65 от 26.11 23:10</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 66 от 26.11 23:12</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
