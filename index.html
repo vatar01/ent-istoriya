@@ -516,6 +516,8 @@ select.fshid{position:absolute!important;opacity:0!important;pointer-events:none
 .authmsg{display:flex;margin:10px 0 0!important}.authmsg:empty{display:none}.authmsg.say{display:flex;width:100%;border-radius:12px;padding:8px 12px 8px 8px;font-size:14px;line-height:1.35}
 .say .spin{width:12px;height:12px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}@keyframes spin{to{transform:rotate(360deg)}}
 .say .sayi{flex:none}
+.tlim{background:#FFFBEA!important;border-color:#F0D66B!important;margin-top:14px}.tlh{display:flex;gap:12px;align-items:flex-start}.tlh>svg{flex:none;color:#B98900;margin-top:2px}
+.lkb{display:inline-flex;align-items:center;gap:4px;vertical-align:middle;font:700 11px 'Golos Text',sans-serif;background:var(--hl);color:var(--ink);border-radius:999px;padding:3px 8px;margin-left:6px}.lockc{background:#F7F8FB!important}.lockc .btn{background:#C9D2E3!important;border-color:#B5C0D6!important;box-shadow:0 2px 0 #B5C0D6!important;color:#fff!important}.lockg .topic{opacity:.6}
 </style>
 </head>
 <body>
@@ -1540,6 +1542,8 @@ const D={
 'Решено заданий':'Шешілген тапсырма','Верно из решённых':'Шешілгеннің дұрысы','разных заданий решено':'түрлі тапсырма шешілді','решены верно':'дұрыс шешілді',
 '1. Первый предмет':'1. Бірінші пән','2. Второй предмет':'2. Екінші пән','скоро':'жақында','Твоя пара:':'Сенің жұбың:','(часть предметов появится позже)':'(кейбір пәндер кейін қосылады)','Пока без профильных предметов — выберешь позже в профиле':'Әзірге бейіндік пәнсіз — кейін профильде таңдайсың','Поиск…':'Іздеу…','Есть в приложении':'Қосымшада бар','Скоро':'Жақында','Выбери':'Таңда',
 'Вышло обновление сайта. Применится после теста — ответы не пропадут.':'Сайт жаңарды. Тесттен кейін қолданылады — жауаптар жоғалмайды.','Вышло обновление сайта':'Сайт жаңарды','Обновить':'Жаңарту',
+'Ответы сохранены. Завтра лимит обновится, или оформи тариф — тогда без ограничений.':'Жауаптар сақталды. Ертең лимит жаңарады немесе тариф рәсімде — сонда шектеусіз.','Завершить тест':'Тестті аяқтау','Лимит заданий на сегодня закончился':'Бүгінгі тапсырма лимиті бітті','Сегодня без тарифа осталось:':'Бүгін тарифсіз қалды:','Заданий в день':'Күніне тапсырма',
+'с тарифом':'тарифпен','Тесты по темам':'Тақырыптар бойынша тесттер','«Все задания», «Новые» и контекстные':'«Барлық тапсырма», «Жаңалары» және контекстік','«Все задания», «Новые» и контекстные задания доступны с тарифом. Без тарифа — пробное ЕНТ и тесты по темам.':'«Барлық тапсырма», «Жаңалары» және контекстік тапсырмалар тарифпен қолжетімді. Тарифсіз — сынақ ҰБТ және тақырыптық тесттер.',
 /* установка */
 'Установи приложение':'Қосымшаны орнат','Установить':'Орнату','Установить приложение':'Қосымшаны орнату','Открывается с главного экрана, как обычное приложение':'Басты экраннан кәдімгі қосымша сияқты ашылады',
 'Установка приложения':'Қосымшаны орнату','Нажми':'Бас','«Поделиться» внизу Safari, затем «На экран „Домой“».':'Safari төменгі жағындағы «Бөлісу», содан кейін «Басты экранға».'
@@ -1566,6 +1570,11 @@ const P=[
  [/^Решено (\d+) из (\d+) · верно (\d+)$/,m=>`${m[2]}-ден ${m[1]} шешілді · дұрыс ${m[3]}`],
  [/^(\d+) заданий · ещё не решал$/,m=>`${m[1]} тапсырма · әлі шешілмеген`],
  [/^По всем предметам\. Повторные ответы на то же задание не считаются заново(?: \(всего ответов: (\d+)\))?\.$/,m=>`Барлық пән бойынша. Бір тапсырмаға қайта жауап қайта саналмайды${m[1]?` (барлық жауап: ${m[1]})`:''}.`],
+ [/^Без тарифа можно решать (\d+) (задание|задания|заданий) в день — на сегодня всё\. Приходи завтра или оформи тариф\.$/,m=>`Тарифсіз күніне ${m[1]} тапсырма шешуге болады — бүгінге бітті. Ертең кел немесе тариф рәсімде.`],
+ [/^В пробнике (\d+) \S+, а без тарифа на сегодня осталось (\d+)\. Реши тесты по темам или оформи тариф\.$/,m=>`Сынақта ${m[1]} тапсырма, ал тарифсіз бүгінге ${m[2]} қалды. Тақырыптық тест шеш немесе тариф рәсімде.`],
+ [/^На сегодня всё — (\d+) \S+ без тарифа$/,m=>`Бүгінге болды — тарифсіз ${m[1]} тапсырма`],
+ [/^Без тарифа на сегодня осталось (\d+) \S+$/,m=>`Тарифсіз бүгінге ${m[1]} тапсырма қалды`],
+ [/^заданий$/,m=>'тапсырма'],
  [/^(\d+) минут$/,m=>`${m[1]} минут`],
  [/^Начать ЕНТ · (\d+) минут$/,m=>`ҰБТ бастау · ${m[1]} минут`],
  [/^(\d+) предметов · (\d+) заданий · (\d+) мин$/,m=>`${m[1]} пән · ${m[2]} тапсырма · ${m[3]} мин`],
@@ -2041,25 +2050,26 @@ function cards(){const R=cur.ref;
 }
 
 /* ---------- Тесты ---------- */
-function test(){const it=cur.items,ns=it.filter(x=>x.t==='s').length,nm=it.filter(x=>x.t==='m').length,nx=it.filter(x=>x.t==='x').length;
+function test(){const LX=window.PERKOK&&!PERKOK('extra'),LK=`<span class="lkb">${ICO('lock',13)} с тарифом</span>`;const it=cur.items,ns=it.filter(x=>x.t==='s').length,nm=it.filter(x=>x.t==='m').length,nx=it.filter(x=>x.t==='x').length;
  app.innerHTML=`<div class="fade"><h2>Тесты</h2>
  <div class="grid">
  <div class="card"><h3>${EXN()}</h3><p class="small mut">${cur.examName?'Смешанный тест':'Как на ЕНТ'}: ${examCount()} заданий, максимум ${examMax()} баллов, ${cur.exam.minutes} минут. Ответы — в конце.</p><button class="btn gold" id="ex">Начать</button></div>
- <div class="card"><h3>Все задания</h3><p class="small mut">${it.length} заданий в случайном порядке, пояснение после каждого.</p><button class="btn" id="all">Начать</button></div>
- <div class="card"><h3>Новые</h3><p class="small mut">Ещё не решённые: ${all().filter(q=>!S.q[k(q)]).length}.</p><button class="btn" id="nw">Начать</button></div>
+ <div class="card ${LX?'lockc':''}"><h3>Все задания ${LX?LK:''}</h3><p class="small mut">${it.length} заданий в случайном порядке, пояснение после каждого.</p><button class="btn" id="all">Начать</button></div>
+ <div class="card ${LX?'lockc':''}"><h3>Новые ${LX?LK:''}</h3><p class="small mut">Ещё не решённые: ${all().filter(q=>!S.q[k(q)]).length}.</p><button class="btn" id="nw">Начать</button></div>
  ${nm?`<div class="card"><h3>Несколько ответов</h3><p class="small mut">${nm} заданий — выбери все верные варианты из шести.</p><button class="btn" id="mm">Начать</button></div>`:''}
  ${nx?`<div class="card"><h3>На соответствие</h3><p class="small mut">${nx} заданий — сопоставь A и B с вариантами.</p><button class="btn" id="xx">Начать</button></div>`:''}
  </div>
- ${cur.ctx.length?`<h3 style="margin-top:24px">Контекстные задания (${cur.ctx.length})</h3>`:''}
- <div class="grid" id="ct">${cur.ctx.map(c=>{const ok=ctxItems(c).filter(q=>S.q[k(q)]&&S.q[k(q)].last).length;return`<button class="card topic" data-c="${c.id}"><div class="per">${esc(c.kind)}</div><b>${esc(c.title)}</b><div class="small mut" style="margin-top:6px">${ok}/5 верно</div></button>`}).join('')}</div>
- <h3 style="margin-top:24px">По темам</h3>
- <div class="grid" id="tt">${cur.T.map((t,i)=>{const st=topicStat(t.id);return`<button class="card topic" data-id="${t.id}"><div class="per">${i+1}. ${esc(t.per)}</div><b>${esc(t.name)}</b><div class="small mut" style="margin-top:6px">${st.ok}/${st.n} верно</div></button>`}).join('')}</div></div>`;
+ <h3 style="margin-top:24px">Тесты по темам</h3>
+ <div class="grid" id="tt">${cur.T.map((t,i)=>{const st=topicStat(t.id);return`<button class="card topic" data-id="${t.id}"><div class="per">${i+1}. ${esc(t.per)}</div><b>${esc(t.name)}</b><div class="small mut" style="margin-top:6px">${st.ok}/${st.n} верно</div></button>`}).join('')}</div>
+ ${cur.ctx.length?`<h3 style="margin-top:24px">Контекстные задания (${cur.ctx.length}) ${LX?LK:''}</h3>`:''}
+ <div class="grid ${LX?'lockg':''}" id="ct">${cur.ctx.map(c=>{const ok=ctxItems(c).filter(q=>S.q[k(q)]&&S.q[k(q)].last).length;return`<button class="card topic" data-c="${c.id}"><div class="per">${esc(c.kind)}</div><b>${esc(c.title)}</b><div class="small mut" style="margin-top:6px">${ok}/5 верно</div></button>`}).join('')}</div>
+</div>`;
  document.getElementById('ex').onclick=()=>startQuiz(makeExam(),EXN(),true);
- document.getElementById('all').onclick=()=>startQuiz(shuf(it),'Все задания');
- document.getElementById('nw').onclick=()=>{const n=all().filter(q=>!S.q[k(q)]);if(n.length)startQuiz(shuf(n),'Новые задания')};
+ document.getElementById('all').onclick=()=>(window.PERKGATE&&!PERKGATE('extra'))||startQuiz(shuf(it),'Все задания');
+ document.getElementById('nw').onclick=()=>{if(window.PERKGATE&&!PERKGATE('extra'))return;const n=all().filter(q=>!S.q[k(q)]);if(n.length)startQuiz(shuf(n),'Новые задания')};
  const mm=document.getElementById('mm');if(mm)mm.onclick=()=>startQuiz(shuf(it.filter(x=>x.t==='m')),'Несколько ответов');
  const xx=document.getElementById('xx');if(xx)xx.onclick=()=>startQuiz(shuf(it.filter(x=>x.t==='x')),'На соответствие');
- document.getElementById('ct').onclick=e=>{const b=e.target.closest('[data-c]');if(b){const c=ctxById(b.dataset.c);startQuiz(ctxItems(c),c.title)}};
+ document.getElementById('ct').onclick=e=>{const b=e.target.closest('[data-c]');if(b){if(window.PERKGATE&&!PERKGATE('extra'))return;const c=ctxById(b.dataset.c);startQuiz(ctxItems(c),c.title)}};
  document.getElementById('tt').onclick=e=>{const b=e.target.closest('[data-id]');if(b)topicQuiz(b.dataset.id)};
 }
 
@@ -2107,7 +2117,7 @@ function SIMILAR(it,seen,later){const r0=new Set(it.r||[]);const S1=new Set(seen
  const L=new Set(later||[]);
  const sc=x=>{let s=Math.random();if(x.t===it.t)s+=2;(x.r||[]).forEach(id=>{if(r0.has(id))s+=3});const st=S.q&&S.q[k(x)];if(!st||!st.last)s+=1;if(x.lvl&&x.lvl===it.lvl)s+=0.5;if(L.has(x))s+=0.3;return s};
  return pool.map(x=>[sc(x),x]).sort((a,b)=>b[0]-a[0])[0][1]}
-function startQuiz(qs,title,exam){if(window.QUIZGATE&&!QUIZGATE(exam))return;const TOPIC=!!window.QTOPIC&&!exam;window.QTOPIC=0;window.QACTIVE=true;window.QEXAM=!!exam;const HL=[];
+function startQuiz(qs,title,exam){if(window.QUIZGATE&&!QUIZGATE(exam,qs.length))return;const TOPIC=!!window.QTOPIC&&!exam;window.QTOPIC=0;window.QACTIVE=true;window.QEXAM=!!exam;const HL=[];
  let i=0,score=0,maxSoFar=0;const P=qs.map(prep);const ans=[],checked=[];let left=(exam?cur.exam.minutes:0)*60;
  const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
  if(exam){timerId=setInterval(()=>{left--;const el=document.getElementById('tm');if(el)el.textContent=fmt(left);if(left<=0){clearInterval(timerId);finish()}},1000)}
@@ -2133,11 +2143,11 @@ function startQuiz(qs,title,exam){if(window.QUIZGATE&&!QUIZGATE(exam))return;con
   ${exam?`<div class="navq">${P.map((pp,j)=>`<button data-g="${j}" class="${answered(pp,ans[j])?'a':''} ${j===i?'c':''}" aria-label="Задание ${j+1}">${j+1}</button>`).join('')}</div>`:''}</div>`;
   const opts=document.getElementById('opts');
   opts.onclick=e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;
-   if(it.t==='s'){ans[i]=+b.dataset.j;if(!exam){checked[i]=1;const g=grade(p,ans[i]);score+=g;maxSoFar+=1;record(it,g===1);save()}draw();return}
+   if(it.t==='s'){if(!exam&&window.TASKSTEP&&!TASKSTEP())return;ans[i]=+b.dataset.j;if(!exam){checked[i]=1;const g=grade(p,ans[i]);score+=g;maxSoFar+=1;record(it,g===1);save()}draw();return}
    if(it.t==='m'){const s=new Set(ans[i]||[]);const j=+b.dataset.j;s.has(j)?s.delete(j):s.add(j);ans[i]=[...s];draw();return}
    const arr=(ans[i]||it.left.map(()=>null)).slice();const li=+b.dataset.l,ri=+b.dataset.r;arr[li]=arr[li]===ri?null:ri;ans[i]=arr;draw()};
   const hb=document.getElementById('hint');if(hb)hb.onclick=()=>{if(window.PERKGATE&&!PERKGATE('hints'))return;HL[i]=(HL[i]||0)+1;draw()};
-  const chk=document.getElementById('chk');if(chk)chk.onclick=()=>{checked[i]=1;const g=grade(p,ans[i]);score+=g;maxSoFar+=pts(it);record(it,g===pts(it));save();draw()};
+  const chk=document.getElementById('chk');if(chk)chk.onclick=()=>{if(window.TASKSTEP&&!TASKSTEP())return;checked[i]=1;const g=grade(p,ans[i]);score+=g;maxSoFar+=pts(it);record(it,g===pts(it));save();draw()};
   const nx=document.getElementById('nx');if(nx)nx.onclick=()=>{if(i<P.length-1){i++;draw()}else finish()};
   const pv=document.getElementById('pv');if(pv)pv.onclick=()=>{i--;draw()};
   const sm=document.getElementById('sim');if(sm)sm.onclick=()=>{if(window.PERKGATE&&!PERKGATE('similar'))return;const seen=P.slice(0,i+1).map(x=>x.it).filter((x,j)=>true),later=P.slice(i+1).filter((x,j)=>!checked[i+1+j]).map(x=>x.it);const gm=it.g&&typeof GENMAKE==='function'?GENMAKE(it):null;if(gm){const np=prep(gm);np.sim=1;P.splice(i+1,0,np);ans.splice(i+1,0,undefined);checked.splice(i+1,0,undefined);HL.splice(i+1,0,0);i++;draw();window.scrollTo({top:0,behavior:'smooth'});return}const c=SIMILAR(it,seen,later);if(!c){document.getElementById('simmsg').textContent='Похожих заданий в этой теме нет — открой урок по теме.';return}
@@ -3171,10 +3181,10 @@ const PHAVE={math:1,inf:1,phys:1}; // какие профильные предм
 const SECS=[['hist','История Казахстана'],['ml','Мат. грамотность'],['rl','Грамотность чтения'],['math','Математика'],['inf','Информатика'],['phys','Физика'],['rus','История России'],['eng','Английский · IELTS'],['ent','Пробное ЕНТ']];
 const SECN=Object.fromEntries(SECS);
 const CORE=['hist','ml','rl'],EXTRA=['rus','eng'];
-const PERKS=[['learn','Учить: уроки и параграфы'],['ref','Справочник и карточки'],['mist','Работа над ошибками'],['hints','Подсказки в тестах'],['similar','«Решить похожее» — новые задания'],['tests','Тестов в день'],['ent','Пробных ЕНТ в день']];
+const PERKS=[['learn','Учить: уроки и параграфы'],['ref','Справочник и карточки'],['mist','Работа над ошибками'],['hints','Подсказки в тестах'],['similar','«Решить похожее» — новые задания'],['extra','«Все задания», «Новые» и контекстные'],['tasks','Заданий в день'],['tests','Тестов в день'],['ent','Пробных ЕНТ в день']];
 const BASESEC=['hist','ml','rl','math','inf','phys','ent'];
 const DEFCFG={access:{rus:'paid',eng:'paid'},topics:{},
- free:{learn:false,ref:false,mist:false,hints:false,similar:false,tests:2,ent:1},
+ free:{learn:false,ref:false,mist:false,hints:false,similar:false,extra:false,tasks:20,tests:-1,ent:1},
  tariffs:[
   {id:'standart',name:'Standart',price:1990,days:30,desc:'Уроки, справочник и тесты без ограничений по обязательным и твоим профильным предметам.',features:BASESEC,perks:{learn:true,ref:true,mist:true,hints:true,similar:false,tests:-1,ent:1}},
   {id:'plus',name:'Standart Plus',price:2990,days:30,desc:'Всё из Standart + «Решить похожее» и пробные ЕНТ без ограничений.',features:BASESEC,perks:{learn:true,ref:true,mist:true,hints:true,similar:true,tests:-1,ent:-1}},
@@ -3214,14 +3224,30 @@ const planOn=()=>viewAs()?!!viewAs().plan:!!ACC&&!!ACC.plan&&(ACC.paidUntil||0)>
 const myUntil=()=>viewAs()?Date.now()+30*864e5:(ACC&&ACC.paidUntil)||0;
 const myTariff=()=>planOn()?CFG.tariffs.find(t=>t.id===(viewAs()?viewAs().plan:ACC.plan)):null;
 function hasFeat(sec){if(isAdminR())return true;const t=myTariff();return!!t&&(t.features.includes('all')||t.features.includes(sec))}
-function perk(p){if(isAdminR()||!NEEDAUTH&&!ACC)return p==='tests'||p==='ent'?-1:true;const t=myTariff();const src=t&&t.perks?t.perks:(CFG.free||DEFCFG.free);const v=src[p];return v==null?(p==='tests'||p==='ent'?-1:true):v}
+const LIMP=['tasks','tests','ent'];
+function freeVal(k){const f=Object.assign({},DEFCFG.free,CFG.free||{});if(k==='tests'&&(CFG.free||{}).tasks==null)return -1;return f[k]}
+function perk(p){if(isAdminR()||!NEEDAUTH&&!ACC)return LIMP.includes(p)?-1:true;const t=myTariff();const src=t&&t.perks?t.perks:Object.assign({},DEFCFG.free,CFG.free||{});
+ if(!t&&p==='tests'&&(CFG.free||{}).tasks==null)return -1; /* старый лимит «2 теста» заменён лимитом заданий */
+ const v=src[p];return v==null?(LIMP.includes(p)?(t?-1:(DEFCFG.free[p]??-1)):true):v}
 const today=()=>new Date().toISOString().slice(0,10);
-function useGet(){const u=LSG('ent-use');return u&&u.d===today()?u:{d:today(),tests:0,ent:0}}
-function useAdd(k){const u=useGet();u[k]=(u[k]||0)+1;LSS('ent-use',u)}
+const dayIdx=()=>Math.floor((Date.now()+5*36e5)/864e5); /* сутки по времени Казахстана (UTC+5) */
+const useKey=()=>ACC?'ent-use:'+ACC.uid:'ent-use';
+function useGet(){const u=LSG(useKey()),d=dayIdx();return u&&u.d===d?u:{d,tasks:0,tests:0,ent:0}}
+let useT=0;function usePush(){if(!FB||!ACC)return;clearTimeout(useT);useT=setTimeout(()=>{const u=useGet();FB.setUser(ACC.uid,{use:{d:u.d,tasks:u.tasks||0,tests:u.tests||0,ent:u.ent||0}}).catch(()=>{})},1200)}
+function useAdd(k,n){const u=useGet();u[k]=(u[k]||0)+(n||1);LSS(useKey(),u);usePush()}
+function useMerge(s){if(!s||s.d!==dayIdx())return;const u=useGet();['tasks','tests','ent'].forEach(k=>u[k]=Math.max(u[k]||0,s[k]||0));LSS(useKey(),u)}
 const TABPERK={learn:'learn',ref:'ref',cards:'ref',mist:'mist'};
 window.TABGATE=v=>{const p=TABPERK[v];if(!p||perk(p))return true;showTariffs(v==='learn'?'Вкладка «Учить» (уроки и параграфы) доступна с тарифом.':v==='mist'?'Работа над ошибками доступна с тарифом.':'Справочник и карточки доступны с тарифом.');return false};
-window.PERKGATE=p=>{if(perk(p))return true;showTariffs(p==='hints'?'Подсказки доступны с тарифом.':'«Решить похожее» доступно с тарифом Standart Plus и выше.');return false};
-window.QUIZGATE=()=>{const L=perk('tests');if(L<0)return true;const u=useGet();if(u.tests>=L){showTariffs(`Без тарифа можно решать ${L} ${GW(L,'тест','теста','тестов')} в день — лимит на сегодня закончился. Приходи завтра или оформи тариф.`);return false}useAdd('tests');return true};
+window.PERKGATE=p=>{if(perk(p))return true;showTariffs(p==='hints'?'Подсказки доступны с тарифом.':p==='extra'?'«Все задания», «Новые» и контекстные задания доступны с тарифом. Без тарифа — пробное ЕНТ и тесты по темам.':'«Решить похожее» доступно с тарифом Standart Plus и выше.');return false};
+window.PERKOK=p=>!!perk(p);
+window.QUIZGATE=(exam,cnt)=>{const L=perk('tests'),LT=perk('tasks'),u=useGet();
+ if(LT>=0){const rest=LT-(u.tasks||0);if(rest<=0){showTariffs(`Без тарифа можно решать ${LT} ${GW(LT,'задание','задания','заданий')} в день — на сегодня всё. Приходи завтра или оформи тариф.`);return false}
+  if(exam&&cnt>rest){showTariffs(`В пробнике ${cnt} ${GW(cnt,'задание','задания','заданий')}, а без тарифа на сегодня осталось ${rest}. Реши тесты по темам или оформи тариф.`);return false}}
+ if(L>=0){if((u.tests||0)>=L){showTariffs(`Без тарифа можно решать ${L} ${GW(L,'тест','теста','тестов')} в день — лимит на сегодня закончился. Приходи завтра или оформи тариф.`);return false}useAdd('tests')}
+ if(LT>=0&&exam&&cnt)useAdd('tasks',cnt);return true};
+window.TASKSTEP=()=>{const LT=perk('tasks');if(LT<0)return true;const u=useGet();if((u.tasks||0)>=LT){const box=document.getElementById('cf');if(box)box.innerHTML=`<div class="card tlim"><div class="tlh">${ICO('lock',22)}<div><b>На сегодня всё — ${LT} ${GW(LT,'задание','задания','заданий')} без тарифа</b><p class="small mut" style="margin:2px 0 0">Ответы сохранены. Завтра лимит обновится, или оформи тариф — тогда без ограничений.</p></div></div><div class="row" style="margin-top:10px;gap:8px"><button class="btn" id="tl_tar">${ICO('gem',16)} Тарифы</button><button class="btn alt" id="tl_end">Завершить тест</button></div></div>`;
+  const tt=document.getElementById('tl_tar');if(tt)tt.onclick=()=>{window.QACTIVE=false;showTariffs()};const te=document.getElementById('tl_end');if(te)te.onclick=()=>{const q=document.getElementById('qq');q&&q.click()};box&&box.scrollIntoView({behavior:'smooth',block:'center'});TOAST('Лимит заданий на сегодня закончился','info',4000);return false}
+ useAdd('tasks');const left=LT-(u.tasks||0)-1;if(left===5||left===1)TOAST(`Без тарифа на сегодня осталось ${left} ${GW(left,'задание','задания','заданий')}`,'info',3500);return true};
 window.ENTGATE=()=>{const L=perk('ent');if(L<0)return true;const u=useGet();if(u.ent>=L){showTariffs(`Пробное ЕНТ без ограничений — с тарифом Standart Plus. Сейчас доступно ${L} в день, на сегодня попытки закончились.`);return false}useAdd('ent');return true};
 const secMode=s=>(CFG.access||{})[s]||'free';
 function canSec(s){if(isAdminR()||!NEEDAUTH&&!ACC)return true;const m=secMode(s);return m==='free'||(m==='paid'&&hasFeat(s))}
@@ -3426,7 +3452,7 @@ async function showTariffs(why){if(!ACC){if(NEEDAUTH)authShow('in');return}if(RE
  <div class="tgrid">${CFG.tariffs.map((x,i)=>`<div class="card tcard ${i===1?'hot':''}">${i===1?'<span class="thot">Популярный</span>':''}<div class="tname">${esc(x.name)}</div>${refDiscount()?`<div class="small" style="color:var(--ok);font-weight:700">${ICO('spark',13)} −${refDiscount()}% по приглашению</div><div class="tprice"><s class="small mut" style="-webkit-text-fill-color:var(--mut)">${(+x.price||0).toLocaleString('ru-RU')}</s> ${Math.round((+x.price||0)*(100-refDiscount())/100).toLocaleString('ru-RU')} ₸<small>`:`<div class="tprice">${(+x.price||0).toLocaleString('ru-RU')} ₸<small>`} / ${x.days>=36500?'навсегда':x.days+' дн.'}</small></div><p class="small">${esc(x.desc||'')}</p>
  <button class="btn" data-buy="${x.id}" style="width:100%">${t&&t.id===x.id?'Продлить':'Оформить'}</button></div>`).join('')||'<p class="mut">Тарифы пока не настроены.</p>'}</div>
  <div class="card scroll" style="padding:6px"><table class="tcmp"><thead><tr><th></th><th>Без тарифа</th>${CFG.tariffs.map(x=>`<th>${esc(x.name)}</th>`).join('')}</tr></thead><tbody>
- ${PERKS.map(([k,n])=>{const cell=v=>k==='tests'||k==='ent'?(v<0||v==null?'∞':v):(v===false?'<span class="no">✗</span>':'<span class="yes">✓</span>');return`<tr><td>${n}</td><td>${cell((CFG.free||{})[k])}</td>${CFG.tariffs.map(x=>`<td>${cell((x.perks||{})[k])}</td>`).join('')}</tr>`}).join('')}
+ ${PERKS.map(([k,n])=>{const cell=v=>LIMP.includes(k)?(v<0||v==null?'∞':v):(v===false?'<span class="no">✗</span>':'<span class="yes">✓</span>');return`<tr><td>${n}</td><td>${cell(freeVal(k))}</td>${CFG.tariffs.map(x=>`<td>${cell((x.perks||{})[k])}</td>`).join('')}</tr>`}).join('')}
  <tr><td>Разделы</td><td class="small">Обязательные и профильные</td>${CFG.tariffs.map(x=>`<td class="small">${x.features.includes('all')?'Все, включая доп. разделы':x.features.filter(f=>!BASESEC.includes(f)).length?'Основные + '+x.features.filter(f=>!BASESEC.includes(f)).map(f=>SECN[f]).join(', '):'Обязательные и профильные'}</td>`).join('')}</tr></tbody></table></div>
  <div id="reqs"></div>`);
  app.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buyTariff(b.dataset.buy));
@@ -3477,17 +3503,18 @@ async function admUser(uid){const u=ADM.users.find(x=>x.id===uid);if(!u)return;c
  <div class="card"><h3 style="margin-top:0">${ICO('user',18)} Данные</h3><label class="small">Имя<input id="au_n" value="${esc(u.name||'')}"></label><label class="small">Профильные предметы<select id="au_p">${pairOpts(u.pair)}</select></label><label class="small">Заметка (видишь только ты)<textarea id="au_note" rows="2" style="width:100%">${esc(u.note||'')}</textarea></label><button class="btn sm" id="au_save" style="margin-top:8px">Сохранить</button></div>
  <div class="card"><h3 style="margin-top:0">${ICO('chart',18)} Прогресс</h3><div id="au_prog" class="small mut">Загрузка…</div></div>
  ${isOwner()&&!OWNERS.includes(u.id)?`<div class="card"><h3 style="margin-top:0">${ICO('shield',18)} Роль</h3><div class="row"><select id="au_role"><option value="" ${!u.role?'selected':''}>Ученик</option><option value="manager" ${u.role==='manager'?'selected':''}>Менеджер — отвечает в чатах, видит учеников и заявки</option><option value="admin" ${u.role==='admin'?'selected':''}>Администратор — всё, кроме ролей</option></select><button class="btn sm" id="au_rsave">Сохранить роль</button></div></div>`:''}
- <div class="card"><h3 style="margin-top:0">${ICO('alert',18)} Опасная зона</h3><div class="row"><button class="btn alt" id="au_blk">${u.blocked?'Разблокировать':'Заблокировать'}</button><button class="btn alt" id="au_rst" style="color:var(--bad)">Сбросить прогресс</button></div><p class="small mut">Удалить сам аккаунт (почту и пароль) можно в Firebase → Authentication → Users.</p></div>
+ <div class="card"><h3 style="margin-top:0">${ICO('alert',18)} Опасная зона</h3><div class="row"><button class="btn alt" id="au_blk">${u.blocked?'Разблокировать':'Заблокировать'}</button><button class="btn alt" id="au_use" title="Ученик снова сможет решать сегодня">Обнулить дневной лимит</button><button class="btn alt" id="au_rst" style="color:var(--bad)">Сбросить прогресс</button></div><p class="small mut">Удалить сам аккаунт (почту и пароль) можно в Firebase → Authentication → Users.</p></div>
  <p class="small" id="au_m"></p>`);
  document.getElementById('pg_back').onclick=()=>showAdmin('users');
  const rs=document.getElementById('au_rsave');if(rs)rs.onclick=()=>{const r=document.getElementById('au_role').value;upd({role:r},r?'Роль: '+ROLEN[r]:'Роль снята')};
- [['#au_give,#au_take','subs'],['#au_save','edit'],['#au_blk','block'],['#au_rst','progress']].forEach(([s,p])=>{if(!can(p))document.querySelectorAll(s).forEach(b=>{b.disabled=true;b.title='Нет права у твоей роли'})});
+ [['#au_give,#au_take','subs'],['#au_save','edit'],['#au_blk','block'],['#au_rst,#au_use','progress']].forEach(([s,p])=>{if(!can(p))document.querySelectorAll(s).forEach(b=>{b.disabled=true;b.title='Нет права у твоей роли'})});
  const cw=document.getElementById('au_chat');if(cw)cw.onclick=()=>admChat(u.id,u.name);
  const upd=async(d,msg)=>{try{await FB.setUser(uid,d);Object.assign(u,d);say2('au_m','✓ '+msg,1);setTimeout(()=>admUser(uid),600)}catch(e){say2('au_m',fbErr(e))}};
  document.getElementById('au_give').onclick=()=>{const t=document.getElementById('au_t').value,d=+document.getElementById('au_d').value;const base=on&&u.plan===t?u.paidUntil:now;const T0=CFG.tariffs.find(x=>x.id===t)||{};upd({plan:t,paidUntil:d?base+d*864e5:FOREVER,feat:T0.features||['all'],learn:!T0.perks||T0.perks.learn!==false},'Подписка выдана')};
  const tk=document.getElementById('au_take');if(tk)tk.onclick=()=>{if(confirm('Забрать подписку?'))upd({plan:null,paidUntil:0,feat:[],learn:false},'Подписка снята')};
  document.getElementById('au_save').onclick=()=>upd({name:document.getElementById('au_n').value.trim().slice(0,30),pair:document.getElementById('au_p').value||'none',note:document.getElementById('au_note').value.slice(0,1000)},'Сохранено');
  document.getElementById('au_blk').onclick=()=>{if(confirm(u.blocked?'Разблокировать пользователя?':'Заблокировать? Он не сможет пользоваться приложением.'))upd({blocked:!u.blocked},u.blocked?'Разблокирован':'Заблокирован')};
+ document.getElementById('au_use').onclick=async()=>{try{await FB.setUser(uid,{use:{d:dayIdx(),tasks:0,tests:0,ent:0}});say2('au_m','✓ Дневной лимит обнулён — ученик может решать дальше',1)}catch(e){say2('au_m',fbErr(e))}};
  document.getElementById('au_rst').onclick=async()=>{if(!confirm('Сбросить весь прогресс этого пользователя?'))return;const m={},t=Date.now();SYNCKEYS().forEach(k=>m[k]={v:'',t});try{await FB.putProg(uid,m);await FB.setUser(uid,{stats:{n:0,ok:0,acc:0,ent:0,best:null}});say2('au_m','✓ Прогресс сброшен',1)}catch(e){say2('au_m',fbErr(e))}};
  try{const P=await FB.getProg(uid);document.getElementById('au_prog').innerHTML=progHTML(P);progBind()}catch(e){document.getElementById('au_prog').textContent=fbErr(e)}}
 function progData(P){return Object.keys(SUBJ).map(sid=>{const s=SUBJ[sid],A=SUBJ_ALL[sid]||s,r=P[s.key];let st=null;try{st=r&&r.v?JSON.parse(r.v):null}catch(e){}if(!st||!st.q)return null;
@@ -3518,10 +3545,10 @@ function admReqs(box){const now=Date.now();const ALL=ADM.reqs.slice().sort((a,b)
   const T0=CFG.tariffs.find(x=>x.id===r.tariff)||{};try{await FB.setUser(r.uid,{plan:r.tariff,paidUntil:r.days>=36500?FOREVER:base+r.days*864e5,feat:T0.features||['all'],learn:!T0.perks||T0.perks.learn!==false,...(r.disc?{refUsed:r.refN||0,refFriendUsed:true}:{})});await FB.setReq(r.id,{status:'ok',done:Date.now()});await admLoad(true);admReqs(box)}catch(e){alert(fbErr(e))}});
  box.querySelectorAll('[data-no]').forEach(b=>b.onclick=async()=>{const why=prompt('Причина (увидит ученик):','Оплата не найдена');if(why==null)return;try{await FB.setReq(b.dataset.no,{status:'no',reply:why,done:Date.now()});await admLoad(true);admReqs(box)}catch(e){alert(fbErr(e))}})}
 async function saveCfg(d,msgId){Object.assign(CFG,d);LSS(CFK,CFG);applyAccess();try{await FB.setCfg(d);say2(msgId,'✓ Сохранено',1)}catch(e){say2(msgId,fbErr(e))}}
-function admTar(box){const T=JSON.parse(JSON.stringify(CFG.tariffs)),FR=Object.assign({},DEFCFG.free,CFG.free||{});
- const pk=(obj,pre,i)=>PERKS.map(([k,n])=>k==='tests'||k==='ent'?`<label class="small" style="display:inline-block;margin-right:10px">${n}<input data-${pre}n="${k}" data-i="${i}" type="number" value="${obj[k]==null?-1:obj[k]}" style="width:80px"></label>`:`<label class="chk"><input type="checkbox" data-${pre}b="${k}" data-i="${i}" ${obj[k]!==false?'checked':''}> ${n}</label>`).join('');
+function admTar(box){const T=JSON.parse(JSON.stringify(CFG.tariffs)),FR=Object.assign({},DEFCFG.free,CFG.free||{});if((CFG.free||{}).tasks==null)FR.tests=-1;
+ const pk=(obj,pre,i)=>PERKS.map(([k,n])=>LIMP.includes(k)?`<label class="small" style="display:inline-block;margin-right:10px">${n}<input data-${pre}n="${k}" data-i="${i}" type="number" value="${obj[k]==null?-1:obj[k]}" style="width:80px"></label>`:`<label class="chk"><input type="checkbox" data-${pre}b="${k}" data-i="${i}" ${obj[k]!==false?'checked':''}> ${n}</label>`).join('');
  const draw=()=>{box.innerHTML=`<div class="card" style="border-style:dashed"><h3 style="margin-top:0">Без тарифа</h3><p class="small mut">Что доступно ученикам без подписки. −1 = без ограничений.</p>${pk(FR,'f',0)}</div>
- ${T.map((t,i)=>{t.perks=Object.assign({learn:true,ref:true,mist:true,hints:true,similar:true,tests:-1,ent:-1},t.perks||{});return`<div class="card"><div class="row"><input data-f="name" data-i="${i}" value="${esc(t.name)}" placeholder="Название" style="flex:1"><button class="btn alt sm" data-up="${i}" title="Выше">↑</button><button class="btn alt sm" data-del="${i}" aria-label="Удалить">${ICO('trash',16)}</button></div>
+ ${T.map((t,i)=>{t.perks=Object.assign({learn:true,ref:true,mist:true,hints:true,similar:true,tasks:-1,tests:-1,ent:-1},t.perks||{});return`<div class="card"><div class="row"><input data-f="name" data-i="${i}" value="${esc(t.name)}" placeholder="Название" style="flex:1"><button class="btn alt sm" data-up="${i}" title="Выше">↑</button><button class="btn alt sm" data-del="${i}" aria-label="Удалить">${ICO('trash',16)}</button></div>
  <div class="row" style="margin-top:6px"><label class="small">Цена, ₸<input data-f="price" data-i="${i}" type="number" value="${t.price}" style="width:110px"></label><label class="small">Срок, дней<input data-f="days" data-i="${i}" type="number" value="${t.days}" style="width:90px"></label></div>
  <label class="small">Описание<textarea data-f="desc" data-i="${i}" rows="2" style="width:100%">${esc(t.desc||'')}</textarea></label>
  <p class="small" style="margin:8px 0 2px"><b>Возможности</b></p>${pk(t.perks,'p',i)}
@@ -3537,7 +3564,7 @@ function admTar(box){const T=JSON.parse(JSON.stringify(CFG.tariffs)),FR=Object.a
   box.querySelectorAll('[data-ft]').forEach(el=>el.onchange=()=>{const t=T[+el.dataset.ft];t.features=t.features.filter(x=>x!==el.value);if(el.checked)t.features.push(el.value)});
   box.querySelectorAll('[data-del]').forEach(el=>el.onclick=()=>{if(confirm('Удалить тариф?')){T.splice(+el.dataset.del,1);draw()}});
   box.querySelectorAll('[data-up]').forEach(el=>el.onclick=()=>{const i=+el.dataset.up;if(i>0){[T[i-1],T[i]]=[T[i],T[i-1]];draw()}});
-  document.getElementById('at_add').onclick=()=>{T.push({id:'t'+Date.now().toString(36),name:'Новый тариф',price:1990,days:30,desc:'',features:BASESEC.slice(),perks:{learn:true,ref:true,mist:true,hints:true,similar:true,tests:-1,ent:-1}});draw()};
+  document.getElementById('at_add').onclick=()=>{T.push({id:'t'+Date.now().toString(36),name:'Новый тариф',price:1990,days:30,desc:'',features:BASESEC.slice(),perks:{learn:true,ref:true,mist:true,hints:true,similar:true,tasks:-1,tests:-1,ent:-1}});draw()};
   document.getElementById('at_save').onclick=()=>saveCfg({tariffs:T,free:FR},'at_m')};draw()}
 function admAcc(box){const A=Object.assign({},CFG.access),TP=Object.assign({},CFG.topics);const M=[['free','Бесплатно'],['paid','По подписке'],['hidden','Скрыто']];
  const sel=(v,attr,inh)=>`<select ${attr}>${inh?'<option value="">Как у предмета</option>':''}${M.map(([k,n])=>`<option value="${k}" ${v===k?'selected':''}>${n}</option>`).join('')}</select>`;
@@ -3760,7 +3787,7 @@ async function nickEdit(){const v0=prompt('Логин (ник) — его вид
  if(old)FB.nickFree(old).catch(()=>{});ACC.nick=n;LSS(ACK,ACC);showProfile()}
 
 /* ---- режим «Смотреть как…» ---- */
-const VAOPTS=()=>[{k:'free',n:'Ученик без тарифа',d:'2 теста в день, без «Учить»',v:{role:'',plan:''}},...(CFG.tariffs||[]).map(t=>({k:t.id,n:'Ученик · '+t.name,d:(+t.price||0).toLocaleString('ru-RU')+' ₸',v:{role:'',plan:t.id}})),{k:'manager',n:'Менеджер',d:'чаты, ученики, заявки',v:{role:'manager',plan:''}},{k:'admin',n:'Администратор',d:'всё, кроме ролей',v:{role:'admin',plan:''}}];
+const VAOPTS=()=>[{k:'free',n:'Ученик без тарифа',d:'20 заданий в день, тесты по темам',v:{role:'',plan:''}},...(CFG.tariffs||[]).map(t=>({k:t.id,n:'Ученик · '+t.name,d:(+t.price||0).toLocaleString('ru-RU')+' ₸',v:{role:'',plan:t.id}})),{k:'manager',n:'Менеджер',d:'чаты, ученики, заявки',v:{role:'manager',plan:''}},{k:'admin',n:'Администратор',d:'всё, кроме ролей',v:{role:'admin',plan:''}}];
 function setViewAs(v){try{if(v)sessionStorage.setItem('ent-viewas',JSON.stringify(v));else sessionStorage.removeItem('ent-viewas')}catch(e){}location.reload()}
 function vaName(){const v=viewAs();if(!v)return'';const o=VAOPTS().find(x=>x.v.role===(v.role||'')&&x.v.plan===(v.plan||''));return o?o.n:'другая роль'}
 function vaCard(){if(!realOwner()||viewAs())return'';const v=null;
@@ -3793,10 +3820,10 @@ function ring(p,c){const r=22,L=2*Math.PI*r;return`<svg width="56" height="56" v
 function showDash(){const vis=(visibleSecs()||SECS.map(s=>s[0])).filter(s=>s!=='ent'&&SUBJ[s]);const st=myStats(),H=LSG('ent-mock-v1')||[],last=H[H.length-1];
  const hr=new Date().getHours(),hi=hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер';
  const _ed=entCountdown();const ed=_ed?Math.ceil((new Date(_ed+(_ed.length===10?'T00:00':''))-Date.now())/864e5):null;
- const Lt=perk('tests'),Le=perk('ent'),u=useGet();const cols=['#4f46e5','#0891b2','#16a34a','#d97706','#db2777','#7c3aed','#dc2626','#0d9488'];
+ const Lt=perk('tests'),Le=perk('ent'),Lk=perk('tasks'),u=useGet();const cols=['#4f46e5','#0891b2','#16a34a','#d97706','#db2777','#7c3aed','#dc2626','#0d9488'];
  page('dash',`<div class="dhero"><div class="dhi">${ACC?AVH(ACC.avatar,52,ACC.name):'<span class="av" style="width:52px;height:52px;background:#fff;color:#1F3A93">'+ICO('cap',28)+'</span>'}<div><div class="dgreet">${hi}${ACC&&ACC.name?', '+esc(ACC.name):''}!</div><div class="small" style="opacity:.85">Каждый день понемногу — и на ЕНТ будет спокойно.</div></div>${ed!=null&&ed>0?`<div class="dcount"><b>${ed}</b><span>${GW(ed,'день','дня','дней')} до ЕНТ</span></div>`:''}</div>
  <div class="dmini"><div><b>${st.n}</b><span>заданий</span></div><div><b>${st.acc}%</b><span>точность</span></div><div><b>${last?last.score+'/'+last.max:'—'}</b><span>последний ЕНТ</span></div></div></div>
- ${Lt>=0||Le>=0?`<div class="card dlim"><div>Сегодня без тарифа: тестов <b>${Math.max(0,Lt-u.tests)} из ${Lt}</b>${Le>=0?`, пробных ЕНТ <b>${Math.max(0,Le-u.ent)} из ${Le}</b>`:''}</div><button class="btn sm" id="d_tar">${ICO('gem',16)} Тарифы</button></div>`:''}
+ ${Lt>=0||Le>=0||Lk>=0?`<div class="card dlim"><div>Сегодня без тарифа осталось: ${[Lk>=0?`заданий <b>${Math.max(0,Lk-(u.tasks||0))} из ${Lk}</b>`:'',Lt>=0?`тестов <b>${Math.max(0,Lt-(u.tests||0))} из ${Lt}</b>`:'',Le>=0?`пробных ЕНТ <b>${Math.max(0,Le-(u.ent||0))} из ${Le}</b>`:''].filter(Boolean).join(', ')}</div><button class="btn sm" id="d_tar">${ICO('gem',16)} Тарифы</button></div>`:''}
  <h3 style="margin:14px 0 8px">Мои предметы</h3><div class="dgrid">${vis.map((k,i)=>{const p=subjProg(k),pc=p.tot?Math.round(p.read/p.tot*100):0,lk=ACC&&!canSec(k);return`<button class="card dsub ${lk?'lockd':''}" data-go="${k}"><div class="dic" style="background:${cols[i%cols.length]}1a;color:${cols[i%cols.length]}">${ICO(SICON[k]||'book',24)}</div><div class="dtx"><b>${esc(SUBJ[k].title||SUBJ[k].name)}</b><small>${lk?'по подписке':p.tot?`Темы: ${p.read} из ${p.tot}`:''}${p.n&&!lk?` · верно ${p.acc}%`:''}</small></div><div class="dring" style="color:${cols[i%cols.length]}">${ring(pc,cols[i%cols.length])}</div></button>`}).join('')}</div>
  <div class="dact"><button class="card dbig" id="d_ent"><span class="dbi">${ICO('exam',26)}</span><b>Пробное ЕНТ</b><small>${ESUB.length} предмет${ESUB.length===5?'ов':'а'} · ${ENTQ()} заданий · ${ENTMIN()} мин</small></button>
  ${ACC?'<button class="card dbig" id="d_help"><span class="dbi">'+ICO('chat',26)+'</span><b>Помощь</b><small>Чат с менеджером</small></button>':''}${ACC?'<button class="card dbig" id="d_prof"><span class="dbi">'+ICO('user',26)+'</span><b>Профиль</b><small>Аватар, статистика, предметы</small></button>':''}</div>${calCard()}`,1);
@@ -3812,7 +3839,7 @@ async function onUser(u){
   if(cfg){CFG=Object.assign({},DEFCFG,cfg);LSS(CFK,CFG)}
   if(!p&&pend){p={...pend,name:pend.name||u.displayName||'',email:u.email,created:Date.now()};delete p.google;if(p.nick){try{await FB.nickClaim(p.nick,u.uid)}catch(e){p.nick=''}}else delete p.nick;if(window.REFCODE&&window.REFCODE!==u.uid){p.refBy=window.REFCODE}await FB.setUser(u.uid,p);if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
   if(!p){p={name:u.displayName||(isPhoneMail(u.email)?'':(u.email||'').split('@')[0]),email:u.email,pair:'',created:Date.now(),avatar:'e|'+AVE[Math.floor(Math.random()*AVE.length)]+'|'+AVC[Math.floor(Math.random()*AVC.length)]};if(window.REFCODE&&window.REFCODE!==u.uid)p.refBy=window.REFCODE;await FB.setUser(u.uid,p).catch(()=>{});if(p.refBy)FB.addRef(p.refBy,u.uid,{name:p.name||'',t:Date.now()}).catch(()=>{})}
-  const first=!ACC||ACC.uid!==u.uid;if(p.remind&&!LSG(RMK))LSS(RMK,Object.assign(remGet(),p.remind));ACC={uid:u.uid,email:u.email,name:p.name,pair:p.pair,avatar:p.avatar||'',plan:p.plan||null,paidUntil:p.paidUntil||0,blocked:!!p.blocked,role:p.role||'',nick:p.nick||'',refBy:p.refBy||'',refUsed:p.refUsed||0,phone:p.phone||''};LSS(ACK,ACC);
+  const first=!ACC||ACC.uid!==u.uid;if(p.remind&&!LSG(RMK))LSS(RMK,Object.assign(remGet(),p.remind));ACC={uid:u.uid,email:u.email,name:p.name,pair:p.pair,avatar:p.avatar||'',plan:p.plan||null,paidUntil:p.paidUntil||0,blocked:!!p.blocked,role:p.role||'',nick:p.nick||'',use:p.use||null,refBy:p.refBy||'',refUsed:p.refUsed||0,phone:p.phone||''};useMerge(p.use);LSS(ACK,ACC);
   authHide();if(ACC.blocked&&!isOwner()){blockedScreen();return}lsnPrefill();applyAccess();
   if(!SYNC.uid&&SYNCKEYS().some(k=>localStorage.getItem(k)!=null)){const keep=await askMigrate(!!pend);if(!keep){SYNCKEYS().forEach(k=>localStorage.removeItem(k));localStorage.removeItem('ent-mock-run')}SYNC={uid:u.uid,h:{},t:{}};saveSync();S=loadS()}
   const changed=await pullProg();if(changed&&!window.PAGEMODE){S=loadS();if(window.ENTMODE)eMode();else go(location.hash.slice(1)||'home')}
@@ -3918,7 +3945,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 76 от 27.11 00:02</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 77 от 27.11 00:10</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,pend=false;const busy=()=>!!(window.QACTIVE||window.ENTMODE);function updBar(){let u=document.getElementById("updbar");const t=busy()?"Вышло обновление сайта. Применится после теста — ответы не пропадут.":"Вышло обновление сайта";if(!u){u=document.createElement("div");u.id="updbar";u.innerHTML='<span class="ut"></span><button type="button">Обновить</button><button type="button" class="ux" aria-label="Позже">✕</button>';document.body.appendChild(u);u.querySelector("button").onclick=()=>{if(busy()&&!confirm("Тест ещё идёт. Обновить сейчас? Ответы текущего теста пропадут."))return;location.reload()};u.querySelector(".ux").onclick=()=>u.remove();requestAnimationFrame(()=>u.classList.add("on"))}u.querySelector(".ut").textContent=t}navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had){had=true;return}pend=true;if(!busy()&&document.visibilityState==="hidden"){location.reload();return}updBar()});document.addEventListener("visibilitychange",()=>{if(pend&&document.visibilityState==="hidden"&&!busy())location.reload()});setInterval(()=>{if(pend&&document.getElementById("updbar"))updBar()},4000);navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
