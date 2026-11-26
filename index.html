@@ -400,6 +400,15 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 .authlogo9{width:64px;height:64px;filter:drop-shadow(0 6px 10px rgba(20,39,102,.3))}.authlogo9 svg{width:100%;height:100%}
 
 .grecaptcha-badge{visibility:hidden!important}.rcnote{font-size:11px;color:var(--mut);text-align:center;margin:12px 0 0;line-height:1.4}.rcnote a{color:var(--mut)}
+
+.ntools{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.ntools input{flex:1;min-width:160px}
+.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.note{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff;box-shadow:0 3px 0 var(--line);position:relative;min-height:90px;transition:transform .15s}.note:hover{transform:translateY(-2px)}
+.note h4{margin:0 0 6px;font:700 15px/1.3 Unbounded,sans-serif;color:var(--ink);padding-right:20px}.note p{margin:0;font-size:14px;color:var(--ink);white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.note .nd{font-size:11px;color:var(--mut);margin-top:8px}.note .pin{position:absolute;top:10px;right:10px;color:var(--pen)}
+.note.c1{background:#FFF8D6}.note.c2{background:#E6F6FF}.note.c3{background:#EAF8EE}.note.c4{background:#FDECEF}.note.c5{background:#F1ECFF}
+.ned textarea{width:100%;min-height:260px;resize:vertical;font:15px/1.5 'Golos Text',sans-serif;padding:12px;border:1.5px solid var(--line);border-radius:12px}
+.ncol{display:flex;gap:8px;align-items:center}.ncol button{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}.ncol button.on{border-color:var(--pen);box-shadow:0 0 0 2px #fff inset}
 </style>
 </head>
 <body>
@@ -3234,11 +3243,13 @@ let ADM={users:null,reqs:null};
 async function admLoad(force){if(force||!ADM.users){const [u,r]=await Promise.all([FB.listUsers(),FB.allReqs()]);ADM.users=u;ADM.reqs=r}}
 async function showAdmin(tab){if(!isStaff()||!FB)return;const R0=myRole();tab=tab||(R0==='manager'?'chats':'dash');
  let tabs=[['chats','chat','Чаты'],['dash','chart','Обзор'],['users','users','Ученики'],['reqs','receipt','Заявки'],['tar','gem','Тарифы'],['acc','lock','Доступ'],['cont','cloud','Уроки'],['cal','cal','Календарь'],['set','sliders','Настройки']];
+ if(R0==='owner')tabs.push(['notes','pencil','Заметки']);
  if(R0==='manager')tabs=tabs.filter(t=>['chats','users','reqs'].includes(t[0]));if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
  page('admin',`<h2 style="margin:.6em 0 .3em">Админ-панель <span class="pbadge own sm">${ICO(ROLEI[R0],13)} ${ROLEN[R0]}</span></h2><div class="atabs">${tabs.map(([k,ic,n])=>`<button data-t="${k}" class="${k===tab?'on':''}">${ICO(ic,16)}<span>${n}</span></button>`).join('')}</div><div id="adm"><p class="mut">Загрузка…</p></div>`);
  app.querySelectorAll('.atabs [data-t]').forEach(b=>b.onclick=()=>showAdmin(b.dataset.t));
  const box=document.getElementById('adm');
  if(tab==='chats'){admChats(box);return}
+ if(tab==='notes'){admNotes(box);return}
  try{await admLoad(tab==='dash')}catch(e){box.innerHTML=`<p style="color:var(--bad)">${esc(fbErr(e))}</p><p class="small">Проверь, что в правилах Firestore указан твой UID как владелец.</p>`;return}
  ({dash:admDash,users:admUsers,reqs:admReqs,tar:admTar,acc:admAcc,cont:admCont,cal:admCal,set:admSet})[tab](box)}
 function admDash(box){const U=ADM.users,now=Date.now(),wk=now-7*864e5;const pro=U.filter(u=>u.plan&&(u.paidUntil||0)>now);
@@ -3333,6 +3344,37 @@ function admSet(box){box.innerHTML=`<div class="card"><h3 style="margin-top:0">$
  document.getElementById('as_save').onclick=()=>saveCfg({refOn:document.getElementById('as_ron').checked,refPct:+document.getElementById('as_rp').value||0,refMax:+document.getElementById('as_rm').value||0,refFriend:+document.getElementById('as_rf').value||0,contact:document.getElementById('as_contact').value.slice(0,120),entDate:document.getElementById('as_date').value,announce:document.getElementById('as_ann').value.slice(0,300),payInfo:document.getElementById('as_pay').value.slice(0,1500)},'as_m')}
 
 
+
+
+/* ---- личные заметки владельца (видны только ему) ---- */
+let NOTES=null,NQ='';
+const NCOL=['','#FFF8D6','#E6F6FF','#EAF8EE','#FDECEF','#F1ECFF'];
+const nDate=t=>new Date(t||Date.now()).toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+async function admNotes(box){if(myRole()!=='owner')return;
+ if(!NOTES){box.innerHTML='<p class="mut">Загрузка…</p>';try{NOTES=await FB.notesList(ACC.uid)}catch(e){box.innerHTML=`<div class="card"><p>Не удалось открыть заметки: ${esc(fbErr(e))}</p><p class="small mut">Проверь, что вставлены новые правила Firestore.</p></div>`;return}}
+ const q=NQ.toLowerCase(),list=NOTES.filter(n=>!q||(n.title+' '+n.text).toLowerCase().includes(q)).sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||(b.t||0)-(a.t||0));
+ box.innerHTML=`<div class="card" style="margin-bottom:12px"><p class="small mut" style="margin:0">${ICO('lock',14)} Эти заметки видишь только ты. Ученики, админы и менеджеры их не видят.</p></div>
+ <div class="ntools"><input id="nq" placeholder="Поиск по заметкам…" value="${esc(NQ)}"><button class="btn" id="nnew">${ICO('pencil',16)} Новая заметка</button></div>
+ ${list.length?`<div class="ngrid">${list.map(n=>`<div class="note c${n.c||0}" data-n="${n.id}">${n.pin?`<span class="pin">${ICO('target',15)}</span>`:''}<h4>${esc(n.title||'Без названия')}</h4><p>${esc(n.text||'')}</p><div class="nd">${nDate(n.t)}</div></div>`).join('')}</div>`:`<div class="card" style="text-align:center"><p class="mut">${NQ?'Ничего не найдено.':'Пока нет заметок. Нажми «Новая заметка» — например, идеи, цены, кому что ответить.'}</p></div>`}`;
+ const qi=document.getElementById('nq');qi.oninput=()=>{NQ=qi.value;const p=qi.selectionStart;admNotes(box).then(()=>{const x=document.getElementById('nq');x.focus();x.setSelectionRange(p,p)})};
+ document.getElementById('nnew').onclick=()=>noteEdit(box,null);
+ box.querySelectorAll('[data-n]').forEach(el=>el.onclick=()=>noteEdit(box,NOTES.find(n=>n.id===el.dataset.n)))}
+function noteEdit(box,n){n=n||{title:'',text:'',c:0,pin:false};let c=n.c||0,pin=!!n.pin,saved=true,timer=null,id=n.id||null;
+ box.innerHTML=`<div class="card ned"><div class="row" style="justify-content:space-between;margin-bottom:10px"><button class="btn alt sm" id="nback">← Все заметки</button><span class="small mut" id="nst">${id?'Сохранено':'Новая'}</span></div>
+ <input id="nt" placeholder="Заголовок" maxlength="120" value="${esc(n.title||'')}" style="width:100%;font:700 18px Unbounded,sans-serif;margin-bottom:10px">
+ <textarea id="nx" placeholder="Текст заметки…" maxlength="20000">${esc(n.text||'')}</textarea>
+ <div class="row" style="justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:10px"><div class="ncol">${NCOL.map((col,i)=>`<button data-c="${i}" class="${i===c?'on':''}" style="background:${col||'#fff'}" aria-label="Цвет ${i}"></button>`).join('')}</div>
+ <div class="row" style="gap:8px"><label class="chk"><input type="checkbox" id="npin" ${pin?'checked':''}> Закрепить</label>${id?`<button class="btn alt sm" id="ndel" style="color:var(--bad)">${ICO('trash',15)} Удалить</button>`:''}</div></div></div>`;
+ const st=document.getElementById('nst'),T=document.getElementById('nt'),X=document.getElementById('nx');
+ async function save(){if(saved)return;const d={title:T.value.trim(),text:X.value,c,pin,t:Date.now()};if(!id&&!d.title&&!d.text.trim())return;st.textContent='Сохраняем…';
+  try{id=await FB.noteSave(ACC.uid,id,d);const o=NOTES.find(z=>z.id===id);if(o)Object.assign(o,d);else NOTES.push({id,...d});saved=true;st.textContent='Сохранено ✓'}catch(e){st.textContent='Не сохранилось: '+fbErr(e)}}
+ const dirty=()=>{saved=false;st.textContent='Изменено…';clearTimeout(timer);timer=setTimeout(save,900)};
+ T.oninput=dirty;X.oninput=dirty;
+ box.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{c=+b.dataset.c;box.querySelectorAll('[data-c]').forEach(x=>x.classList.toggle('on',x===b));dirty()});
+ document.getElementById('npin').onchange=e=>{pin=e.target.checked;dirty()};
+ document.getElementById('nback').onclick=async()=>{clearTimeout(timer);await save();admNotes(box)};
+ const del=document.getElementById('ndel');if(del)del.onclick=async()=>{if(!confirm('Удалить заметку? Вернуть её будет нельзя.'))return;try{await FB.noteDel(ACC.uid,id);NOTES=NOTES.filter(z=>z.id!==id);admNotes(box)}catch(e){alert(fbErr(e))}};
+ window.addEventListener('pagehide',save,{once:true});if(!id)T.focus()}
 
 /* ---- политика конфиденциальности и удаление аккаунта ---- */
 const PRIVDATE='26 ноября 2026 г.';
@@ -3557,6 +3599,9 @@ const auth=U.getAuth(app);auth.languageCode=window.LANG==='kk'?'kk':'ru';const d
 window.FBAPI={onAuth:cb=>U.onAuthStateChanged(auth,cb),signUp:(e,p)=>U.createUserWithEmailAndPassword(auth,e,p),signIn:(e,p)=>U.signInWithEmailAndPassword(auth,e,p),reset:e=>U.sendPasswordResetEmail(auth,e),out:()=>U.signOut(auth),
 google:()=>{const pr=new U.GoogleAuthProvider();pr.setCustomParameters({prompt:'select_account'});const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone;return sa?U.signInWithRedirect(auth,pr):U.signInWithPopup(auth,pr).catch(e=>{if(e&&(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'))return U.signInWithRedirect(auth,pr);throw e})},
 redirectResult:()=>U.getRedirectResult(auth),
+notesList:uid=>D.getDocs(D.collection(db,'notes',uid,'items')).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o}),
+noteSave:(uid,id,d)=>id?D.setDoc(D.doc(db,'notes',uid,'items',id),d,{merge:true}).then(()=>id):D.addDoc(D.collection(db,'notes',uid,'items'),d).then(r=>r.id),
+noteDel:(uid,id)=>D.deleteDoc(D.doc(db,'notes',uid,'items',id)),
 addRef:(owner,uid,d)=>D.setDoc(D.doc(db,'refs',owner,'list',uid),d),
 myRefs:uid=>D.getDocs(D.collection(db,'refs',uid,'list')).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o}),
 getUser:uid=>D.getDoc(D.doc(db,'users',uid)).then(s=>s.exists()?s.data():null),setUser:(uid,d)=>D.setDoc(D.doc(db,'users',uid),d,{merge:true}),
@@ -3578,7 +3623,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 56 от 26.11 22:44</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 57 от 26.11 22:48</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
