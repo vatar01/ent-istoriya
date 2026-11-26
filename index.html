@@ -449,13 +449,13 @@ button.card,.dsub{transition:transform .15s ease,box-shadow .15s ease,border-col
 .say.info{background:#EEF2FF;color:var(--pen)}.say.info .sayi{background:var(--pen)}
 
 /* микро-анимации */
-.bar i{transform-origin:left;animation:barfill 1s cubic-bezier(.2,.8,.2,1) both}@keyframes barfill{from{transform:scaleX(0)}}
+.grid.stats .bar i,.topic .bar i{transform-origin:left;animation:barfill 1s cubic-bezier(.2,.8,.2,1) both}@keyframes barfill{from{transform:scaleX(0)}}
 .dbi svg,.atabs button svg,.bmark9 svg{transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
 :hover>.dbi svg,.dbi:hover svg,button:hover>.dbi svg,.atabs button:hover svg{transform:rotate(-10deg) scale(1.12)}
 svg.ring{transform-origin:50% 10%;animation:ring 1s ease-in-out}@keyframes ring{0%,100%{transform:rotate(0)}15%{transform:rotate(18deg)}30%{transform:rotate(-16deg)}45%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}75%{transform:rotate(4deg)}}
 .okflash{background:#22A355!important;border-color:#1B8A46!important;box-shadow:0 2px 0 #1B8A46!important;color:#fff!important;animation:okpop .45s}
 .toast .ti svg{animation:ticon .5s .15s cubic-bezier(.3,1.6,.5,1) both}@keyframes ticon{from{transform:scale(0) rotate(-30deg)}}
-@media(prefers-reduced-motion:reduce){.bar i,svg.ring,.okflash,.toast .ti svg{animation:none}}
+@media(prefers-reduced-motion:reduce){.grid.stats .bar i,.topic .bar i,svg.ring,.okflash,.toast .ti svg{animation:none}}
 
 .rptab{border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
 .rph,.rpr{display:grid;grid-template-columns:1fr 96px 96px;align-items:center;gap:6px;padding:9px 12px}
@@ -3873,7 +3873,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 71 от 26.11 23:46</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 72 от 26.11 23:46</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!rl){rl=true;location.reload()}had=true});navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
