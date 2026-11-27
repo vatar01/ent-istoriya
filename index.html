@@ -1034,7 +1034,7 @@ const Q2=[
 ['t15','В 1999 г. ЮНЕСКО присвоило Астане статус:',['«Город мира»','«Культурная столица тюркского мира»','«Город-герой»','«Зелёная столица»'],'По хронологии НЦТ.'],
 ['t15','VII зимние Азиатские игры прошли в Казахстане в:',['2011 г.','2010 г.','2017 г.','2002 г.'],'По хронологии НЦТ.'],
 ['t15','К.-Ж. Токаев впервые избран Президентом в:',['2019 г.','2022 г.','2017 г.','2010 г.'],'По хронологии НЦТ (9 июня 2019).'],
-['t15','Государственные Флаг и Герб утверждены в:',['1992 г.','1991 г.','1993 г.','1995 г.'],'4 июня 1992 г.']
+['t15','Государственные Флаг и Герб утверждены в:',['1992 г.','1991 г.','1993 г.','1995 г.'],'4 июня 1992 г.'],
 
 /* добавлено по пробному ЕНТ «Лидер плюс», вариант 252-2р */
 ['t9','Восстание казахов Младшего жуза 1822–1824 гг. (первая половина XIX века) возглавил:',['Жоламан Тленшиулы','Сырым Датулы','Амангельды Иманов','Жанкожа Нурмухамедулы'],'Жоламан Тленшиулы — 1822–1824 гг. Сырым Датулы — 1783–1797 гг., Жанкожа Нурмухамедулы — 1856–1857 гг., А. Иманов — 1916 г.'],
@@ -4153,7 +4153,7 @@ chatSet:(cid,d)=>D.setDoc(D.doc(db,'chats',cid),d,{merge:true}),
 myReqs:uid=>D.getDocs(D.query(D.collection(db,'requests'),D.where('uid','==',uid))).then(q=>{const o=[];q.forEach(d=>o.push({id:d.id,...d.data()}));return o})};
 dispatchEvent(new Event('fbready'))}catch(e){console.warn('firebase',e)}}
 </script>
-<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 86 от 27.11 13:39</p>
+<p style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 calc(18px + env(safe-area-inset-bottom))">Версия 87 от 27.11 13:57</p>
 <script>if("serviceWorker" in navigator){let had=!!navigator.serviceWorker.controller,pend=false;const busy=()=>!!(window.QACTIVE||window.ENTMODE);function updBar(){let u=document.getElementById("updbar");const t=busy()?"Вышло обновление сайта. Применится после теста — ответы не пропадут.":"Вышло обновление сайта";if(!u){u=document.createElement("div");u.id="updbar";u.innerHTML='<span class="ut"></span><button type="button">Обновить</button><button type="button" class="ux" aria-label="Позже">✕</button>';document.body.appendChild(u);u.querySelector("button").onclick=()=>{if(busy()&&!confirm("Тест ещё идёт. Обновить сейчас? Ответы текущего теста пропадут."))return;location.reload()};u.querySelector(".ux").onclick=()=>u.remove();requestAnimationFrame(()=>u.classList.add("on"))}u.querySelector(".ut").textContent=t}navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had){had=true;return}pend=true;if(!busy()&&document.visibilityState==="hidden"){location.reload();return}updBar()});document.addEventListener("visibilitychange",()=>{if(pend&&document.visibilityState==="hidden"&&!busy())location.reload()});setInterval(()=>{if(pend&&document.getElementById("updbar"))updBar()},4000);navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update()})}).catch(()=>{})}</script>
 </body>
 </html>
